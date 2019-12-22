@@ -1,0 +1,22 @@
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">TS</th>
+      <th scope="col">Thread TS</th>
+      <th scope="col">Event TS</th>
+      <th scope="col">Replyes</th>
+    </tr>
+  </thead>
+
+  <% @messages.each do |message| %>
+    <tr>
+      <td><%= message.message_id %></td>
+      <td><%= message.ts %></td>
+      <td><%= message.thread_ts %></td>
+      <td><%= message.event_ts %></td>
+      <td><%= message.reply_counter %></td>
+    </tr>
+  <% end %>
+</table>
+

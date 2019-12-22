@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+APP_NAME=File.basename(File.expand_path("..", Dir.pwd))
+APP_HOME=File.join(File.dirname(__FILE__), '../')
+VM_NAME=APP_NAME
+
+Vagrant.configure("2") do |config|
+  config.vm.hostname = "#{APP_NAME}"
+  config.vm.box = "centos/7"
+  config.ssh.insert_key = false
+  config.vm.network "private_network", type: "dhcp"
+
+  config.vm.provision "ansible_local" do |ansible|
+    ansible.playbook = "playbook.yml"
+    ansible.verbose = "v"
+  end
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.customize ["modifyvm", :id, "--audio", "none"]
+    vb.cpus = 1
+    vb.memory = "512"
+    vb.name = "#{APP_NAME}"
+  end
+
+  config.vm.synced_folder APP_HOME, "/opt/#{APP_NAME}"
+end

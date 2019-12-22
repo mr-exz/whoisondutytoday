@@ -1,0 +1,17 @@
+version: '3'
+services:
+  whoisondutytoday:
+    restart: always
+    container_name: whoisondutytoday
+    build: .
+    volumes:
+      - /opt/whoisondutytoday/db/development.sqlite3:/myapp/db/development.sqlite3
+    ports:
+      - "3000:3000"
+    env_file:
+      - production.env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2048k"
+        max-file: "10"

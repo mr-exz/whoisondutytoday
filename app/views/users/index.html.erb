@@ -1,0 +1,25 @@
+<table class="table">
+  <thead class="thead-dark">
+  <tr>
+    <th scope="col">Slack User ID</th>
+    <th scope="col">Name</th>
+    <th scope="col">Real Name</th>
+    <th scope="col">Contacts</th>
+    <th scope="col">TZ</th>
+    <th scope="col">TZ Offset</th>
+    <th scope="col">Status</th>
+  </tr>
+  </thead>
+
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.slack_user_id %></td>
+      <td><%= user.name %></td>
+      <td><%= user.real_name %></td>
+      <td><%= user.contacts %></td>
+      <td><%= user.tz %></td>
+      <td><%= user.tz_offset %></td>
+      <td><%= user.status %></td>
+    </tr>
+  <% end %>
+</table>

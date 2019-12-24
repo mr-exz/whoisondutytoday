@@ -27,15 +27,22 @@ Commands in private:
 • my status work - set status on duty
 ```
 
-## How to run
-```bash
-docker-compose up
-```
-
 ## How to build
 
 ```bash
 docker-compose build
+```
+
+## How to run
+
+Copy file and define valid Slack API API Token. Create bot [here](https://slack.com/intl/en-hr/help/articles/115005265703-create-a-bot-for-your-workspace).
+
+```
+cp ./production.env.example ./production.env
+```
+
+```bash
+docker-compose up
 ```
 
 ## How to develop

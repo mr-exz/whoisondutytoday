@@ -14,4 +14,4 @@ COPY . /myapp
 
 EXPOSE 3000
 
-CMD ["./bin/rails", "server"]
+CMD ["./bin/start"]

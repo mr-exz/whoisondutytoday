@@ -40,7 +40,7 @@ class Bot < SlackRubyBot::Bot
   end
 
   command(/.*/) do |client, data|
-    Commands.dontknow(client: client, data: data)
+    Commands.unknown(client: client, data: data)
   end
 
   scan(/.*/) do |client, data|

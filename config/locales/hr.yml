@@ -1,0 +1,17 @@
+hr:
+  commands:
+    unknown:
+      text: "Oprosti što te ne razumijem."
+    help:
+      text: |
+        Verzija: %{version}
+        Naredbe u kanalu:
+        -- `call duty person` - pozvati dežurnu osobu.
+        -- `i am on duty` - umetnite na dežurstvo.
+        -- `who is on duty?` - uznatʹ ko dežurnyj.
+        -- `duty create` - stvoriti radno vrijeme, primjerice `duty create from 8:00 to 17:00`.
+        -- `duty update` - ažurirajte radne sate, primjerice `duty update from 8:00 to 17:00`.
+        -- `duty delete` - uklonit će dužnost.
+        Naredbe u privatnim porukama:
+        -- `my status lunch` - postavite status na večeri.
+        -- `my status work` - postaviti status na dužnosti.

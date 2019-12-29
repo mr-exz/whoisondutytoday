@@ -5,20 +5,9 @@ class Commands
   def self.help(client:,data:)
     client.web_client.chat_postMessage(
         channel: data.channel,
-        text: "
-Version: %s\n
-Commands in channel:\n
-• `call duty person` - will send alert message to duty person.\n
-• `i am on duty` - will set you as duty person in channel.\n
-• `who is on duty?` - will display name of duty persion.\n
-• `duty create` - will create duty, example `duty create from 8:00 to 17:00`\n
-• `duty update` - will update duty, example `duty update from 8:00 to 17:00`\n
-• `duty delete` - will delete duty`\n
-Commands in private:\n
-• `my status lunch` - set status on lunch\n
-• `my status work` - set status on duty\n
-" % Whoisondutytoday::Application::VERSION,
-        thread_ts: data.thread_ts || data.ts
+        text: I18n.t("commands.help.text", version:Whoisondutytoday::Application::VERSION),
+        thread_ts: data.thread_ts || data.ts,
+        as_user: true
     )
   end
 
@@ -81,34 +70,26 @@ Commands in private:\n
       duty.save
       client.say(
           channel: data.channel,
-          text: 'Duty from %s:%s to %s:%s created (UTC time), enabled: %s' % [
-              duty.duty_from.hour,  duty.duty_from.min,
-              duty.duty_to.hour,  duty.duty_to.min,
-              duty.enabled
-          ],
+          text: I18n.t("commands.duty.created.text", fH:duty.duty_from.hour,fM:duty.duty_from.min,tH:duty.duty_to.hour,tM:duty.duty_to.min,status:duty.enabled),
           thread_ts: data.thread_ts || data.ts
       )
       i_am_on_duty(data:data,client:client)
     else
       client.say(
           channel: data.channel,
-          text: 'Duty already exist %s:%s to %s:%s, enabled: %s' % [
-              duty.duty_from.hour,  duty.duty_from.min,
-              duty.duty_to.hour,  duty.duty_to.min,
-              duty.enabled
-          ],
+          text: I18n.t("commands.duty.exist.text", fH:duty.duty_from.hour,fM:duty.duty_from.min,tH:duty.duty_to.hour,tM:duty.duty_to.min,status:duty.enabled),
           thread_ts: data.thread_ts || data.ts
       )
     end
   end
 
   def self.duty_update(client:, data:, match:)
-
     duty = Duty.where(user_id: data.user, channel_id: data.channel).first
+
     if duty.blank?
       client.say(
           channel: data.channel,
-          text: 'You don\'t have duty record for this channel',
+          text: I18n.t("commands.duty.exist.error"),
           thread_ts: data.thread_ts || data.ts
       )
     else
@@ -121,11 +102,7 @@ Commands in private:\n
       duty.save
       client.say(
           channel: data.channel,
-          text: 'Duty hours updated, from %s:%s to %s:%s (UTC time), enabled: %s' % [
-              duty.duty_from.hour,  duty.duty_from.min,
-              duty.duty_to.hour,  duty.duty_to.min,
-              duty.enabled
-          ],
+          text: I18n.t("commands.duty.exist.error",fH:duty.duty_from.hour,fM:duty.duty_from.min,tH:duty.duty_to.hour,tM:duty.duty_to.min,status:duty.enabled),
           thread_ts: data.thread_ts || data.ts
       )
       i_am_on_duty(data:data,client:client)
@@ -133,19 +110,19 @@ Commands in private:\n
   end
 
   def self.duty_delete(client:,data:,match:)
-
     duty = Duty.where(user_id: data.user, channel_id: data.channel).first
+
     if duty.blank?
       client.say(
           channel: data.channel,
-          text: 'You don\'t have duty record for this channel.',
+          text: I18n.t("commands.duty.exist.error"),
           thread_ts: data.thread_ts || data.ts
       )
     else
       duty.delete
       client.say(
           channel: data.channel,
-          text: 'Duty deleted for this channel.',
+          text: I18n.t("commands.duty.deleted.text"),
           thread_ts: data.thread_ts || data.ts
       )
     end
@@ -156,7 +133,7 @@ Commands in private:\n
     Duty.where(channel_id: data.channel).where.not(user_id: data.user).update_all(enabled: false)
     client.say(
         channel: data.channel,
-        text: 'Now you on duty.',
+        text: I18n.t("commands.duty.on.text"),
         thread_ts: data.thread_ts || data.ts
     )
   end
@@ -165,7 +142,7 @@ Commands in private:\n
     User.where(slack_user_id: data.user).update_all(status: status)
     client.say(
         channel: data.channel,
-        text: 'User status configured `%s`' % status,
+        text:  I18n.t("commands.user.status.configured.text",status:status),
         thread_ts: data.thread_ts || data.ts
     )
   end
@@ -174,7 +151,7 @@ Commands in private:\n
     duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
     client.say(
         channel: data.channel,
-        text: '%s on duty today.' % duty.user.real_name,
+        text: I18n.t("commands.user.status.on.duty",user:duty.user.real_name),
         thread_ts: data.thread_ts || data.ts
     )
   end
@@ -186,8 +163,8 @@ Commands in private:\n
         as_user: true,
         attachments: [
             {
-                fallback: 'Something happaned',
-                text: "Should i bother person on call ? Type command: `<@#{client.self.name}> call duty person`",
+                fallback: I18n.t("reply.non-working-time.subject"),
+                text: I18n.t("reply.non-working-time.text",name:client.self.name),
                 color: '#3AA3E3',
                 attachment_type: 'default'
                 # actions: [
@@ -206,7 +183,8 @@ Commands in private:\n
                 # ]
             }
         ],
-        thread_ts: data.thread_ts || data.ts
+        thread_ts: data.thread_ts || data.ts,
+        as_user: true
     )
 
     message = Message.new
@@ -225,19 +203,15 @@ Commands in private:\n
       duty = Duty.where(channel_id: data.channel, enabled: true).first
 
       if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
-        reason = 'You asked at non working hours. Support hours %s - %s UTC. Current time is: %s.' % [
-            duty.duty_from.utc.strftime('%H:%M').to_s,
-            duty.duty_to.utc.strftime('%H:%M').to_s,
-            time.utc.strftime('%H:%M').to_s
-        ]
+        reason = I18n.t("reply.reason.non-working-hours.text",fT:duty.duty_from.utc.strftime('%H:%M').to_s,tT:duty.duty_to.utc.strftime('%H:%M').to_s,cT:time.utc.strftime('%H:%M').to_s)
       end
 
       if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
-        reason = 'You asked at non working day.'
+        reason = I18n.t("reply.reason.non-working-day.text")
       end
 
       if duty.user.status == 'lunch'
-        reason = 'Sorry, duty person on lunch.'
+        reason = I18n.t("commands.user.status.on.lunch")
       end
 
       reply_in_not_working_time(client, reason, duty, time, data) if !reason.nil?
@@ -247,19 +221,15 @@ Commands in private:\n
         duty = Duty.where(channel_id: data.channel, enabled: true).first
 
         if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
-          reason = 'You asked at non working hours. Support hours %s - %s UTC. Current time is: %s.' % [
-              duty.duty_from.utc.strftime('%H:%M').to_s,
-              duty.duty_to.utc.strftime('%H:%M').to_s,
-              time.utc.strftime('%H:%M').to_s
-          ]
+          reason = I18n.t("reply.reason.non-working-hours.text",fT:duty.duty_from.utc.strftime('%H:%M').to_s,tT:duty.duty_to.utc.strftime('%H:%M').to_s,cT:time.utc.strftime('%H:%M').to_s)
         end
 
         if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
-          reason = 'You asked at non working day.'
+          reason = I18n.t("reply.reason.non-working-day.text")
         end
 
         if duty.user.status == 'lunch'
-          reason = 'Sorry, duty person on lunch.'
+          reason = I18n.t("commands.user.status.on.lunch")
         end
 
         reply_in_not_working_time(client,reason,duty,time,data) if !reason.nil?
@@ -267,11 +237,12 @@ Commands in private:\n
     end
   end
 
-  def self.dontknow(client:, data:)
+  def self.unknown(client:, data:)
     client.web_client.chat_postMessage(
         channel: data.channel,
-        text: "sorry i don't understand you",
-        thread_ts: data.thread_ts || data.ts
+        text: I18n.t("commands.unknown.text", user:"gopa"),
+        thread_ts: data.thread_ts || data.ts,
+        as_user: true
     )
   end
 

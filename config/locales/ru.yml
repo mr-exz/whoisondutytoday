@@ -15,3 +15,31 @@ ru:
         Команды в личных сообщениях:
         -- `my status lunch` - установить статус на обеде.
         -- `my status work` - установить статус на дежурстве.
+    duty:
+      created:
+        text: "Duty from %{fH}:%{fM} to %{tH}:%{tM} created (UTC time), enabled: %{status}"
+      exist:
+        text: "Duty already exist %{fH}:%{fM} to %{tH}:%{tM} (UTC time), enabled: %{status}"
+        error: "You don't have duty record for this channel"
+      updated:
+        text: "Duty hours updated, from %{fH}:%{fM} to %{tH}:%{tM} (UTC time), enabled: %{status}"
+      deleted:
+        text: "Duty deleted for this channel."
+      enabled:
+        text: "Now you on duty."
+    user:
+      status:
+        configured:
+          text: "User status configured `%{status}`"
+        enabled:
+          duty: "%{user} on duty today."
+          lunch: "Sorry, duty person on lunch."
+  reply:
+    non-working-time:
+      subject: "Something happened"
+      text: "Should i bother person on call ? Type command: `<@%{name}> call duty person`"
+    reason:
+      non-working-hours:
+        text: "You asked at non working hours. Support hours %{fT} - %{tT} UTC. Current time is: %{cT}."
+      non-working-day:
+        text: "You asked at non working day."

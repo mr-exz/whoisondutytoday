@@ -25,13 +25,13 @@ en:
         text: "Duty hours updated, from %{fH}:%{fM} to %{tH}:%{tM} (UTC time), enabled: %{status}"
       deleted:
         text: "Duty deleted for this channel."
-      on:
+      enabled:
         text: "Now you on duty."
     user:
       status:
         configured:
           text: "User status configured `%{status}`"
-        on:
+        enabled:
           duty: "%{user} on duty today."
           lunch: "Sorry, duty person on lunch."
   reply:

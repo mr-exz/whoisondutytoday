@@ -17,7 +17,12 @@ class Commands
     user_info = slack_web_client.users_info(user: duty.user.slack_user_id)
     notification = NotifyOpsgenie.new
     #TODO: sync with DB
-    notification.send(user_info['user']['profile']['email'],data)
+    response = notification.send(user_info['user']['profile']['email'],client)
+    client.say(
+        channel: data.channel,
+        text: I18n.t("reply.opsgenie.text"),
+        thread_ts: data.thread_ts || data.ts
+    )
   end
 
   def self.duty_create(client:,data:,match:)
@@ -235,7 +240,7 @@ class Commands
   def self.unknown(client:, data:)
     client.web_client.chat_postMessage(
         channel: data.channel,
-        text: I18n.t("commands.unknown.text", user:"gopa"),
+        text: I18n.t("commands.unknown.text", name:client.self.name),
         thread_ts: data.thread_ts || data.ts,
         as_user: true
     )

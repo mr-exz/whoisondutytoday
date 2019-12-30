@@ -1,7 +1,7 @@
 en:
   commands:
     unknown:
-      text: "Sorry i don't understand you."
+      text: "Sorry i don't understand you. Use `<@%{name}> help`"
     help:
       text: |
         Version: %{version}
@@ -43,3 +43,5 @@ en:
         text: "You asked at non working hours. Support hours %{fT} - %{tT} UTC. Current time is: %{cT}."
       non-working-day:
         text: "You asked at non working day."
+    opsgenie:
+        text: "Alert opened, soon person on call will contact you."

@@ -213,7 +213,11 @@ class Commands
       end
 
       if duty.user.status == 'lunch'
-        reason = I18n.t("commands.user.status.on.lunch")
+        reason = I18n.t("commands.user.status.enabled.lunch")
+      end
+
+      if duty.user.status == 'holidays'
+        reason = I18n.t("commands.user.status.enabled.holidays")
       end
 
       reply_in_not_working_time(client, reason, duty, time, data) if !reason.nil?
@@ -231,7 +235,11 @@ class Commands
         end
 
         if duty.user.status == 'lunch'
-          reason = I18n.t("commands.user.status.on.lunch")
+          reason = I18n.t("commands.user.status.enabled.lunch")
+        end
+
+        if duty.user.status == 'holidays'
+          reason = I18n.t("commands.user.status.enabled.holidays")
         end
 
         reply_in_not_working_time(client,reason,duty,time,data) if !reason.nil?

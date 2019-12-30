@@ -15,6 +15,10 @@ class Bot < SlackRubyBot::Bot
     Commands.set_user_status(client: client, data: data, status: 'lunch')
   end
 
+  command 'my status holidays' do |client, data|
+    Commands.set_user_status(client: client, data: data, status: 'holidays')
+  end
+
   command 'my status work' do |client, data|
     Commands.set_user_status(client: client, data: data, status: 'work')
   end

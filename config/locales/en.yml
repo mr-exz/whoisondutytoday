@@ -15,14 +15,15 @@ en:
         Commands in private:
         -- `my status lunch` - set status on lunch.
         -- `my status work` - set status on duty.
+        -- `my status holidays` - set status on holidays.
     duty:
       created:
-        text: "Duty from %{fH}:%{fM} to %{tH}:%{tM} created (UTC time), enabled: %{status}"
+        text: "Duty from %{fH}:%{fM} to %{tH}:%{tM} created (UTC time), enabled: %{status}."
       exist:
-        text: "Duty already exist %{fH}:%{fM} to %{tH}:%{tM} (UTC time), enabled: %{status}"
+        text: "Duty already exist %{fH}:%{fM} to %{tH}:%{tM} (UTC time), enabled: %{status}."
         error: "You don't have duty record for this channel"
       updated:
-        text: "Duty hours updated, from %{fH}:%{fM} to %{tH}:%{tM} (UTC time), enabled: %{status}"
+        text: "Duty hours updated, from %{fH}:%{fM} to %{tH}:%{tM} (UTC time), enabled: %{status}."
       deleted:
         text: "Duty deleted for this channel."
       enabled:
@@ -34,6 +35,7 @@ en:
         enabled:
           duty: "%{user} on duty today."
           lunch: "Sorry, duty person on lunch."
+          holidays: "Sorry, duty person on holidays."
   reply:
     non-working-time:
       subject: "Something happened"

@@ -15,9 +15,11 @@ class Commands
     duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
     slack_web_client = Slack::Web::Client.new
     user_info = slack_web_client.users_info(user: duty.user.slack_user_id)
+    client_info = slack_web_client.users_info(user: data.user)
+
     notification = NotifyOpsgenie.new
     #TODO: sync with DB
-    response = notification.send(user_info['user']['profile']['email'],client)
+    response = notification.send(user_info['user']['profile']['email'],client_info)
     client.say(
         channel: data.channel,
         text: I18n.t("reply.opsgenie.text"),

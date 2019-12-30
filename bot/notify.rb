@@ -42,13 +42,13 @@ class NotifyOpsgenie
   def initialize
     @opsgenie_url = "https://api.eu.opsgenie.com"
   end
-  def send(user,client)
+  def send(user,client_info)
     uri = URI.parse("#{@opsgenie_url}/v2/alerts")
     request = Net::HTTP::Post.new(uri)
     request.content_type = "application/json"
     request["Authorization"] = "GenieKey %s" % (ENV['OPSGENIE_API_TOKEN'])
     request.body = JSON.dump({
-                                 "message" => "#{client.name} calls you in slack!",
+                                 "message" => "#{client_info['user']['real_name']} calls you in slack!",
                                  "responders" => [
                                      {
                                          "username" => user,

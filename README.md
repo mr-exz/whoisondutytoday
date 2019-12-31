@@ -36,21 +36,22 @@ Commands in private:
 -- my status holidays - set status on holidays.
 ```
 
-## How to build
+## How to start
 
 ```bash
-docker-compose build
+git clone https://github.com/mr-exz/whoisondutytoday.git
+cd ./whoisondutytoday
+mkdir -p /opt/whoisondutytoday/db/data
 ```
-
-## How to run
 
 Copy file and define valid Slack API API Token. Create bot [here](https://slack.com/intl/en-hr/help/articles/115005265703-create-a-bot-for-your-workspace).
 
-```
+```bash
 cp ./production.env.example ./production.env
 ```
 
 ```bash
+docker-compose build
 docker-compose up
 ```
 

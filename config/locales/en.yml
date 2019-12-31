@@ -47,3 +47,4 @@ en:
         text: "You asked at non working day."
     opsgenie:
         text: "Alert opened, soon person on call will contact you."
+        error: "Failed to call duty person, Opsgenie replied with error: %{message}."

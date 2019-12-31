@@ -15,33 +15,36 @@ hr:
         Naredbe u privatnim porukama:
         -- `my status lunch` - postavite status na večeri.
         -- `my status work` - postaviti status na dužnosti.
-        -- `my status holidays` - set status on holidays.
+        -- `my status holidays` - postaviti status na praznicima.
     duty:
       created:
-        text: "Duty from %{fH}:%{fM} to %{tH}:%{tM} created (UTC time), enabled: %{status}"
+        text: "Obveza od %{fH}:%{fM} do %{tH}:%{tM} stvoreno (UTC vrijeme), omogućeno: %{status}"
       exist:
-        text: "Duty already exist %{fH}:%{fM} to %{tH}:%{tM} (UTC time), enabled: %{status}"
-        error: "You don't have duty record for this channel"
+        text: "Dužnost već postoji %{fH}:%{fM} do %{tH}:%{tM} (UTC vrijeme), omogućeno: %{status}"
+        error: "Nemate službene evidencije za ovaj kanal"
       updated:
-        text: "Duty hours updated, from %{fH}:%{fM} to %{tH}:%{tM} (UTC time), enabled: %{status}"
+        text: "Ažurirano radno vrijeme, od %{fH}:%{fM} do %{tH}:%{tM} (UTC vrijeme), omogućeno: %{status}"
       deleted:
-        text: "Duty deleted for this channel."
+        text: "Obaveza je izbrisana za ovaj kanal."
       enabled:
-        text: "Now you on duty."
+        text: "Sad si na dužnosti."
     user:
       status:
         configured:
-          text: "User status configured `%{status}`"
+          text: "Status korisnika konfiguriran `%{status}`"
         enabled:
-          duty: "%{user} on duty today."
-          lunch: "Sorry, duty person on lunch."
-          holidays: "Sorry, duty person on holidays."
+          duty: "%{user} danas na dužnosti."
+          lunch: "Oprosti, dežurna osoba na ručku."
+          holidays: "Oprosti, dežurna osoba u praznicima."
   reply:
     non-working-time:
-      subject: "Something happened"
-      text: "Should i bother person on call ? Type command: `<@%{name}> call duty person`"
+      subject: "Nešto se dogodilo"
+      text: "Trebam li gnjaviti osobu na poziv? Naredba za tip: `<@%{name}> call duty person`"
     reason:
       non-working-hours:
-        text: "You asked at non working hours. Support hours %{fT} - %{tT} UTC. Current time is: %{cT}."
+        text: "Pitali ste u neradno vrijeme. Sati podrške %{fT} - %{tT} UTC. Trenutno vrijeme je: %{cT}."
       non-working-day:
-        text: "You asked at non working day."
+        text: "Pitali ste neradnim danom."
+    opsgenie:
+      text: "Upozorenje se otvorilo, uskoro će vas osoba na poziv kontaktirati."
+      error: "Nije uspio nazvati dežurnu osobu, opsgenie je odgovorio pogreškom: %{message}."

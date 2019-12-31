@@ -1,4 +1,5 @@
 require_relative 'notify'
+require 'json'
 
 class Commands
 
@@ -20,9 +21,18 @@ class Commands
     notification = NotifyOpsgenie.new
     #TODO: sync with DB
     response = notification.send(user_info['user']['profile']['email'],client_info)
+
+    jsonResponse = JSON.parse(response.body)
+
+    if !jsonResponse["result"].nil?
+      reply = I18n.t("reply.opsgenie.text")
+    elsif !jsonResponse["message"].nil?
+      reply = I18n.t("reply.opsgenie.error",message:jsonResponse["message"])
+    end
+
     client.say(
         channel: data.channel,
-        text: I18n.t("reply.opsgenie.text"),
+        text: reply,
         thread_ts: data.thread_ts || data.ts
     )
   end

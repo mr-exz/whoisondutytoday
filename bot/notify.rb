@@ -40,6 +40,7 @@ end
 
 class NotifyOpsgenie
   def initialize
+    #TODO: move it to database settings
     @opsgenie_url = "https://api.eu.opsgenie.com"
   end
   def send(user,client_info)

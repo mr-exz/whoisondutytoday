@@ -1,6 +1,9 @@
 require 'mail'
 require 'yaml'
 require 'erb'
+require 'net/http'
+require 'uri'
+require 'json'
 
 class Notify
 
@@ -33,4 +36,39 @@ class Notify
     mail.deliver
   end
 
+end
+
+class NotifyOpsgenie
+  def initialize
+    #TODO: move it to database settings
+    @opsgenie_url = "https://api.eu.opsgenie.com"
+  end
+  def send(user,client_info)
+    uri = URI.parse("#{@opsgenie_url}/v2/alerts")
+    request = Net::HTTP::Post.new(uri)
+    request.content_type = "application/json"
+    request["Authorization"] = "GenieKey %s" % (ENV['OPSGENIE_API_TOKEN'])
+    request.body = JSON.dump({
+                                 "message" => "#{client_info['user']['real_name']} calls you in slack!",
+                                 "responders" => [
+                                     {
+                                         "username" => user,
+                                         "type" => "user"
+                                     }
+                                 ],
+                                 "tags" => [
+                                     "slack_bot"
+                                 ],
+                                 "priority" => "P2"
+                             })
+
+    req_options = {
+        use_ssl: uri.scheme == "https",
+    }
+
+    response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+      http.request(request)
+    end
+    return response
+  end
 end

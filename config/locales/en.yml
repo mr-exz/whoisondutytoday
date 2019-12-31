@@ -1,33 +1,50 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  commands:
+    unknown:
+      text: "Sorry i don't understand you. Use `<@%{name}> help`"
+    help:
+      text: |
+        Version: %{version}
+        Commands in channel:
+        -- `call duty person` - will send alert message to duty person.
+        -- `i am on duty` - will set you as duty person in channel.
+        -- `who is on duty?` - will display name of duty persion.
+        -- `duty create` - will create duty, example `duty create from 8:00 to 17:00`.
+        -- `duty update` - will update duty, example `duty update from 8:00 to 17:00`.
+        -- `duty delete` - will delete duty.
+        Commands in private:
+        -- `my status lunch` - set status on lunch.
+        -- `my status work` - set status on duty.
+        -- `my status holidays` - set status on holidays.
+    duty:
+      created:
+        text: "Duty from %{fH}:%{fM} to %{tH}:%{tM} created (UTC time), enabled: %{status}."
+      exist:
+        text: "Duty already exist %{fH}:%{fM} to %{tH}:%{tM} (UTC time), enabled: %{status}."
+        error: "You don't have duty record for this channel"
+      updated:
+        text: "Duty hours updated, from %{fH}:%{fM} to %{tH}:%{tM} (UTC time), enabled: %{status}."
+      deleted:
+        text: "Duty deleted for this channel."
+      enabled:
+        text: "Now you on duty."
+    user:
+      status:
+        configured:
+          text: "User status configured `%{status}`"
+        enabled:
+          duty: "%{user} on duty today."
+          lunch: "Sorry, duty person on lunch."
+          holidays: "Sorry, duty person on holidays."
+  reply:
+    non-working-time:
+      subject: "Something happened"
+      text: "Should i bother person on call ? Type command: `<@%{name}> call duty person`"
+    reason:
+      non-working-hours:
+        text: "You asked at non working hours. Support hours %{fT} - %{tT} UTC. Current time is: %{cT}."
+      non-working-day:
+        text: "You asked at non working day."
+    opsgenie:
+        text: "Alert opened, soon person on call will contact you."
+        error: "Failed to call duty person, Opsgenie replied with error: %{message}."

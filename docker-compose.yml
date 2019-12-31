@@ -1,11 +1,12 @@
 version: '3'
 services:
   whoisondutytoday:
+    image: whoisondutytoday
     restart: always
     container_name: whoisondutytoday
     build: .
     volumes:
-      - /opt/whoisondutytoday/db/development.sqlite3:/myapp/db/development.sqlite3
+      - /opt/whoisondutytoday/db/data/:/myapp/db/data/
     ports:
       - "3000:3000"
     env_file:

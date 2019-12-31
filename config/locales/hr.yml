@@ -1,0 +1,50 @@
+hr:
+  commands:
+    unknown:
+      text: "Oprosti što te ne razumijem."
+    help:
+      text: |
+        Verzija: %{version}
+        Naredbe u kanalu:
+        -- `call duty person` - pozvati dežurnu osobu.
+        -- `i am on duty` - umetnite na dežurstvo.
+        -- `who is on duty?` - uznatʹ ko dežurnyj.
+        -- `duty create` - stvoriti radno vrijeme, primjerice `duty create from 8:00 to 17:00`.
+        -- `duty update` - ažurirajte radne sate, primjerice `duty update from 8:00 to 17:00`.
+        -- `duty delete` - uklonit će dužnost.
+        Naredbe u privatnim porukama:
+        -- `my status lunch` - postavite status na večeri.
+        -- `my status work` - postaviti status na dužnosti.
+        -- `my status holidays` - postaviti status na praznicima.
+    duty:
+      created:
+        text: "Obveza od %{fH}:%{fM} do %{tH}:%{tM} stvoreno (UTC vrijeme), omogućeno: %{status}"
+      exist:
+        text: "Dužnost već postoji %{fH}:%{fM} do %{tH}:%{tM} (UTC vrijeme), omogućeno: %{status}"
+        error: "Nemate službene evidencije za ovaj kanal"
+      updated:
+        text: "Ažurirano radno vrijeme, od %{fH}:%{fM} do %{tH}:%{tM} (UTC vrijeme), omogućeno: %{status}"
+      deleted:
+        text: "Obaveza je izbrisana za ovaj kanal."
+      enabled:
+        text: "Sad si na dužnosti."
+    user:
+      status:
+        configured:
+          text: "Status korisnika konfiguriran `%{status}`"
+        enabled:
+          duty: "%{user} danas na dužnosti."
+          lunch: "Oprosti, dežurna osoba na ručku."
+          holidays: "Oprosti, dežurna osoba u praznicima."
+  reply:
+    non-working-time:
+      subject: "Nešto se dogodilo"
+      text: "Trebam li gnjaviti osobu na poziv? Naredba za tip: `<@%{name}> call duty person`"
+    reason:
+      non-working-hours:
+        text: "Pitali ste u neradno vrijeme. Sati podrške %{fT} - %{tT} UTC. Trenutno vrijeme je: %{cT}."
+      non-working-day:
+        text: "Pitali ste neradnim danom."
+    opsgenie:
+      text: "Upozorenje se otvorilo, uskoro će vas osoba na poziv kontaktirati."
+      error: "Nije uspio nazvati dežurnu osobu, opsgenie je odgovorio pogreškom: %{message}."

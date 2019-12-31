@@ -16,6 +16,7 @@ vagrant/.vagrant
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
+/db/data/*
 !/log/.keep
 !/tmp/.keep
 

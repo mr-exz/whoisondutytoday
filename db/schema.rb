@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 2019_09_02_182330) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "reply_counter"
-    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x0000555cae7831a0>"
+    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x00000000061b7348>"
   end
 
   create_table "teams", force: :cascade do |t|

@@ -1,7 +1,5 @@
 FROM ruby:2.6.3
 
-ENV SLACK_API_TOKEN=REPLACE_ME
-
 RUN apt-get update -qq && apt-get install -y nodejs
 RUN mkdir /myapp
 WORKDIR /myapp
@@ -14,4 +12,4 @@ COPY . /myapp
 
 EXPOSE 3000
 
-CMD ["./bin/rails", "server"]
+CMD ["./bin/start"]

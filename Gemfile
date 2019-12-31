@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.6.3'
 gem 'slack-ruby-bot'
 gem 'faye-websocket'
-gem 'bootstrap', '~> 4.3.1'
+gem 'bootstrap', '~> 4.4.1'
 gem 'font-awesome-rails'
 gem 'jquery-rails'
 gem 'json'

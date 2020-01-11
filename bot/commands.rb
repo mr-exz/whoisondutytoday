@@ -155,6 +155,7 @@ class Commands
   end
 
   def self.set_user_on_duty(data:, client:, user:)
+    puts "TEST",user
     Duty.where(channel_id: data.channel).where(user_id: user.slack_user_id).update_all(enabled: true)
     Duty.where(channel_id: data.channel).where.not(user_id: user.slack_user_id).update_all(enabled: false)
   end
@@ -226,9 +227,10 @@ class Commands
       user = User.where(slack_user_id: data.user).first
       duty = Duty.where(channel_id: data.channel, enabled: true).first
 
-      unless duty.opsgenie_schedule_name.nil?
+      dutys = Duty.where(channel_id: data.channel).first
+      if !dutys.opsgenie_schedule_name.nil?
         notification = NotifyOpsgenie.new
-        json_response = JSON.parse(notification.GetOnCall(schedule_name: duty.opsgenie_schedule_name).body)
+        json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)
         user = User.where(contacts: json_response['data']['onCallRecipients'][0]).first
         set_user_on_duty(data: data, client: client, user: user)
       end

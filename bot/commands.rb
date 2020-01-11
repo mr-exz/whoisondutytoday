@@ -1,5 +1,6 @@
 require_relative 'notify'
 require 'json'
+require_relative 'message_processor'
 
 class Commands
 
@@ -38,6 +39,7 @@ class Commands
   end
 
   def self.duty_create(client:,data:,match:)
+    message_processor = MessageProcessor.new
     slack_web_client = Slack::Web::Client.new
     user_info = slack_web_client.users_info(user: data.user)
     begin
@@ -59,17 +61,7 @@ class Commands
       channel.save
     end
 
-    user = User.where(slack_user_id: data.user).first
-    if user.blank?
-      user = User.new
-      user.slack_user_id = user_info['user']['id']
-      user.name = user_info['user']['name']
-      user.real_name = user_info['user']['real_name']
-      user.tz = user_info['user']['tz']
-      user.tz_offset = user_info['user']['tz_offset']
-      user.contacts = user_info['user']['profile']['email']
-      user.save
-    end
+    message_processor.collectUserInfo(data:data)
 
     duty = Duty.where(user_id: data.user, channel_id: data.channel).first
     if duty.blank?
@@ -209,26 +201,32 @@ class Commands
   end
 
   def self.watch(client:, data:)
+    message_processor = MessageProcessor.new
     time = DateTime.strptime(data.ts, '%s')
 
     if data.thread_ts.nil?
+      message_processor.collectUserInfo(data: data)
+      user = User.where(slack_user_id: data.user).first
       duty = Duty.where(channel_id: data.channel, enabled: true).first
 
       if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
-        reason = I18n.t("reply.reason.non-working-hours.text",fT:duty.duty_from.utc.strftime('%H:%M').to_s,tT:duty.duty_to.utc.strftime('%H:%M').to_s,cT:time.utc.strftime('%H:%M').to_s)
+        from_time = (duty.duty_from.utc + user.tz_offset).strftime('%H:%M').to_s
+        to_time = (duty.duty_to.utc + user.tz_offset).strftime('%H:%M').to_s
+        current_time = (time.utc + user.tz_offset).strftime('%H:%M').to_s
+        reason = I18n.t("reply.reason.non-working-hours.text",fT:from_time,tT:to_time,cT:current_time)
       end
 
-      if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
-        reason = I18n.t("reply.reason.non-working-day.text")
-      end
-
-      if duty.user.status == 'lunch'
-        reason = I18n.t("commands.user.status.enabled.lunch")
-      end
-
-      if duty.user.status == 'holidays'
-        reason = I18n.t("commands.user.status.enabled.holidays")
-      end
+      #if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
+      #  reason = I18n.t("reply.reason.non-working-day.text")
+      #end
+      #
+      #if duty.user.status == 'lunch'
+      #  reason = I18n.t("commands.user.status.enabled.lunch")
+      #end
+      #
+      #if duty.user.status == 'holidays'
+      #  reason = I18n.t("commands.user.status.enabled.holidays")
+      #end
 
       reply_in_not_working_time(client, reason, duty, time, data) if !reason.nil?
     else

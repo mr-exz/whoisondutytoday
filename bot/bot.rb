@@ -43,6 +43,10 @@ class Bot < SlackRubyBot::Bot
     Commands.duty_delete(client: client, data: data, match: match)
   end
 
+  command 'duty sync with opsgenie schedule' do |client, data, match|
+    Commands.duty_sync_with_opsgenie(client: client, data: data, match: match)
+  end
+
   command(/.*/) do |client, data|
     Commands.unknown(client: client, data: data)
   end

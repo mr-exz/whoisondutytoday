@@ -36,6 +36,8 @@ hr:
           duty: "%{user} danas na dužnosti."
           lunch: "Oprosti, dežurna osoba na ručku."
           holidays: "Oprosti, dežurna osoba u praznicima."
+    opsgenie-schedule-name:
+      text: ""
   reply:
     non-working-time:
       subject: "Nešto se dogodilo"

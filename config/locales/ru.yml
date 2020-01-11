@@ -36,6 +36,8 @@ ru:
           duty: "%{user} сегодня дежурный."
           lunch: "Извините, дежурный на обеде."
           holidays: "Извините, дежурный на каникулах."
+    opsgenie-schedule-name:
+      text: ""
   reply:
     non-working-time:
       subject: "Что то  случилось"

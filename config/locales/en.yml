@@ -36,6 +36,8 @@ en:
           duty: "%{user} on duty today."
           lunch: "Sorry, duty person on lunch."
           holidays: "Sorry, duty person on holidays."
+    opsgenie-schedule-name:
+      text: "All duties in this channel synced with Opsgenie."
   reply:
     non-working-time:
       subject: "Something happened"

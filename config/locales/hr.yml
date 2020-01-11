@@ -42,7 +42,7 @@ hr:
       text: "Trebam li gnjaviti osobu na poziv? Naredba za tip: `<@%{name}> call duty person`"
     reason:
       non-working-hours:
-        text: "Pitali ste u neradno vrijeme. Sati podrške %{fT} - %{tT} UTC. Trenutno vrijeme je: %{cT}."
+        text: "Pitali ste u neradno vrijeme. Sati podrške %{fT} - %{tT}. Trenutno vrijeme je: %{cT}."
       non-working-day:
         text: "Pitali ste neradnim danom."
     opsgenie:

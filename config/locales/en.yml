@@ -42,7 +42,7 @@ en:
       text: "Should i bother person on call ? Type command: `<@%{name}> call duty person`"
     reason:
       non-working-hours:
-        text: "You asked at non working hours. Support hours %{fT} - %{tT} UTC. Current time is: %{cT}."
+        text: "You asked at non working hours. Support hours %{fT} - %{tT}. Current time is: %{cT}."
       non-working-day:
         text: "You asked at non working day."
     opsgenie:

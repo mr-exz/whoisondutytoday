@@ -235,7 +235,7 @@ class Commands
         set_user_on_duty(data: data, client: client, user: user)
       end
 
-      return if user.slack_user_id == duty.user.slack_user_id
+      #return if user.slack_user_id == duty.user.slack_user_id
 
       if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
         from_time = (duty.duty_from.utc + user.tz_offset).strftime('%H:%M').to_s

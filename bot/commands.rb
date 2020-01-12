@@ -232,10 +232,10 @@ class Commands
         notification = NotifyOpsgenie.new
         json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)
         users = User.where(contacts: json_response['data']['onCallRecipients'][0]).first
-        set_user_on_duty(data: data, client: client, user: users) if users.slack_user_id != duty.user.slack_user_id
+        set_user_on_duty(data: data, client: client, user: users)
       end
 
-      #return if data.user == duty.user.slack_user_id
+      #return if user.slack_user_id == duty.user.slack_user_id
 
       if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
         from_time = (duty.duty_from.utc + user.tz_offset).strftime('%H:%M').to_s

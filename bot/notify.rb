@@ -52,8 +52,8 @@ class NotifyOpsgenie
                                  "message" => "#{client_info['user']['real_name']} calls you in slack!",
                                  "responders" => [
                                      {
-                                         "username" => user,
-                                         "type" => "user"
+                                         user['field_name'] => user['name'],
+                                         "type" => user['type']
                                      }
                                  ],
                                  "tags" => [
@@ -66,9 +66,22 @@ class NotifyOpsgenie
         use_ssl: uri.scheme == "https",
     }
 
-    response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+    Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
       http.request(request)
     end
-    return response
+  end
+
+  def GetOnCall(schedule_name:)
+    uri = URI.parse("#{@opsgenie_url}/v2/schedules/#{schedule_name}/on-calls?scheduleIdentifierType=name&flat=true")
+    request = Net::HTTP::Get.new(uri)
+    request["Authorization"] = "GenieKey %s" % (ENV['OPSGENIE_API_TOKEN'])
+
+    req_options = {
+        use_ssl: uri.scheme == "https",
+    }
+
+    Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+      http.request(request)
+    end
   end
 end

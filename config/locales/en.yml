@@ -12,6 +12,7 @@ en:
         -- `duty create` - will create duty, example `duty create from 8:00 to 17:00`.
         -- `duty update` - will update duty, example `duty update from 8:00 to 17:00`.
         -- `duty delete` - will delete duty.
+        -- `duty sync with opsgenie schedule` - will configure all duties in channel with schedule name in Opsgenie, example `duty sync with opsgenie schedule My_Team_Schedule`.
         Commands in private:
         -- `my status lunch` - set status on lunch.
         -- `my status work` - set status on duty.
@@ -36,13 +37,15 @@ en:
           duty: "%{user} on duty today."
           lunch: "Sorry, duty person on lunch."
           holidays: "Sorry, duty person on holidays."
+    opsgenie-schedule-name:
+      text: "All duties in this channel synced with Opsgenie."
   reply:
     non-working-time:
       subject: "Something happened"
       text: "Should i bother person on call ? Type command: `<@%{name}> call duty person`"
     reason:
       non-working-hours:
-        text: "You asked at non working hours. Support hours %{fT} - %{tT} UTC. Current time is: %{cT}."
+        text: "You asked at non working hours. Support hours %{fT} - %{tT}. Current time is: %{cT}."
       non-working-day:
         text: "You asked at non working day."
     opsgenie:

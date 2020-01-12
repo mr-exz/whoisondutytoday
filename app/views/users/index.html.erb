@@ -8,6 +8,7 @@
     <th scope="col">TZ</th>
     <th scope="col">TZ Offset</th>
     <th scope="col">Status</th>
+    <th scope="col">Actions</th>
   </tr>
   </thead>
 
@@ -20,6 +21,7 @@
       <td><%= user.tz %></td>
       <td><%= user.tz_offset %></td>
       <td><%= user.status %></td>
+      <td><%= link_to "delete", user_path(user.id), method: :delete, data: { confirm: "You sure?" } %></td>
     </tr>
   <% end %>
 </table>

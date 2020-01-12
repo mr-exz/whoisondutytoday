@@ -12,6 +12,7 @@ ru:
         -- `duty create` - создать рабочее время дежурного, пример `duty create from 8:00 to 17:00`.
         -- `duty update` - обновить рабочее время дежурного, пример `duty update from 8:00 to 17:00`.
         -- `duty delete` - удалить дежурство.
+        -- `duty sync with opsgenie schedule` - настроить все дежурства в канале с дежурством в Opsgenie, пример `duty sync with opsgenie schedule My_Team_Schedule`.
         Команды в личных сообщениях:
         -- `my status lunch` - установить статус на обеде.
         -- `my status work` - установить статус на дежурстве.
@@ -36,13 +37,15 @@ ru:
           duty: "%{user} сегодня дежурный."
           lunch: "Извините, дежурный на обеде."
           holidays: "Извините, дежурный на каникулах."
+    opsgenie-schedule-name:
+      text: ""
   reply:
     non-working-time:
       subject: "Что то  случилось"
       text: "Вызвать дежурного ? Напишите команду: `<@%{name}> call duty person`"
     reason:
       non-working-hours:
-        text: "Вы написали внерабочее время. Время работы дежурного %{fT} - %{tT} UTC. Сейчас: %{cT}."
+        text: "Вы написали внерабочее время. Время работы дежурного %{fT} - %{tT}. Сейчас: %{cT}."
       non-working-day:
         text: "Вы спросили внерабочий день."
     opsgenie:

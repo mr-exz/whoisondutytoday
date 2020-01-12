@@ -7,4 +7,10 @@ class UsersController < ApplicationController
       format.json { render json: @duties }
     end
   end
+
+  def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "Record deleted"
+    redirect_to users_url
+  end
 end

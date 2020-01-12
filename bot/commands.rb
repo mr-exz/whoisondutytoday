@@ -1,12 +1,25 @@
 require_relative 'notify'
 require 'json'
+require_relative 'message_processor'
 
 class Commands
 
   def self.help(client:,data:)
     client.web_client.chat_postMessage(
         channel: data.channel,
-        text: I18n.t("commands.help.text", version:Whoisondutytoday::Application::VERSION),
+        text: I18n.t("commands.help.text", version: Whoisondutytoday::Application::VERSION),
+        thread_ts: data.thread_ts || data.ts,
+        as_user: true
+    )
+  end
+
+  def self.duty_sync_with_opsgenie(client:, data:, match:)
+    opsgenie_schedule_name = match['expression']
+    Duty.where(channel_id: data.channel).update_all(opsgenie_schedule_name: opsgenie_schedule_name)
+
+    client.web_client.chat_postMessage(
+        channel: data.channel,
+        text: I18n.t("commands.opsgenie-schedule-name.text", version: Whoisondutytoday::Application::VERSION),
         thread_ts: data.thread_ts || data.ts,
         as_user: true
     )
@@ -15,19 +28,29 @@ class Commands
   def self.call_of_duty(client:, data:)
     duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
     slack_web_client = Slack::Web::Client.new
-    user_info = slack_web_client.users_info(user: duty.user.slack_user_id)
     client_info = slack_web_client.users_info(user: data.user)
 
     notification = NotifyOpsgenie.new
-    #TODO: sync with DB
-    response = notification.send(user_info['user']['profile']['email'],client_info)
 
-    jsonResponse = JSON.parse(response.body)
+    recipient = {}
+    if !duty.opsgenie_schedule_name.nil?
+      recipient['name'] = duty.opsgenie_schedule_name
+      recipient['type'] = 'schedule'
+      recipient['field_name'] = 'name'
+    else
+      recipient['name'] = duty.user.contacts
+      recipient['type'] = 'user'
+      recipient['field_name'] = 'username'
+    end
 
-    if !jsonResponse["result"].nil?
+    response = notification.send(recipient, client_info)
+
+    json_response = JSON.parse(response.body)
+
+    if !json_response["result"].nil?
       reply = I18n.t("reply.opsgenie.text")
-    elsif !jsonResponse["message"].nil?
-      reply = I18n.t("reply.opsgenie.error",message:jsonResponse["message"])
+    elsif !json_response["message"].nil?
+      reply = I18n.t("reply.opsgenie.error",message: json_response["message"])
     end
 
     client.say(
@@ -38,6 +61,7 @@ class Commands
   end
 
   def self.duty_create(client:,data:,match:)
+    message_processor = MessageProcessor.new
     slack_web_client = Slack::Web::Client.new
     user_info = slack_web_client.users_info(user: data.user)
     begin
@@ -59,17 +83,7 @@ class Commands
       channel.save
     end
 
-    user = User.where(slack_user_id: data.user).first
-    if user.blank?
-      user = User.new
-      user.slack_user_id = user_info['user']['id']
-      user.name = user_info['user']['name']
-      user.real_name = user_info['user']['real_name']
-      user.tz = user_info['user']['tz']
-      user.tz_offset = user_info['user']['tz_offset']
-      user.contacts = user_info['user']['profile']['email']
-      user.save
-    end
+    message_processor.collectUserInfo(data: data)
 
     duty = Duty.where(user_id: data.user, channel_id: data.channel).first
     if duty.blank?
@@ -82,14 +96,14 @@ class Commands
       duty.save
       client.say(
           channel: data.channel,
-          text: I18n.t("commands.duty.created.text", fH:duty.duty_from.hour,fM:duty.duty_from.min,tH:duty.duty_to.hour,tM:duty.duty_to.min,status:duty.enabled),
+          text: I18n.t("commands.duty.created.text", fH: duty.duty_from.hour,fM: duty.duty_from.min,tH: duty.duty_to.hour,tM: duty.duty_to.min,status: duty.enabled),
           thread_ts: data.thread_ts || data.ts
       )
-      i_am_on_duty(data:data,client:client)
+      i_am_on_duty(data: data,client: client)
     else
       client.say(
           channel: data.channel,
-          text: I18n.t("commands.duty.exist.text", fH:duty.duty_from.hour,fM:duty.duty_from.min,tH:duty.duty_to.hour,tM:duty.duty_to.min,status:duty.enabled),
+          text: I18n.t("commands.duty.exist.text", fH: duty.duty_from.hour,fM: duty.duty_from.min,tH: duty.duty_to.hour,tM: duty.duty_to.min,status: duty.enabled),
           thread_ts: data.thread_ts || data.ts
       )
     end
@@ -114,10 +128,10 @@ class Commands
       duty.save
       client.say(
           channel: data.channel,
-          text: I18n.t("commands.duty.exist.error",fH:duty.duty_from.hour,fM:duty.duty_from.min,tH:duty.duty_to.hour,tM:duty.duty_to.min,status:duty.enabled),
+          text: I18n.t("commands.duty.exist.error",fH: duty.duty_from.hour,fM: duty.duty_from.min,tH: duty.duty_to.hour,tM: duty.duty_to.min,status: duty.enabled),
           thread_ts: data.thread_ts || data.ts
       )
-      i_am_on_duty(data:data,client:client)
+      i_am_on_duty(data: data,client: client)
     end
   end
 
@@ -150,11 +164,16 @@ class Commands
     )
   end
 
+  def self.set_user_on_duty(data:, client:, user:)
+    Duty.where(channel_id: data.channel).where(user_id: user.slack_user_id).update_all(enabled: true)
+    Duty.where(channel_id: data.channel).where.not(user_id: user.slack_user_id).update_all(enabled: false)
+  end
+
   def self.set_user_status(data:, client:, status:)
     User.where(slack_user_id: data.user).update_all(status: status)
     client.say(
         channel: data.channel,
-        text:  I18n.t("commands.user.status.configured.text",status:status),
+        text:  I18n.t("commands.user.status.configured.text",status: status),
         thread_ts: data.thread_ts || data.ts
     )
   end
@@ -163,7 +182,7 @@ class Commands
     duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
     client.say(
         channel: data.channel,
-        text: I18n.t("commands.user.status.enabled.duty",user:duty.user.real_name),
+        text: I18n.t("commands.user.status.enabled.duty",user: duty.user.real_name),
         thread_ts: data.thread_ts || data.ts
     )
   end
@@ -176,7 +195,7 @@ class Commands
         attachments: [
             {
                 fallback: I18n.t("reply.non-working-time.subject"),
-                text: I18n.t("reply.non-working-time.text",name:client.self.name),
+                text: I18n.t("reply.non-working-time.text",name: client.self.name),
                 color: '#3AA3E3',
                 attachment_type: 'default'
                 # actions: [
@@ -209,13 +228,29 @@ class Commands
   end
 
   def self.watch(client:, data:)
+    message_processor = MessageProcessor.new
     time = DateTime.strptime(data.ts, '%s')
 
     if data.thread_ts.nil?
+      message_processor.collectUserInfo(data: data)
+      user = User.where(slack_user_id: data.user).first
       duty = Duty.where(channel_id: data.channel, enabled: true).first
 
+      dutys = Duty.where(channel_id: data.channel).first
+      if !dutys.opsgenie_schedule_name.nil?
+        notification = NotifyOpsgenie.new
+        json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)
+        users = User.where(contacts: json_response['data']['onCallRecipients'][0]).first
+        set_user_on_duty(data: data, client: client, user: users) if duty.user.slack_user_id != users.slack_user_id
+      end
+
+      return if data.user == duty.user.slack_user_id
+
       if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
-        reason = I18n.t("reply.reason.non-working-hours.text",fT:duty.duty_from.utc.strftime('%H:%M').to_s,tT:duty.duty_to.utc.strftime('%H:%M').to_s,cT:time.utc.strftime('%H:%M').to_s)
+        from_time = (duty.duty_from.utc + user.tz_offset).strftime('%H:%M').to_s
+        to_time = (duty.duty_to.utc + user.tz_offset).strftime('%H:%M').to_s
+        current_time = (time.utc + user.tz_offset).strftime('%H:%M').to_s
+        reason = I18n.t("reply.reason.non-working-hours.text",fT: from_time,tT: to_time,cT: current_time)
       end
 
       if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
@@ -237,7 +272,7 @@ class Commands
         duty = Duty.where(channel_id: data.channel, enabled: true).first
 
         if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
-          reason = I18n.t("reply.reason.non-working-hours.text",fT:duty.duty_from.utc.strftime('%H:%M').to_s,tT:duty.duty_to.utc.strftime('%H:%M').to_s,cT:time.utc.strftime('%H:%M').to_s)
+          reason = I18n.t("reply.reason.non-working-hours.text",fT: duty.duty_from.utc.strftime('%H:%M').to_s,tT: duty.duty_to.utc.strftime('%H:%M').to_s,cT: time.utc.strftime('%H:%M').to_s)
         end
 
         if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
@@ -260,7 +295,7 @@ class Commands
   def self.unknown(client:, data:)
     client.web_client.chat_postMessage(
         channel: data.channel,
-        text: I18n.t("commands.unknown.text", name:client.self.name),
+        text: I18n.t("commands.unknown.text", name: client.self.name),
         thread_ts: data.thread_ts || data.ts,
         as_user: true
     )

@@ -12,6 +12,7 @@ hr:
         -- `duty create` - stvoriti radno vrijeme, primjerice `duty create from 8:00 to 17:00`.
         -- `duty update` - ažurirajte radne sate, primjerice `duty update from 8:00 to 17:00`.
         -- `duty delete` - uklonit će dužnost.
+        -- `duty sync with opsgenie schedule` - konfigurirat će sve dužnosti u kanalu s nazivom rasporeda u Opsgenie, primjerice `duty sync with opsgenie schedule My_Team_Schedule`.
         Naredbe u privatnim porukama:
         -- `my status lunch` - postavite status na večeri.
         -- `my status work` - postaviti status na dužnosti.
@@ -36,13 +37,15 @@ hr:
           duty: "%{user} danas na dužnosti."
           lunch: "Oprosti, dežurna osoba na ručku."
           holidays: "Oprosti, dežurna osoba u praznicima."
+    opsgenie-schedule-name:
+      text: ""
   reply:
     non-working-time:
       subject: "Nešto se dogodilo"
       text: "Trebam li gnjaviti osobu na poziv? Naredba za tip: `<@%{name}> call duty person`"
     reason:
       non-working-hours:
-        text: "Pitali ste u neradno vrijeme. Sati podrške %{fT} - %{tT} UTC. Trenutno vrijeme je: %{cT}."
+        text: "Pitali ste u neradno vrijeme. Sati podrške %{fT} - %{tT}. Trenutno vrijeme je: %{cT}."
       non-working-day:
         text: "Pitali ste neradnim danom."
     opsgenie:

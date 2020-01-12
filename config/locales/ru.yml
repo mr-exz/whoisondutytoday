@@ -12,6 +12,7 @@ ru:
         -- `duty create` - создать рабочее время дежурного, пример `duty create from 8:00 to 17:00`.
         -- `duty update` - обновить рабочее время дежурного, пример `duty update from 8:00 to 17:00`.
         -- `duty delete` - удалить дежурство.
+        -- `duty sync with opsgenie schedule` - настроить все дежурства в канале с дежурством в Opsgenie, пример `duty sync with opsgenie schedule My_Team_Schedule`.
         Команды в личных сообщениях:
         -- `my status lunch` - установить статус на обеде.
         -- `my status work` - установить статус на дежурстве.

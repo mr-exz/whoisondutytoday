@@ -61,7 +61,7 @@ class NotifyOpsgenie
                                  ],
                                  "priority" => "P2"
                              })
-    
+
     req_options = {
         use_ssl: uri.scheme == "https",
     }

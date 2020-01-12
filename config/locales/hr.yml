@@ -12,6 +12,7 @@ hr:
         -- `duty create` - stvoriti radno vrijeme, primjerice `duty create from 8:00 to 17:00`.
         -- `duty update` - ažurirajte radne sate, primjerice `duty update from 8:00 to 17:00`.
         -- `duty delete` - uklonit će dužnost.
+        -- `duty sync with opsgenie schedule` - konfigurirat će sve dužnosti u kanalu s nazivom rasporeda u Opsgenie, primjerice `duty sync with opsgenie schedule My_Team_Schedule`.
         Naredbe u privatnim porukama:
         -- `my status lunch` - postavite status na večeri.
         -- `my status work` - postaviti status na dužnosti.

@@ -1,4 +1,10 @@
 # Changelog
+## 0.2.0
+### Features
+- Syncing duty schedule from Opsgenie #25
+### Fixes
+- Display working hours in local time of requester #8 
+- Stop replying on messages in channel from duty person #26
 
 ## 0.1.0
 ### Features

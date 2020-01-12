@@ -235,7 +235,7 @@ class Commands
         set_user_on_duty(data: data, client: client, user: users)
       end
 
-      #return if user.slack_user_id == duty.user.slack_user_id
+      return if data.user == duty.user.slack_user_id
 
       if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
         from_time = (duty.duty_from.utc + user.tz_offset).strftime('%H:%M').to_s
@@ -244,17 +244,17 @@ class Commands
         reason = I18n.t("reply.reason.non-working-hours.text",fT: from_time,tT: to_time,cT: current_time)
       end
 
-      #if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
-      #  reason = I18n.t("reply.reason.non-working-day.text")
-      #end
-      #
-      #if duty.user.status == 'lunch'
-      #  reason = I18n.t("commands.user.status.enabled.lunch")
-      #end
-      #
-      #if duty.user.status == 'holidays'
-      #  reason = I18n.t("commands.user.status.enabled.holidays")
-      #end
+      if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
+        reason = I18n.t("reply.reason.non-working-day.text")
+      end
+
+      if duty.user.status == 'lunch'
+        reason = I18n.t("commands.user.status.enabled.lunch")
+      end
+
+      if duty.user.status == 'holidays'
+        reason = I18n.t("commands.user.status.enabled.holidays")
+      end
 
       reply_in_not_working_time(client, reason, duty, time, data) if !reason.nil?
     else

@@ -28,19 +28,22 @@ class Commands
   def self.call_of_duty(client:, data:)
     duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
     slack_web_client = Slack::Web::Client.new
-    user_info = slack_web_client.users_info(user: duty.user.slack_user_id)
     client_info = slack_web_client.users_info(user: data.user)
 
     notification = NotifyOpsgenie.new
-    #TODO: sync with DB
-    response = notification.send(user_info['user']['profile']['email'],client_info)
+    recipient = if !duty.opsgenie_schedule_name.nil?
+      duty.opsgenie_schedule_name
+    else
+      duty.user.contacts
+    end
+    response = notification.send(recipient,client_info)
 
-    jsonResponse = JSON.parse(response.body)
+    json_response = JSON.parse(response.body)
 
-    if !jsonResponse["result"].nil?
+    if !json_response["result"].nil?
       reply = I18n.t("reply.opsgenie.text")
-    elsif !jsonResponse["message"].nil?
-      reply = I18n.t("reply.opsgenie.error",message: jsonResponse["message"])
+    elsif !json_response["message"].nil?
+      reply = I18n.t("reply.opsgenie.error",message: json_response["message"])
     end
 
     client.say(

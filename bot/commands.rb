@@ -31,12 +31,17 @@ class Commands
     client_info = slack_web_client.users_info(user: data.user)
 
     notification = NotifyOpsgenie.new
-    recipient = if !duty.opsgenie_schedule_name.nil?
-      duty.opsgenie_schedule_name
+
+    recipient = {}
+    if !duty.opsgenie_schedule_name.nil?
+      recipient['name'] = duty.opsgenie_schedule_name
+      recipient['type'] = 'schedule'
     else
-      duty.user.contacts
+      recipient['name'] = duty.user.contacts
+      recipient['type'] = 'user'
     end
-    response = notification.send(recipient,client_info)
+
+    response = notification.send(recipient, client_info)
 
     json_response = JSON.parse(response.body)
 
@@ -158,7 +163,6 @@ class Commands
   end
 
   def self.set_user_on_duty(data:, client:, user:)
-    puts "TEST",user
     Duty.where(channel_id: data.channel).where(user_id: user.slack_user_id).update_all(enabled: true)
     Duty.where(channel_id: data.channel).where.not(user_id: user.slack_user_id).update_all(enabled: false)
   end

@@ -36,9 +36,11 @@ class Commands
     if !duty.opsgenie_schedule_name.nil?
       recipient['name'] = duty.opsgenie_schedule_name
       recipient['type'] = 'schedule'
+      recipient['field_name'] = 'name'
     else
       recipient['name'] = duty.user.contacts
       recipient['type'] = 'user'
+      recipient['field_name'] = 'username'
     end
 
     response = notification.send(recipient, client_info)

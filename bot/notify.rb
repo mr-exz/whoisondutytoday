@@ -52,7 +52,7 @@ class NotifyOpsgenie
                                  "message" => "#{client_info['user']['real_name']} calls you in slack!",
                                  "responders" => [
                                      {
-                                         "username" => user['name'],
+                                         user['field_name'] => user['name'],
                                          "type" => user['type']
                                      }
                                  ],
@@ -61,7 +61,7 @@ class NotifyOpsgenie
                                  ],
                                  "priority" => "P2"
                              })
-
+    
     req_options = {
         use_ssl: uri.scheme == "https",
     }

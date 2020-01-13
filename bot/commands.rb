@@ -84,6 +84,7 @@ class Commands
     end
 
     message_processor.collectUserInfo(data: data)
+    user = User.where(slack_user_id: data.user).first
 
     duty = Duty.where(user_id: data.user, channel_id: data.channel).first
     if duty.blank?

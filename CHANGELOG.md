@@ -1,4 +1,8 @@
 # Changelog
+## 0.2.1
+### Fixes
+- Fixed missed variables and translation.
+
 ## 0.2.0
 ### Features
 - Syncing duty schedule from Opsgenie [25](https://github.com/mr-exz/whoisondutytoday/issues/25).

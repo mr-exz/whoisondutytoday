@@ -29,7 +29,10 @@ class Commands
     duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
     slack_web_client = Slack::Web::Client.new
     client_info = slack_web_client.users_info(user: data.user)
-
+    options = {}
+    options[:message_ts] = data.thread_ts || data.ts
+    options[:channel] = data.channel
+    message_info = slack_web_client.chat_getPermalink(options)
     notification = NotifyOpsgenie.new
 
     recipient = {}
@@ -43,7 +46,7 @@ class Commands
       recipient['field_name'] = 'username'
     end
 
-    response = notification.send(recipient, client_info)
+    response = notification.send(recipient, client_info, message_info)
 
     json_response = JSON.parse(response.body)
 

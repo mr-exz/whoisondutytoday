@@ -1,4 +1,9 @@
 # Changelog
+## 0.3.0
+### Improvements 
+- Logging switched to info mode.
+- Added link on slack message in alert.
+
 ## 0.2.1
 ### Fixes
 - Fixed missed variables and translation.

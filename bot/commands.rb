@@ -228,6 +228,14 @@ class Commands
     message.save
   end
 
+  def rotate_schedule(dutys,data,client,duty)
+    #TODO: duty.user can be empty handle this
+    notification = NotifyOpsgenie.new
+    json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)
+    users = User.where(contacts: json_response['data']['onCallRecipients'][0]).first
+    set_user_on_duty(data: data, client: client, user: users) if duty.user.slack_user_id != users.slack_user_id
+  end
+
   def self.watch(client:, data:)
     message_processor = MessageProcessor.new
     time = DateTime.strptime(data.ts, '%s')
@@ -239,10 +247,7 @@ class Commands
 
       dutys = Duty.where(channel_id: data.channel).first
       if !dutys.opsgenie_schedule_name.nil?
-        notification = NotifyOpsgenie.new
-        json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)
-        users = User.where(contacts: json_response['data']['onCallRecipients'][0]).first
-        set_user_on_duty(data: data, client: client, user: users) if duty.user.slack_user_id != users.slack_user_id
+        rotate_schedule(dutys,data,client,duty)
       end
 
       return if data.user == duty.user.slack_user_id

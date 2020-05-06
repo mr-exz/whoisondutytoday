@@ -1,4 +1,9 @@
 # Changelog
+## 0.3.1
+### Fixes
+- Fixed rotation function.
+
+# Changelog
 ## 0.3.0
 ### Improvements 
 - Logging switched to info mode.

@@ -231,7 +231,7 @@ class Commands
     message.save
   end
 
-  def rotate_schedule(dutys,data,client,duty)
+  def self.rotate_schedule(dutys,data,client,duty)
     #TODO: duty.user can be empty handle this
     notification = NotifyOpsgenie.new
     json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)

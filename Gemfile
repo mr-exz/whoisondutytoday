@@ -9,6 +9,10 @@ gem 'font-awesome-rails'
 gem 'jquery-rails'
 gem 'json'
 gem 'mail'
+gem "actionview", ">= 5.2.4.3"
+gem "activesupport", ">= 5.2.4.3"
+gem "actionpack", ">= 5.2.4.3"
+gem "activestorage", ">= 5.2.4.3"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.3'
 # Use sqlite3 as the database for Active Record

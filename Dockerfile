@@ -9,7 +9,6 @@ COPY Gemfile.lock /myapp/Gemfile.lock
 RUN bundle install
 
 COPY . /myapp
-RUN yarn install --check-files
 
 EXPOSE 3000
 

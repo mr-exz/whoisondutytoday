@@ -1,11 +1,11 @@
-FROM ruby:2.6.3-alpine3.10
-HEALTHCHECK NONE
+FROM ruby:2.6.3
 
-RUN apk add --no-cache build-base yarn nodejs vim imagemagick sqlite sqlite-dev tzdata curl
-RUN gem install bundler
-
+RUN apt-get update -qq && apt-get install -y nodejs
+RUN mkdir /myapp
 WORKDIR /myapp
-COPY Gemfile* /myapp/
+
+COPY Gemfile /myapp/Gemfile
+COPY Gemfile.lock /myapp/Gemfile.lock
 RUN bundle install
 
 COPY . /myapp

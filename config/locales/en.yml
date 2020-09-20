@@ -42,7 +42,7 @@ en:
   reply:
     non-working-time:
       subject: "Something happened"
-      text: "Should i bother person on call ? Type command: `<@%{name}> call duty person`"
+      text: "For urgent case type command: `<@%{name}> call duty person` or wait his working hours."
     reason:
       non-working-hours:
         text: "You asked at non working hours. Support hours %{fT} - %{tT}. Current time is: %{cT}."

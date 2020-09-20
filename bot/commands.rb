@@ -195,7 +195,6 @@ class Commands
     client.web_client.chat_postMessage(
         text: '%s' % reason,
         channel: data.channel,
-        as_user: true,
         attachments: [
             {
                 fallback: I18n.t('reply.non-working-time.subject'),

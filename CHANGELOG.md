@@ -1,4 +1,9 @@
 # Changelog
+## 0.3.2
+### Improvements 
+- Docker build optimisation.
+- Update translatio.
+
 ## 0.3.1
 ### Fixes
 - Fixed rotation function.

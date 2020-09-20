@@ -195,6 +195,7 @@ class Commands
     client.web_client.chat_postMessage(
         text: '%s' % reason,
         channel: data.channel,
+        as_user: true,
         attachments: [
             {
                 fallback: I18n.t('reply.non-working-time.subject'),
@@ -235,7 +236,11 @@ class Commands
     notification = NotifyOpsgenie.new
     json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)
     users = User.where(contacts: json_response['data']['onCallRecipients'][0]).first
-    set_user_on_duty(data: data, client: client, user: users) if duty.user.slack_user_id != users.slack_user_id
+    begin
+      set_user_on_duty(data: data, client: client, user: users) if duty.user.slack_user_id != users.slack_user_id
+    rescue StandardError => e
+      set_user_on_duty(data: data, client: client, user: users)
+    end
   end
 
   def self.watch(client:, data:)
@@ -249,7 +254,11 @@ class Commands
 
       dutys = Duty.where(channel_id: data.channel).first
       if !dutys.opsgenie_schedule_name.nil?
-        rotate_schedule(dutys,data,client,duty)
+        begin
+          rotate_schedule(dutys,data,client,duty)
+        rescue StandardError => e
+          print e
+        end
       end
 
       return if data.user == duty.user.slack_user_id

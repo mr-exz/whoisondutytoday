@@ -25,6 +25,18 @@ class Commands
     )
   end
 
+  def self.duty_set_opsgenie_escalation(client:, data:, match:)
+    opsgenie_escalation_name = match['expression']
+    Duty.where(channel_id: data.channel).update_all(opsgenie_escalation_name: opsgenie_escalation_name)
+
+    client.web_client.chat_postMessage(
+        channel: data.channel,
+        text: I18n.t('commands.opsgenie-escalation-name.text', version: Whoisondutytoday::Application::VERSION),
+        thread_ts: data.thread_ts || data.ts,
+        as_user: true
+    )
+  end
+
   def self.call_of_duty(client:, data:)
     duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
     slack_web_client = Slack::Web::Client.new
@@ -36,7 +48,11 @@ class Commands
     notification = NotifyOpsgenie.new
 
     recipient = {}
-    if !duty.opsgenie_schedule_name.nil?
+    if !duty.opsgenie_escalation_name.nil?
+      recipient['name'] = duty.opsgenie_escalation_name
+      recipient['type'] = 'escalation'
+      recipient['field_name'] = 'name'
+    elsif !duty.opsgenie_schedule_name.nil?
       recipient['name'] = duty.opsgenie_schedule_name
       recipient['type'] = 'schedule'
       recipient['field_name'] = 'name'
@@ -246,19 +262,15 @@ class Commands
   def self.watch(client:, data:)
     message_processor = MessageProcessor.new
     time = DateTime.strptime(data.ts, '%s')
-
-    if data.thread_ts.nil?
+    begin
+      if data.thread_ts.nil?
       message_processor.collectUserInfo(data: data)
       user = User.where(slack_user_id: data.user).first
       duty = Duty.where(channel_id: data.channel, enabled: true).first
 
       dutys = Duty.where(channel_id: data.channel).first
       if !dutys.opsgenie_schedule_name.nil?
-        begin
           rotate_schedule(dutys,data,client,duty)
-        rescue StandardError => e
-          print e
-        end
       end
 
       return if data.user == duty.user.slack_user_id
@@ -306,6 +318,9 @@ class Commands
 
         reply_in_not_working_time(client,reason,duty,time,data) if !reason.nil?
       end
+    end
+    rescue StandardError => e
+      print e
     end
   end
 

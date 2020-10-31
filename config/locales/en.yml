@@ -39,6 +39,8 @@ en:
           holidays: "Sorry, duty person on holidays."
     opsgenie-schedule-name:
       text: "All duties in this channel synced with Opsgenie."
+    opsgenie-escalation-name:
+      text: "All duties in this channel now have escalation."
   reply:
     non-working-time:
       subject: "Something happened"

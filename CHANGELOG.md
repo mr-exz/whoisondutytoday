@@ -1,4 +1,8 @@
 # Changelog
+## 0.3.3
+### Improvements 
+- Added Opsgenie escalation.
+
 ## 0.3.2
 ### Improvements 
 - Docker build optimisation.

@@ -48,6 +48,10 @@ class Bot < SlackRubyBot::Bot
     Commands.duty_sync_with_opsgenie(client: client, data: data, match: match)
   end
 
+  command 'duty set opsgenie escalation' do |client, data, match|
+    Commands.duty_sync_with_opsgenie(client: client, data: data, match: match)
+  end
+
   command(/.*/) do |client, data|
     Commands.unknown(client: client, data: data)
   end

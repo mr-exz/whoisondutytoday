@@ -8,6 +8,7 @@
       <th scope="col">Working time (UTC)</th>
       <th scope="col">Status</th>
       <th scope="col">Opsgenie schedule name</th>
+      <th scope="col">Opsgenie escalation name</th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
@@ -20,6 +21,7 @@
       <td><%= duty.duty_from.strftime( "%H:%M" ) %> - <%= duty.duty_to.strftime( "%H:%M" ) %></td>
       <td><%= duty.enabled %></td>
       <td><%= duty.opsgenie_schedule_name %></td>
+      <td><%= duty.opsgenie_escalation_name %></td>
       <td><%= link_to "delete", duty_path(duty.id), method: :delete, data: { confirm: "You sure?" } %></td>
     </tr>
   <% end %>

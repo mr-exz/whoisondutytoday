@@ -1,0 +1,10 @@
+
+<%= form_for @duty do |f| %>
+  <%= f.label 'Opsgenie escalation name' %><br>
+  <%= f.text_field :opsgenie_escalation_name %><br>
+
+  <%= f.label 'Opsgenie schedule name' %><br>
+  <%= f.text_field :opsgenie_schedule_name %><br>
+
+  <%= f.submit "Submit" %>
+<% end %>

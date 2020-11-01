@@ -185,6 +185,7 @@ class Commands
   end
 
   def self.set_user_on_duty(data:, user:)
+    p user
     Duty.where(channel_id: data.channel).where(user_id: user.slack_user_id).update_all(enabled: true)
     Duty.where(channel_id: data.channel).where.not(user_id: user.slack_user_id).update_all(enabled: false)
   end

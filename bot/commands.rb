@@ -252,11 +252,12 @@ class Commands
     #TODO: duty.user can be empty handle this
     notification = NotifyOpsgenie.new
     json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)
-    users = User.where(contacts: json_response['data']['onCallRecipients'][0]).first
+    user = User.where(contacts: json_response['data']['onCallRecipients'][0]).first
+    p user
     begin
-      set_user_on_duty(data: data, user: users)
+      set_user_on_duty(data: data, user: user)
     rescue StandardError => e
-      set_user_on_duty(data: data, user: users)
+      set_user_on_duty(data: data, user: user)
     end
   end
 

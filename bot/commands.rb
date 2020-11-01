@@ -253,7 +253,11 @@ class Commands
     json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)
     user = User.where('lower(contacts) = ?', json_response['data']['onCallRecipients'][0].downcase).first
     begin
-      set_user_on_duty(data: data, user: user)
+      if duty.user_id == user.slack_user_id
+        Rails.logger.info("User already active:"+duty.user.name)
+      else
+        set_user_on_duty(data: data, user: user)
+      end
     rescue StandardError => e
       set_user_on_duty(data: data, user: user)
     end

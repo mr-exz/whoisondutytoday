@@ -263,45 +263,24 @@ class Commands
     message_processor = MessageProcessor.new
     time = DateTime.strptime(data.ts, '%s')
     begin
+      duties = Duty.where(channel_id: data.channel).first
+
+      if !duties.opsgenie_schedule_name.nil?
+        rotate_schedule(duties,data,client,duty)
+      end
+      
       if data.thread_ts.nil?
-      message_processor.collectUserInfo(data: data)
-      user = User.where(slack_user_id: data.user).first
-      duty = Duty.where(channel_id: data.channel, enabled: true).first
-
-      dutys = Duty.where(channel_id: data.channel).first
-      if !dutys.opsgenie_schedule_name.nil?
-          rotate_schedule(dutys,data,client,duty)
-      end
-
-      return if data.user == duty.user.slack_user_id
-
-      if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
-        from_time = (duty.duty_from.utc + user.tz_offset).strftime('%H:%M').to_s
-        to_time = (duty.duty_to.utc + user.tz_offset).strftime('%H:%M').to_s
-        current_time = (time.utc + user.tz_offset).strftime('%H:%M').to_s
-        reason = I18n.t('reply.reason.non-working-hours.text',fT: from_time,tT: to_time,cT: current_time)
-      end
-
-      if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
-        reason = I18n.t('reply.reason.non-working-day.text')
-      end
-
-      if duty.user.status == 'lunch'
-        reason = I18n.t('commands.user.status.enabled.lunch')
-      end
-
-      if duty.user.status == 'holidays'
-        reason = I18n.t('commands.user.status.enabled.holidays')
-      end
-
-      reply_in_not_working_time(client, reason, duty, time, data) if !reason.nil?
-    else
-      message = Message.find_by(ts: data.thread_ts)
-      if data.thread_ts != message.ts
+        message_processor.collectUserInfo(data: data)
+        user = User.where(slack_user_id: data.user).first
         duty = Duty.where(channel_id: data.channel, enabled: true).first
 
+        return if data.user == duty.user.slack_user_id
+
         if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
-          reason = I18n.t('reply.reason.non-working-hours.text',fT: duty.duty_from.utc.strftime('%H:%M').to_s,tT: duty.duty_to.utc.strftime('%H:%M').to_s,cT: time.utc.strftime('%H:%M').to_s)
+          from_time = (duty.duty_from.utc + user.tz_offset).strftime('%H:%M').to_s
+          to_time = (duty.duty_to.utc + user.tz_offset).strftime('%H:%M').to_s
+          current_time = (time.utc + user.tz_offset).strftime('%H:%M').to_s
+          reason = I18n.t('reply.reason.non-working-hours.text',fT: from_time,tT: to_time,cT: current_time)
         end
 
         if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
@@ -316,9 +295,31 @@ class Commands
           reason = I18n.t('commands.user.status.enabled.holidays')
         end
 
-        reply_in_not_working_time(client,reason,duty,time,data) if !reason.nil?
+        reply_in_not_working_time(client, reason, duty, time, data) if !reason.nil?
+      else
+        message = Message.find_by(ts: data.thread_ts)
+        if data.thread_ts != message.ts
+          duty = Duty.where(channel_id: data.channel, enabled: true).first
+
+          if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
+            reason = I18n.t('reply.reason.non-working-hours.text',fT: duty.duty_from.utc.strftime('%H:%M').to_s,tT: duty.duty_to.utc.strftime('%H:%M').to_s,cT: time.utc.strftime('%H:%M').to_s)
+          end
+
+          if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
+            reason = I18n.t('reply.reason.non-working-day.text')
+          end
+
+          if duty.user.status == 'lunch'
+            reason = I18n.t('commands.user.status.enabled.lunch')
+          end
+
+          if duty.user.status == 'holidays'
+            reason = I18n.t('commands.user.status.enabled.holidays')
+          end
+
+          reply_in_not_working_time(client,reason,duty,time,data) if !reason.nil?
+        end
       end
-    end
     rescue StandardError => e
       print e
     end

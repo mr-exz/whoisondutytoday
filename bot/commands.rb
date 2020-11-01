@@ -184,7 +184,7 @@ class Commands
     )
   end
 
-  def self.set_user_on_duty(data:, client:, user:)
+  def self.set_user_on_duty(data:, user:)
     Duty.where(channel_id: data.channel).where(user_id: user.slack_user_id).update_all(enabled: true)
     Duty.where(channel_id: data.channel).where.not(user_id: user.slack_user_id).update_all(enabled: false)
   end
@@ -253,9 +253,9 @@ class Commands
     json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)
     users = User.where(contacts: json_response['data']['onCallRecipients'][0]).first
     begin
-      set_user_on_duty(data: data, client: client, user: users) if duty.user.slack_user_id != users.slack_user_id
+      set_user_on_duty(data: data, user: users)
     rescue StandardError => e
-      set_user_on_duty(data: data, client: client, user: users)
+      set_user_on_duty(data: data, user: users)
     end
   end
 
@@ -263,6 +263,7 @@ class Commands
     message_processor = MessageProcessor.new
     time = DateTime.strptime(data.ts, '%s')
     begin
+      duty = Duty.where(channel_id: data.channel, enabled: true).first
       duties = Duty.where(channel_id: data.channel).first
 
       if !duties.opsgenie_schedule_name.nil?
@@ -272,8 +273,6 @@ class Commands
       if data.thread_ts.nil?
         message_processor.collectUserInfo(data: data)
         user = User.where(slack_user_id: data.user).first
-        duty = Duty.where(channel_id: data.channel, enabled: true).first
-
         return if data.user == duty.user.slack_user_id
 
         if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')

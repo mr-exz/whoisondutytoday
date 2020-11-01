@@ -185,7 +185,6 @@ class Commands
   end
 
   def self.set_user_on_duty(data:, user:)
-    p user
     Duty.where(channel_id: data.channel).where(user_id: user.slack_user_id).update_all(enabled: true)
     Duty.where(channel_id: data.channel).where.not(user_id: user.slack_user_id).update_all(enabled: false)
   end
@@ -253,7 +252,6 @@ class Commands
     notification = NotifyOpsgenie.new
     json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)
     user = User.where('lower(contacts) = ?', json_response['data']['onCallRecipients'][0].downcase).first
-    p user
     begin
       set_user_on_duty(data: data, user: user)
     rescue StandardError => e

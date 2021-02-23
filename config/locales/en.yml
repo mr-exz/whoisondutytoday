@@ -47,7 +47,7 @@ en:
       text: "For urgent case type command: `<@%{name}> call duty person` or wait his working hours."
     reason:
       non-working-hours:
-        text: "You asked at non working hours. Support hours %{fT} - %{tT}. Current time is: %{cT}."
+        text: "You asked at non working hours. Support hours %{fT} - %{tT}. Current time is: %{cT} (UTC time)."
       non-working-day:
         text: "You asked at non working day."
     opsgenie:

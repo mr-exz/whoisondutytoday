@@ -322,9 +322,9 @@ class Commands
         return
       end
 
-      message = Message.find_by(ts: data.thread_ts)
+      message = Message.find_by(thread_ts: data.thread_ts)
       # check if message written in thread without answer from bot
-      if data.thread_ts != message.ts
+      if message.blank?
         reason = self.answer(time,duty)
         reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
       end

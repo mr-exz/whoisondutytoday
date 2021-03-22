@@ -21,8 +21,6 @@ with escalation option.
 
 ## Bot commands
 ```
-@whoisondutytoday help
-Version: 0.2.0
 Commands in channel:
 -- call duty person - will send alert message to duty person.
 -- i am on duty - will set you as duty person in channel.
@@ -30,8 +28,11 @@ Commands in channel:
 -- duty create - will create duty, example duty create from 8:00 to 17:00.
 -- duty update - will update duty, example duty update from 8:00 to 17:00.
 -- duty delete - will delete duty.
--- duty sync with opsgenie schedule - will configure all duties in channel with schedule name in Opsgenie, example duty sync with opsgenie schedule My_Team_Schedule
-Commands in private:
+-- duty sync with opsgenie schedule - will configure all duties in channel with schedule name from Opsgenie, example duty sync with opsgenie schedule My_Team_Schedule.
+-- duty set opsgenie escalation - will configure all duties in channel with escalation name from Opsgenie, example duty set opsgenie escalation My_Team_Escalation.
+-- answer set custom text - configure custom text in answers from bot, example answer set custom text nobody will help you, wait for next day.
+-- answer delete custom text - delete custom text answer, use default.
+Commands in dirrect messages:
 -- my status lunch - set status on lunch.
 -- my status work - set status on duty.
 -- my status holidays - set status on holidays.

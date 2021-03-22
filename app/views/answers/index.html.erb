@@ -1,0 +1,17 @@
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Body</th>
+      <th scope="col">Channel</th>
+    </tr>
+  </thead>
+
+  <% @answers.each do |answer| %>
+    <tr>
+      <td><%= answer.body %></td>
+      <td><%= answer.channel_id %></td>
+    </tr>
+  <% end %>
+</table>
+

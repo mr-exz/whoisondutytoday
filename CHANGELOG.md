@@ -1,4 +1,12 @@
 # Changelog
+
+## 0.4.0
+### Improvements
+- Working hours now in UTC time in messages, to avoid confusing people.
+- Some old code refactored.
+### Features
+- Added option to set custom text in bot answers.
+
 ## 0.3.3
 ### Improvements 
 - Added Opsgenie escalation.

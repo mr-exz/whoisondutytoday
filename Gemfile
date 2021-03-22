@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.3'
 gem 'slack-ruby-bot'
-gem 'faye-websocket'
+gem 'async-websocket', '~> 0.8.0'
 gem 'bootstrap', '~> 4.4.1'
 gem 'font-awesome-rails'
 gem 'jquery-rails'
@@ -13,6 +13,8 @@ gem "actionview", ">= 5.2.4.3"
 gem "activesupport", ">= 5.2.4.3"
 gem "actionpack", ">= 5.2.4.3"
 gem "activestorage", ">= 5.2.4.3"
+gem "nokogiri", ">= 1.11.0"
+gem "activerecord", ">= 5.2.4.5"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.3'
 # Use sqlite3 as the database for Active Record

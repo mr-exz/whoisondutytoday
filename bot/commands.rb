@@ -19,7 +19,7 @@ class Commands
 
     client.web_client.chat_postMessage(
         channel: data.channel,
-        text: I18n.t('commands.opsgenie-schedule-name.text', version: Whoisondutytoday::Application::VERSION),
+        text: I18n.t('commands.opsgenie-schedule-name.text'),
         thread_ts: data.thread_ts || data.ts,
         as_user: true
     )
@@ -31,9 +31,37 @@ class Commands
 
     client.web_client.chat_postMessage(
         channel: data.channel,
-        text: I18n.t('commands.opsgenie-escalation-name.text', version: Whoisondutytoday::Application::VERSION),
+        text: I18n.t('commands.opsgenie-escalation-name.text'),
         thread_ts: data.thread_ts || data.ts,
         as_user: true
+    )
+  end
+
+  def self.answer_set_custom_text(client:, data:, match:)
+    custom_text = match['expression']
+    Answer.where(channel_id: data.channel).delete_all
+    answer = Answer.new
+    answer.body = custom_text
+    answer.channel_id = data.channel
+    answer.save
+
+    client.web_client.chat_postMessage(
+      channel: data.channel,
+      text: I18n.t('commands.answer.created.text'),
+      thread_ts: data.thread_ts || data.ts,
+      as_user: true
+    )
+  end
+
+  def self.answer_delete_custom_text(client:, data:, match:)
+    custom_text = match['expression']
+    Answer.where(channel_id: data.channel).delete_all
+
+    client.web_client.chat_postMessage(
+      channel: data.channel,
+      text: I18n.t('commands.answer.deleted.text'),
+      thread_ts: data.thread_ts || data.ts,
+      as_user: true
     )
   end
 
@@ -207,15 +235,21 @@ class Commands
     )
   end
 
-  def self.reply_in_not_working_time (client, reason, duty, time, data)
+  def self.reply_in_not_working_time (client, reason, data, answer)
+
+    if answer.nil?
+      text = I18n.t('reply.non-working-time.text',name: client.self.name)
+    else
+      text = answer.body
+    end
+
     client.web_client.chat_postMessage(
         text: '%s' % reason,
         channel: data.channel,
-        as_user: true,
         attachments: [
             {
                 fallback: I18n.t('reply.non-working-time.subject'),
-                text: I18n.t('reply.non-working-time.text',name: client.self.name),
+                text: text,
                 color: '#3AA3E3',
                 attachment_type: 'default'
                 # actions: [
@@ -266,66 +300,61 @@ class Commands
   def self.watch(client:, data:)
     message_processor = MessageProcessor.new
     time = DateTime.strptime(data.ts, '%s')
+
     begin
-      duty = Duty.where(channel_id: data.channel, enabled: true).first
       duties = Duty.where(channel_id: data.channel).first
 
-      if !duties.opsgenie_schedule_name.nil?
-        rotate_schedule(duties,data,client,duty)
+      unless duties.opsgenie_schedule_name.nil?
+        rotate_schedule(duties, data, client, duty)
       end
-      
+
+      duty = Duty.where(channel_id: data.channel, enabled: true).first
+      answer = Answer.where(channel_id: duty.channel_id).first
+
+      # don't reply on duty person messages
+      user = User.where(slack_user_id: data.user).first
+      return if data.user == duty.user.slack_user_id
+
+      # check if message written in channel
       if data.thread_ts.nil?
         message_processor.collectUserInfo(data: data)
-        user = User.where(slack_user_id: data.user).first
-        return if data.user == duty.user.slack_user_id
+        reason = self.answer(time,duty)
+        reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
+        return
+      end
 
-        if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
-          from_time = (duty.duty_from.utc + user.tz_offset).strftime('%H:%M').to_s
-          to_time = (duty.duty_to.utc + user.tz_offset).strftime('%H:%M').to_s
-          current_time = (time.utc + user.tz_offset).strftime('%H:%M').to_s
-          reason = I18n.t('reply.reason.non-working-hours.text',fT: from_time,tT: to_time,cT: current_time)
-        end
-
-        if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
-          reason = I18n.t('reply.reason.non-working-day.text')
-        end
-
-        if duty.user.status == 'lunch'
-          reason = I18n.t('commands.user.status.enabled.lunch')
-        end
-
-        if duty.user.status == 'holidays'
-          reason = I18n.t('commands.user.status.enabled.holidays')
-        end
-
-        reply_in_not_working_time(client, reason, duty, time, data) if !reason.nil?
-      else
-        message = Message.find_by(ts: data.thread_ts)
-        if data.thread_ts != message.ts
-          duty = Duty.where(channel_id: data.channel, enabled: true).first
-
-          if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
-            reason = I18n.t('reply.reason.non-working-hours.text',fT: duty.duty_from.utc.strftime('%H:%M').to_s,tT: duty.duty_to.utc.strftime('%H:%M').to_s,cT: time.utc.strftime('%H:%M').to_s)
-          end
-
-          if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
-            reason = I18n.t('reply.reason.non-working-day.text')
-          end
-
-          if duty.user.status == 'lunch'
-            reason = I18n.t('commands.user.status.enabled.lunch')
-          end
-
-          if duty.user.status == 'holidays'
-            reason = I18n.t('commands.user.status.enabled.holidays')
-          end
-
-          reply_in_not_working_time(client,reason,duty,time,data) if !reason.nil?
-        end
+      message = Message.find_by(ts: data.thread_ts)
+      # check if message written in thread without answer from bot
+      if data.thread_ts != message.ts
+        reason = self.answer(time,duty)
+        reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
       end
     rescue StandardError => e
       print e
     end
+  end
+
+  def self.answer(time,duty)
+    if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
+      from_time = (duty.duty_from.utc).strftime('%H:%M').to_s
+      to_time = (duty.duty_to.utc).strftime('%H:%M').to_s
+      current_time = (time.utc).strftime('%H:%M').to_s
+      reason = I18n.t('reply.reason.non-working-hours.text',fT: from_time,tT: to_time,cT: current_time)
+    end
+
+    if !duty.duty_days.split(',').include?(time.utc.strftime('%u'))
+      reason = I18n.t('reply.reason.non-working-day.text')
+    end
+
+    if duty.user.status == 'lunch'
+      reason = I18n.t('commands.user.status.enabled.lunch')
+    end
+
+    if duty.user.status == 'holidays'
+      reason = I18n.t('commands.user.status.enabled.holidays')
+    end
+
+    reason
   end
 
   def self.unknown(client:, data:)

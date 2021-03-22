@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0
+### Improvements
+- Added view web page to see answers.
+### Fixes
+- Fixed usage of undefined variable.
+
 ## 0.4.0
 ### Improvements
 - Working hours now in UTC time in messages, to avoid confusing people.
@@ -14,7 +20,7 @@
 ## 0.3.2
 ### Improvements 
 - Docker build optimisation.
-- Update translatio.
+- Update translation.
 
 ## 0.3.1
 ### Fixes

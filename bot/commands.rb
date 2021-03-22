@@ -304,15 +304,14 @@ class Commands
     begin
       duties = Duty.where(channel_id: data.channel).first
 
+      duty = Duty.where(channel_id: data.channel, enabled: true).first
+      answer = Answer.where(channel_id: duty.channel_id).first
+
       unless duties.opsgenie_schedule_name.nil?
         rotate_schedule(duties, data, client, duty)
       end
 
-      duty = Duty.where(channel_id: data.channel, enabled: true).first
-      answer = Answer.where(channel_id: duty.channel_id).first
-
       # don't reply on duty person messages
-      user = User.where(slack_user_id: data.user).first
       return if data.user == duty.user.slack_user_id
 
       # check if message written in channel

@@ -21,7 +21,6 @@ with escalation option.
 
 ## Bot commands
 ```
-Version: 0.4.0
 Commands in channel:
 -- call duty person - will send alert message to duty person.
 -- i am on duty - will set you as duty person in channel.

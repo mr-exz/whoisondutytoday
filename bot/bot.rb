@@ -52,6 +52,14 @@ class Bot < SlackRubyBot::Bot
     Commands.duty_set_opsgenie_escalation(client: client, data: data, match: match)
   end
 
+  command 'answer set custom text' do |client, data, match|
+    Commands.answer_set_custom_text(client: client, data: data, match: match)
+  end
+
+  command 'answer delete custom text' do |client, data, match|
+    Commands.answer_delete_custom_text(client: client, data: data, match: match)
+  end
+
   command(/.*/) do |client, data|
     Commands.unknown(client: client, data: data)
   end

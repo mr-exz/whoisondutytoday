@@ -10,7 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_02_182330) do
+ActiveRecord::Schema.define(version: 2021_03_20_231638) do
+
+  create_table "answers", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "channel_id"
+  end
 
   create_table "channels", id: false, force: :cascade do |t|
     t.string "slack_channel_id"
@@ -18,6 +25,8 @@ ActiveRecord::Schema.define(version: 2019_09_02_182330) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "channel_id"
+    t.index ["channel_id"], name: "index_channels_on_channel_id"
     t.index ["slack_channel_id"], name: "index_channels_on_slack_channel_id", unique: true
   end
 
@@ -30,6 +39,8 @@ ActiveRecord::Schema.define(version: 2019_09_02_182330) do
     t.boolean "enabled"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "opsgenie_schedule_name"
+    t.string "opsgenie_escalation_name"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -40,7 +51,7 @@ ActiveRecord::Schema.define(version: 2019_09_02_182330) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "reply_counter"
-    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x00000000061b7348>"
+    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x0000563524093008>"
   end
 
   create_table "teams", force: :cascade do |t|

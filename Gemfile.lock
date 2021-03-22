@@ -251,6 +251,7 @@ PLATFORMS
 DEPENDENCIES
   actionpack (>= 5.2.4.3)
   actionview (>= 5.2.4.3)
+  activerecord (>= 5.2.4.5)
   activestorage (>= 5.2.4.3)
   activesupport (>= 5.2.4.3)
   async-websocket (~> 0.8.0)

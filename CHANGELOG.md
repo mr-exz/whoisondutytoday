@@ -1,4 +1,8 @@
 # Changelog
+## 0.6.1
+### Fixes
+- Fixed rake execution task.
+
 ## 0.6.0
 ### Fixes
 - Fixed bug with missed answers in old threads.

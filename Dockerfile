@@ -1,7 +1,16 @@
 FROM ruby:2.6.3
 
-RUN apt-get update -qq && apt-get install -y nodejs
-RUN mkdir /myapp
+RUN apt-get update -qq && apt-get install -y nodejs cron \
+    && apt-get clean autoclean \
+    && apt-get autoremove -y \
+    && rm -rf \
+        /var/lib/apt \
+        /var/lib/dpkg \
+        /var/lib/cache \
+        /var/lib/log \
+    && mkdir /myapp \
+    && crontab -l | { cat; echo ""; } | crontab -
+
 WORKDIR /myapp
 
 COPY Gemfile /myapp/Gemfile
@@ -9,6 +18,7 @@ COPY Gemfile.lock /myapp/Gemfile.lock
 RUN bundle install
 
 COPY . /myapp
+RUN bundle exec whenever --update-crontab
 
 EXPOSE 3000
 

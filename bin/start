@@ -10,6 +10,10 @@ def system!(*args)
 end
 
 chdir APP_ROOT do
+  puts "\n== Run cron =="
+  system! 'env > /etc/environment'
+  system! 'cron'
+
   puts "\n== Preparing database =="
   system! 'bin/rails db:migrate'
 

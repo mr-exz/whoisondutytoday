@@ -25,6 +25,8 @@ Commands in channel:
 -- call duty person - will send alert message to duty person.
 -- i am on duty - will set you as duty person in channel.
 -- who is on duty? - will display name of duty persion.
+-- channel reminder enabled - will enable reminder for not answered messages in channel.
+-- channel reminder disabled - will disable reminder for not answered messages in channel.
 -- duty create - will create duty, example duty create from 8:00 to 17:00.
 -- duty update - will update duty, example duty update from 8:00 to 17:00.
 -- duty delete - will delete duty.

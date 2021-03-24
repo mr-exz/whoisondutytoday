@@ -157,6 +157,28 @@ class Commands
     end
   end
 
+  def self.channel_reminder_enabled(client:, data:, match:)
+    channel = Channel.where(slack_channel_id: data.channel).first
+    channel.reminder_enabled = true
+    channel.save
+    client.say(
+      channel: data.channel,
+      text: I18n.t('commands.channel.reminder.enabled.text'),
+      thread_ts: data.thread_ts || data.ts
+    )
+  end
+
+  def self.channel_reminder_disabled(client:, data:, match:)
+    channel = Channel.where(slack_channel_id: data.channel).first
+    channel.reminder_enabled = false
+    channel.save
+    client.say(
+      channel: data.channel,
+      text: I18n.t('commands.channel.reminder.disabled.text'),
+      thread_ts: data.thread_ts || data.ts
+    )
+  end
+
   def self.duty_update(client:, data:, match:)
     duty = Duty.where(user_id: data.user, channel_id: data.channel).first
 
@@ -277,6 +299,8 @@ class Commands
     message.ts = data.ts
     message.thread_ts = data.thread_ts
     message.event_ts = data.event_ts
+    message.channel_id = data.channel
+    message.remind_needed = true
     message.reply_counter = 1
     message.save
   end
@@ -303,9 +327,15 @@ class Commands
 
     begin
       duties = Duty.where(channel_id: data.channel).first
-
+      channel = Channel.where(slack_channel_id: data.channel).first
       duty = Duty.where(channel_id: data.channel, enabled: true).first
       answer = Answer.where(channel_id: duty.channel_id).first
+
+      # store messages where reminder needed
+      if channel.reminder_enabled == true
+        message_processor.save_message_for_reminder(data: data) if data.thread_ts.nil? and data.user != duty.user.slack_user_id
+        message_processor.disable_message_from_remind(data: data) if data.user == duty.user.slack_user_id and not data.thread_ts.nil?
+      end
 
       unless duties.opsgenie_schedule_name.nil?
         rotate_schedule(duties, data, client, duty)
@@ -334,6 +364,8 @@ class Commands
   end
 
   def self.answer(time,duty)
+    reason = nil
+
     if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
       from_time = (duty.duty_from.utc).strftime('%H:%M').to_s
       to_time = (duty.duty_to.utc).strftime('%H:%M').to_s

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_20_231638) do
+ActiveRecord::Schema.define(version: 2021_03_24_071457) do
 
   create_table "answers", force: :cascade do |t|
     t.text "body"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2021_03_20_231638) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "channel_id"
+    t.boolean "reminder_enabled"
     t.index ["channel_id"], name: "index_channels_on_channel_id"
     t.index ["slack_channel_id"], name: "index_channels_on_slack_channel_id", unique: true
   end
@@ -52,6 +53,8 @@ ActiveRecord::Schema.define(version: 2021_03_20_231638) do
     t.datetime "updated_at", null: false
     t.integer "reply_counter"
     t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x0000563524093008>"
+    t.boolean "remind_needed"
+    t.string "channel_id"
   end
 
   create_table "teams", force: :cascade do |t|

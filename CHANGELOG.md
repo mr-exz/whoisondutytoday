@@ -1,4 +1,9 @@
 # Changelog
+## 0.6.0
+### Fixes
+- Fixed bug with missed answers in old threads.
+### Features
+- Reminder about threads without replies.
 
 ## 0.5.0
 ### Improvements

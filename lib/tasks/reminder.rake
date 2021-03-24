@@ -10,7 +10,7 @@ namespace :reminder do
       reason = Commands.answer(time,duty)
       unless reason.nil?
         p "Reason to skip reminder:" + reason
-        break
+        next
       end
 
       messages = Message.where(remind_needed: true).where(channel_id: channel.slack_channel_id).where("created_at < ?", 15.minute.ago)

@@ -1,4 +1,9 @@
 # Changelog
+## 0.6.2
+### Fixes
+- Fixed reminder logic for saved messages.
+- Dockerfile fixed broken apt-get
+
 ## 0.6.1
 ### Fixes
 - Fixed rake execution task.

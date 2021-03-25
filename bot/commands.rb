@@ -325,6 +325,7 @@ class Commands
       if channel.reminder_enabled == true
         message_processor.save_message_for_reminder(data: data) if data.thread_ts.nil? and data.user != duty.user.slack_user_id
         message_processor.disable_message_from_remind(data: data) if data.user == duty.user.slack_user_id and not data.thread_ts.nil?
+        message_processor.save_message(data: data)
       else
         message_processor.save_message(data: data)
       end

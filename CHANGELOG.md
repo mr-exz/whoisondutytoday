@@ -1,4 +1,9 @@
 # Changelog
+## 0.6.3
+### Fixes
+- Fixed constant replies from bot in thread
+- Fixed saving messages with empty message id
+
 ## 0.6.2
 ### Fixes
 - Fixed reminder logic for saved messages.

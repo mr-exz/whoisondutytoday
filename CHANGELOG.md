@@ -1,4 +1,8 @@
 # Changelog
+## 0.6.4
+### Fixes
+- Fixing answers in threads
+
 ## 0.6.3
 ### Fixes
 - Fixed constant replies from bot in thread

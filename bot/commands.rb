@@ -320,6 +320,7 @@ class Commands
       channel = Channel.where(slack_channel_id: data.channel).first
       duty = Duty.where(channel_id: data.channel, enabled: true).first
       answer = Answer.where(channel_id: duty.channel_id).first
+      message = Message.find_by(thread_ts: data.thread_ts) if data.thread_ts.nil?
 
       # store messages where reminder needed
       if channel.reminder_enabled == true
@@ -345,7 +346,6 @@ class Commands
         return
       end
 
-      message = Message.find_by(thread_ts: data.thread_ts)
       # check if message written in thread without answer from bot
       if message.blank?
         reason = self.answer(time,duty)

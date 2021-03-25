@@ -293,6 +293,8 @@ class Commands
         thread_ts: data.thread_ts || data.ts,
         as_user: true
     )
+    message_processor = MessageProcessor.new
+    message_processor.save_message(data: data)
   end
 
   def self.rotate_schedule(dutys,data,client,duty)
@@ -339,7 +341,6 @@ class Commands
         message_processor.collectUserInfo(data: data)
         reason = self.answer(time,duty)
         reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
-        message_processor.save_message(data: data)
         return
       end
 
@@ -348,7 +349,6 @@ class Commands
       if message.blank?
         reason = self.answer(time,duty)
         reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
-        message_processor.save_message(data: data)
       end
     rescue StandardError => e
       print e

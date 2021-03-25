@@ -22,12 +22,13 @@ class MessageProcessor
 
   def save_message_for_reminder(data:)
     message = Message.new
-    message.message_id = data.client_msg_id
+    message.message_id = data.client_msg_id || 'undefined'
     message.ts = data.ts
     message.thread_ts = data.thread_ts
     message.event_ts = data.event_ts
     message.channel_id = data.channel
     message.remind_needed = true
+    message.reply_counter = 1
     message.save
   end
 
@@ -39,7 +40,7 @@ class MessageProcessor
 
   def save_message(data:)
     message = Message.new
-    message.message_id = data.client_msg_id
+    message.message_id = data.client_msg_id || 'undefined'
     message.ts = data.ts
     message.thread_ts = data.thread_ts
     message.event_ts = data.event_ts

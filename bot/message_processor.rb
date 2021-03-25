@@ -28,7 +28,7 @@ class MessageProcessor
     message.event_ts = data.event_ts
     message.channel_id = data.channel
     message.remind_needed = true
-    message.reply_counter = 1
+    message.reply_counter = 0
     message.save
   end
 

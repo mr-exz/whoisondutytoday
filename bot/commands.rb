@@ -320,15 +320,11 @@ class Commands
       channel = Channel.where(slack_channel_id: data.channel).first
       duty = Duty.where(channel_id: data.channel, enabled: true).first
       answer = Answer.where(channel_id: duty.channel_id).first
-      message = Message.find_by(thread_ts: data.thread_ts) if data.thread_ts.nil?
 
       # store messages where reminder needed
       if channel.reminder_enabled == true
         message_processor.save_message_for_reminder(data: data) if data.thread_ts.nil? and data.user != duty.user.slack_user_id
         message_processor.disable_message_from_remind(data: data) if data.user == duty.user.slack_user_id and not data.thread_ts.nil?
-        message_processor.save_message(data: data)
-      else
-        message_processor.save_message(data: data)
       end
 
       unless duties.opsgenie_schedule_name.nil?
@@ -343,13 +339,16 @@ class Commands
         message_processor.collectUserInfo(data: data)
         reason = self.answer(time,duty)
         reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
+        message_processor.save_message(data: data)
         return
       end
 
       # check if message written in thread without answer from bot
+      message = Message.find_by(thread_ts: data.thread_ts)
       if message.blank?
         reason = self.answer(time,duty)
         reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
+        message_processor.save_message(data: data)
       end
     rescue StandardError => e
       print e

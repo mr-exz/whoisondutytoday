@@ -345,7 +345,7 @@ class Commands
       end
 
       # check if message written in thread without answer from bot
-      message = Message.where(ts: data.thread_ts).where(reply_counter: 1)
+      message = Message.where('ts=? OR thread_ts=?',data.thread_ts,data.thread_ts).where(reply_counter: 1)
       if message.blank?
         reason = self.answer(time,duty)
         reply_in_not_working_time(client, reason, data, answer) unless reason.nil?

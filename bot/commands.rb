@@ -318,7 +318,7 @@ class Commands
     time = DateTime.strptime(data.ts, '%s')
 
     # skip processing events and data witout client_msg_id
-    return if data.data.client_msg_id.nil?
+    return if data.client_msg_id.nil?
 
     begin
       duties = Duty.where(channel_id: data.channel).first

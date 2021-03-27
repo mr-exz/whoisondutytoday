@@ -1,4 +1,8 @@
 # Changelog
+## 0.6.5
+### Fixes
+- Fixing reminder do not remind about events
+
 ## 0.6.4
 ### Fixes
 - Fixing answers in threads

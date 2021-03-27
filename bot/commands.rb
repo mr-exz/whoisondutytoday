@@ -317,6 +317,9 @@ class Commands
     message_processor = MessageProcessor.new
     time = DateTime.strptime(data.ts, '%s')
 
+    # skip processing events and data witout client_msg_id
+    return if data.data.client_msg_id.nil?
+
     begin
       duties = Duty.where(channel_id: data.channel).first
       channel = Channel.where(slack_channel_id: data.channel).first

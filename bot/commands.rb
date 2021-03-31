@@ -318,7 +318,8 @@ class Commands
     time = DateTime.strptime(data.ts, '%s')
 
     # skip processing events and data witout client_msg_id
-    return if data.client_msg_id.nil?
+    p data
+    return if data.respond_to?(:client_msg_id) == false
 
     begin
       duties = Duty.where(channel_id: data.channel).first
@@ -328,8 +329,8 @@ class Commands
 
       # store messages where reminder needed
       if channel.reminder_enabled == true
-        message_processor.save_message_for_reminder(data: data) if data.thread_ts.nil? and data.user != duty.user.slack_user_id
-        message_processor.disable_message_from_remind(data: data) if data.user == duty.user.slack_user_id and not data.thread_ts.nil?
+        message_processor.save_message_for_reminder(data: data) if data.respond_to?(:thread_ts) == false and data.user != duty.user.slack_user_id
+        message_processor.disable_message_from_remind(data: data) if data.user == duty.user.slack_user_id and data.respond_to?(:thread_ts) == true
       end
 
       unless duties.opsgenie_schedule_name.nil?
@@ -340,7 +341,7 @@ class Commands
       return if data.user == duty.user.slack_user_id
 
       # check if message written in channel
-      if data.thread_ts.nil?
+      if data.respond_to?(:thread_ts) == false
         message_processor.collectUserInfo(data: data)
         reason = self.answer(time,duty)
         reply_in_not_working_time(client, reason, data, answer) unless reason.nil?

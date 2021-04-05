@@ -233,12 +233,7 @@ class Commands
         thread_ts: data.thread_ts || data.ts
     )
   end
-
-  def self.set_user_on_duty(data:, user:)
-    Duty.where(channel_id: data.channel).where(user_id: user.slack_user_id).update_all(enabled: true)
-    Duty.where(channel_id: data.channel).where.not(user_id: user.slack_user_id).update_all(enabled: false)
-  end
-
+  
   def self.set_user_status(data:, client:, status:)
     User.where(slack_user_id: data.user).update_all(status: status)
     client.say(
@@ -297,22 +292,6 @@ class Commands
     message_processor.save_message(data: data)
   end
 
-  def self.rotate_schedule(dutys,data,client,duty)
-    #TODO: duty.user can be empty handle this
-    notification = NotifyOpsgenie.new
-    json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)
-    user = User.where('lower(contacts) = ?', json_response['data']['onCallRecipients'][0].downcase).first
-    begin
-      if duty.user_id == user.slack_user_id
-        Rails.logger.info("User already active:"+duty.user.name)
-      else
-        set_user_on_duty(data: data, user: user)
-      end
-    rescue StandardError => e
-      set_user_on_duty(data: data, user: user)
-    end
-  end
-
   def self.watch(client:, data:)
     message_processor = MessageProcessor.new
     time = DateTime.strptime(data.ts, '%s')
@@ -331,10 +310,6 @@ class Commands
       if channel.reminder_enabled == true
         message_processor.save_message_for_reminder(data: data) if data.respond_to?(:thread_ts) == false and data.user != duty.user.slack_user_id
         message_processor.disable_message_from_remind(data: data) if data.user == duty.user.slack_user_id and data.respond_to?(:thread_ts) == true
-      end
-
-      unless duties.opsgenie_schedule_name.nil?
-        rotate_schedule(duties, data, client, duty)
       end
 
       # don't reply on duty person messages

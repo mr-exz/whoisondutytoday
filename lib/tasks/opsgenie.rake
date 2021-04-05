@@ -12,8 +12,9 @@ namespace :opsgenie do
       duty = Duty.where(user_id: user.slack_user_id, enabled: true).first
       begin
         if duty.user_id == user.slack_user_id
-          Rails.logger.info("User already active:"+duty.user.name)
+          p "Schedule for user already active:#{duty.user.name}"
         else
+          p "Rotate schedule for user: #{duty.user.name}"
           Duty.where(channel_id: data.channel).where(user_id: user.slack_user_id).update_all(enabled: true)
           Duty.where(channel_id: data.channel).where.not(user_id: user.slack_user_id).update_all(enabled: false)
         end

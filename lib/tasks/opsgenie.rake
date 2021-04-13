@@ -16,15 +16,14 @@ namespace :opsgenie do
             p "Schedule for user already active:#{duty.user.name}"
           else
             p "Rotate schedule for user: #{duty.user.name}"
-            Duty.where(channel_id: data.channel).where(user_id: user.slack_user_id).update_all(enabled: true)
-            Duty.where(channel_id: data.channel).where.not(user_id: user.slack_user_id).update_all(enabled: false)
+            Duty.where(channel_id: duty.channel_id).where(user_id: user.slack_user_id).update_all(enabled: true)
+            Duty.where(channel_id: duty.channel_id).where.not(user_id: user.slack_user_id).update_all(enabled: false)
           end
         rescue StandardError => e
-          Duty.where(channel_id: data.channel).where(user_id: user.slack_user_id).update_all(enabled: true)
-          Duty.where(channel_id: data.channel).where.not(user_id: user.slack_user_id).update_all(enabled: false)
+          Duty.where(channel_id: duty.channel_id).where(user_id: user.slack_user_id).update_all(enabled: true)
+          Duty.where(channel_id: duty.channel_id).where.not(user_id: user.slack_user_id).update_all(enabled: false)
         end
       end
-
     end
   end
 end

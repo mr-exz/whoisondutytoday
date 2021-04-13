@@ -10,7 +10,7 @@ namespace :opsgenie do
       user = User.where('lower(contacts) = ?', json_response['data']['onCallRecipients'][0].downcase).first
       duties = Duty.where(user_id: user.slack_user_id)
 
-      duties do |duty|
+      duties.each do |duty|
         begin
           if duty.user_id == user.slack_user_id and duty.enabled == true
             p "Schedule for user already active:#{duty.user.name}"

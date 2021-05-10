@@ -8,7 +8,7 @@ namespace :opsgenie do
     opsgenie_schedules.each do |shedule_name|
       json_response = JSON.parse(notification.GetOnCall(schedule_name: shedule_name).body)
       user = User.where('lower(contacts) = ?', json_response['data']['onCallRecipients'][0].downcase).first
-      duties = Duty.where(user_id: user.slack_user_id)
+      duties = Duty.where(user_id: user.slack_user_id).and(Duty.where(opsgenie_schedule_name: shedule_name))
 
       duties.each do |duty|
         begin

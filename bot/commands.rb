@@ -233,7 +233,7 @@ class Commands
         thread_ts: data.thread_ts || data.ts
     )
   end
-  
+
   def self.set_user_status(data:, client:, status:)
     User.where(slack_user_id: data.user).update_all(status: status)
     client.say(
@@ -296,9 +296,9 @@ class Commands
     message_processor = MessageProcessor.new
     time = DateTime.strptime(data.ts, '%s')
 
-    # skip processing events and data witout client_msg_id
+    # skip processing events and data without client_msg_id
     p data
-    return if data.respond_to?(:client_msg_id) == false
+    return if data.respond_to?(:client_msg_id) == false and data.respond_to?(:files) == false
 
     begin
       duties = Duty.where(channel_id: data.channel).first

@@ -301,10 +301,9 @@ class Commands
     return if data.respond_to?(:client_msg_id) == false and data.respond_to?(:files) == false
 
     begin
-      duties = Duty.where(channel_id: data.channel).first
       channel = Channel.where(slack_channel_id: data.channel).first
       duty = Duty.where(channel_id: data.channel, enabled: true).first
-      answer = Answer.where(channel_id: duty.channel_id).first
+      answer = Answer.where(channel_id: data.channel).first
 
       # store messages where reminder needed
       if channel.reminder_enabled == true

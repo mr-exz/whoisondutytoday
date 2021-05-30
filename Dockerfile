@@ -1,4 +1,4 @@
-FROM ruby:2.6.3
+FROM ruby:2.7.3
 
 RUN apt-get update -qq && apt-get install -y nodejs cron \
     && apt-get clean autoclean \

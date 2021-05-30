@@ -4,7 +4,7 @@
   user: vagrant
   vars:
     timezone: UTC
-    RUBY_VERSION: 2.6.3
+    RUBY_VERSION: 2.7.3
   tasks:
     - name: Set timezone to {{ timezone }}
       timezone:

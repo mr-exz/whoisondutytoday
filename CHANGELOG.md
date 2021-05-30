@@ -1,4 +1,13 @@
 # Changelog
+## 0.6.6
+### Improvements 
+- Switched to Ruby 2.7.3
+- [Rake job to sync person on call from OpsGenie shedule.](https://github.com/mr-exz/whoisondutytoday/issues/55)
+- [Improved sync with OpsGenie shedule.](https://github.com/mr-exz/whoisondutytoday/issues/29)
+
+### Fixes
+- [Fixed no replies to messages with attachments](https://github.com/mr-exz/whoisondutytoday/issues/56).
+
 ## 0.6.5
 ### Fixes
 - Fixing reminder do not remind about events

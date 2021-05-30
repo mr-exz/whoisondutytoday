@@ -2,7 +2,6 @@
 # vi: set ft=ruby :
 APP_NAME=File.basename(File.expand_path("..", Dir.pwd))
 APP_HOME=File.join(File.dirname(__FILE__), '../')
-VM_NAME=APP_NAME
 
 Vagrant.configure("2") do |config|
   config.vm.hostname = "#{APP_NAME}"

@@ -11,8 +11,8 @@ en:
         -- `who is on duty?` - will display name of duty persion.
         -- `channel reminder enabled` - will enable reminder for not answered messages in channel.
         -- `channel reminder disabled` - will disable reminder for not answered messages in channel.
-        -- `duty create` - will create duty, example `duty create from 8:00 to 17:00`.
-        -- `duty update` - will update duty, example `duty update from 8:00 to 17:00`.
+        -- `duty create` - will create duty, time should be defined in your local timezone, example `duty create from 8:00 to 17:00`.
+        -- `duty update` - will update duty, time should be defined in your local timezone, example `duty update from 8:00 to 17:00`.
         -- `duty delete` - will delete duty.
         -- `duty sync with opsgenie schedule` - will configure all duties in channel with schedule name from Opsgenie, example `duty sync with opsgenie schedule My_Team_Schedule`.
         -- `duty set opsgenie escalation` - will configure all duties in channel with escalation name from Opsgenie, example `duty set opsgenie escalation My_Team_Escalation`.

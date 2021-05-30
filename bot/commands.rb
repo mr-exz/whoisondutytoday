@@ -234,11 +234,6 @@ class Commands
     )
   end
 
-  def self.set_user_on_duty(data:, user:)
-    Duty.where(channel_id: data.channel).where(user_id: user.slack_user_id).update_all(enabled: true)
-    Duty.where(channel_id: data.channel).where.not(user_id: user.slack_user_id).update_all(enabled: false)
-  end
-
   def self.set_user_status(data:, client:, status:)
     User.where(slack_user_id: data.user).update_all(status: status)
     client.say(
@@ -297,50 +292,30 @@ class Commands
     message_processor.save_message(data: data)
   end
 
-  def self.rotate_schedule(dutys,data,client,duty)
-    #TODO: duty.user can be empty handle this
-    notification = NotifyOpsgenie.new
-    json_response = JSON.parse(notification.GetOnCall(schedule_name: dutys.opsgenie_schedule_name).body)
-    user = User.where('lower(contacts) = ?', json_response['data']['onCallRecipients'][0].downcase).first
-    begin
-      if duty.user_id == user.slack_user_id
-        Rails.logger.info("User already active:"+duty.user.name)
-      else
-        set_user_on_duty(data: data, user: user)
-      end
-    rescue StandardError => e
-      set_user_on_duty(data: data, user: user)
-    end
-  end
-
   def self.watch(client:, data:)
     message_processor = MessageProcessor.new
     time = DateTime.strptime(data.ts, '%s')
 
-    # skip processing events and data witout client_msg_id
-    return if data.client_msg_id.nil?
+    # skip processing events and data without client_msg_id
+    p data
+    return if data.respond_to?(:client_msg_id) == false and data.respond_to?(:files) == false
 
     begin
-      duties = Duty.where(channel_id: data.channel).first
       channel = Channel.where(slack_channel_id: data.channel).first
       duty = Duty.where(channel_id: data.channel, enabled: true).first
-      answer = Answer.where(channel_id: duty.channel_id).first
+      answer = Answer.where(channel_id: data.channel).first
 
       # store messages where reminder needed
       if channel.reminder_enabled == true
-        message_processor.save_message_for_reminder(data: data) if data.thread_ts.nil? and data.user != duty.user.slack_user_id
-        message_processor.disable_message_from_remind(data: data) if data.user == duty.user.slack_user_id and not data.thread_ts.nil?
-      end
-
-      unless duties.opsgenie_schedule_name.nil?
-        rotate_schedule(duties, data, client, duty)
+        message_processor.save_message_for_reminder(data: data) if data.respond_to?(:thread_ts) == false and data.user != duty.user.slack_user_id
+        message_processor.disable_message_from_remind(data: data) if data.user == duty.user.slack_user_id and data.respond_to?(:thread_ts) == true
       end
 
       # don't reply on duty person messages
       return if data.user == duty.user.slack_user_id
 
       # check if message written in channel
-      if data.thread_ts.nil?
+      if data.respond_to?(:thread_ts) == false
         message_processor.collectUserInfo(data: data)
         reason = self.answer(time,duty)
         reply_in_not_working_time(client, reason, data, answer) unless reason.nil?

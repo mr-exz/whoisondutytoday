@@ -72,7 +72,7 @@ class Bot < SlackRubyBot::Bot
     Commands.unknown(client: client, data: data)
   end
 
-  scan(/.*/) do |client, data|
-    Commands.watch(client: client, data: data)
+  scan(/(.*)/) do |client, data, match|
+    Commands.watch(client: client, data: data, match: match)
   end
 end

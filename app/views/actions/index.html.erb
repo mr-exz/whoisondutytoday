@@ -1,0 +1,21 @@
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Problem</th>
+      <th scope="col">Action</th>
+      <th scope="col">Channel</th>
+    </tr>
+  </thead>
+
+  <% @actions.each do |action| %>
+    <tr>
+      <td><%= action.id %></td>
+      <td><%= action.problem %></td>
+      <td><%= action.action %></td>
+      <td><%= action.channel %></td>
+    </tr>
+  <% end %>
+</table>
+

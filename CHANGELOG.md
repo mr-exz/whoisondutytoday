@@ -1,4 +1,8 @@
 # Changelog
+## 0.6.7
+### Improvements
+- added actions table, bot will suggest "actions" on certain "problems"
+
 ## 0.6.6
 ### Improvements 
 - Switched to Ruby 2.7.3

@@ -316,7 +316,7 @@ class Commands
       # check if message written in channel
       if data.respond_to?(:thread_ts) == false
         message_processor.collectUserInfo(data: data)
-        reason = self.answer(time,duty, match)
+        reason = self.answer(time,duty, match, data)
         reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
         return
       end
@@ -324,7 +324,7 @@ class Commands
       # check if message written in thread without answer from bot
       message = Message.where('ts=? OR thread_ts=?',data.thread_ts,data.thread_ts).where(reply_counter: 1)
       if message.blank?
-        reason = self.answer(time,duty, match)
+        reason = self.answer(time,duty, match, data)
         reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
       end
     rescue StandardError => e
@@ -332,7 +332,7 @@ class Commands
     end
   end
 
-  def self.answer(time,duty, match)
+  def self.answer(time,duty, match, data)
     reason = nil
 
     if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
@@ -354,7 +354,7 @@ class Commands
       reason = I18n.t('commands.user.status.enabled.holidays')
     end
 
-    Action.all.each do |action|
+    Action.where(channel: data.channel).each do |action|
       Regexp.new(/#{action.problem}/i).match(match[0][0]) do |_|
         reason = action.action
       end

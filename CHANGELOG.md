@@ -1,7 +1,8 @@
 # Changelog
 ## 0.6.7
 ### Improvements
-- added actions table, bot will suggest "actions" on certain "problems"
+- Added actions table, bot will suggest "actions" on certain "problems"
+- Bump addressable,puma,nio4r due to security issues
 
 ## 0.6.6
 ### Improvements 

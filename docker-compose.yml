@@ -10,7 +10,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - production.env
+      - production.env.example
     logging:
       driver: "json-file"
       options:

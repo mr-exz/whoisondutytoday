@@ -1,7 +1,7 @@
 version: '3'
 services:
   whoisondutytoday:
-    image: whoisondutytoday
+    image: whoisondutytoday:0.6.7
     restart: always
     container_name: whoisondutytoday
     build: .

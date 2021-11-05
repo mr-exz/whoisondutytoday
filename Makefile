@@ -1,5 +1,5 @@
 DOCKER_IMAGE_NAME = whoisondutytoday
-BRANCH = ${{ github.ref }}
+BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
 ifeq ("$(BRANCH)", "master")
 	DOCKER_IMAGE_TAG = $(shell cat ./CHANGELOG.md | grep -e '^\#\# .*' | head -n 1 | cut -d' ' -f 2)

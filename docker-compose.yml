@@ -1,7 +1,7 @@
 version: '3'
 services:
   whoisondutytoday:
-    image: mrexz/whoisondutytoday:0.6.7
+    image: whoisondutytoday
     restart: always
     container_name: whoisondutytoday
     build: .
@@ -10,7 +10,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - production.env.example
+      - production.env
     logging:
       driver: "json-file"
       options:

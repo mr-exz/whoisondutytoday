@@ -1,5 +1,5 @@
 module Whoisondutytoday
   class Application
-    VERSION = "0.6.7"
+    VERSION = ENV['DOCKER_IMAGE_TAG']
   end
 end

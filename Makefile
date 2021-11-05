@@ -10,7 +10,7 @@ endif
 DOCKER_REGISTRY_URL = docker.io/mrexz
 
 build:
-	docker build -t ${DOCKER_REGISTRY_URL}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .
+	docker build --build-arg DOCKER_IMAGE_TAG=${DOCKER_IMAGE_TAG} -t ${DOCKER_REGISTRY_URL}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .
 
 tag-latest:
 ifeq ("$(BRANCH)", "master")

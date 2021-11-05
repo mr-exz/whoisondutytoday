@@ -1,9 +1,10 @@
 DOCKER_IMAGE_NAME = whoisondutytoday
+BRANCH = ${{ github.ref }}
 
 ifeq ("$(BRANCH)", "master")
-	DOCKER_IMAGE_TAG = $(shell cat ./CHANGELOG.md | grep -e '^\# .*' | head -n 1 | cut -d' ' -f 2)
+	DOCKER_IMAGE_TAG = $(shell cat ./CHANGELOG.md | grep -e '^\#\# .*' | head -n 1 | cut -d' ' -f 2)
 else
-	DOCKER_IMAGE_TAG = $(shell cat ./CHANGELOG.md | grep -e '^\# .*' | head -n 1 | cut -d' ' -f 2)-${BRANCH}
+	DOCKER_IMAGE_TAG = $(shell cat ./CHANGELOG.md | grep -e '^\#\# .*' | head -n 1 | cut -d' ' -f 2)-${BRANCH}
 endif
 
 DOCKER_REGISTRY_URL = docker.io/mrexz

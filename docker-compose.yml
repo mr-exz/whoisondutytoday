@@ -1,7 +1,7 @@
 version: '3'
 services:
   whoisondutytoday:
-    image: whoisondutytoday
+    image: mrexz/whoisondutytoday:latest
     restart: always
     container_name: whoisondutytoday
     build: .

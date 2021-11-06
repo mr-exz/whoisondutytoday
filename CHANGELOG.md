@@ -1,4 +1,10 @@
 # Changelog
+## 0.6.8
+### Improvements
+- Added github flow
+- Added Makefile to build project and tag it
+- Added versioning from CHANGELOG.md
+
 ## 0.6.7
 ### Improvements
 - Added actions table, bot will suggest "actions" on certain "problems"

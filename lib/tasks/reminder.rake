@@ -29,7 +29,7 @@ namespace :reminder do
             message_info = client.chat_getPermalink(options)
             permalinks.append(message_info['permalink'])
           rescue => e
-            logger.error e.message
+            p e.message
           end
 
         end

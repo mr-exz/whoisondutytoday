@@ -36,6 +36,10 @@ class Bot < SlackRubyBot::Bot
     Commands.duty_create(client: client, data: data, match: match)
   end
 
+  command 'create duty for user' do |client, data, match|
+    Commands.duty_create_for_user(client: client, data: data, match: match)
+  end
+
   command 'channel reminder enabled' do |client, data, match|
     Commands.channel_reminder_enabled(client: client, data: data, match: match)
   end

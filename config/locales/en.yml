@@ -40,6 +40,8 @@ en:
         text: "Duty deleted for this channel."
       enabled:
         text: "Now you on duty."
+      enabled-for-user:
+        text: "Now <@%{name}> on duty."
     answer:
       created:
         text: "Custom answer created, now bot will use that text."

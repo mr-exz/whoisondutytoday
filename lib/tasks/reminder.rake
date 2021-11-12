@@ -25,10 +25,13 @@ namespace :reminder do
           options = {}
           options[:message_ts] = message.thread_ts || message.ts
           options[:channel] = message.channel_id
-          message_info = client.chat_getPermalink(options)
+          begin
+            message_info = client.chat_getPermalink(options)
+          rescue => e
+            logger.error e.message
+          end
           permalinks.append(message_info['permalink'])
         end
-
 
         client.chat_postMessage(
           channel: duty.user_id,

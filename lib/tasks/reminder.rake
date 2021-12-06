@@ -33,6 +33,10 @@ namespace :reminder do
             message_info = client.chat_getPermalink(options)
             permalinks.append(message_info['permalink'])
           rescue => e
+            # delete from database messages which was deleted, to avoid unnecessary reminders
+            if e.message == 'message_not_found'
+              message.delete
+            end
             p e.message
           end
         end

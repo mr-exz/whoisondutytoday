@@ -21,7 +21,7 @@ gem 'rails', '~> 5.2.4', '>= 5.2.4.5'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use Puma as the app server
-gem 'puma', '~> 4.3.9'
+gem 'puma', '~> 4.3.12'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.1', '>= 5.1.0'
 # Use Uglifier as compressor for JavaScript assets

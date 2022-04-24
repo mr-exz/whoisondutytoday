@@ -3,7 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.7.3'
 gem 'slack-ruby-bot'
-gem 'async-websocket', '~> 0.8.0'
+gem 'async-websocket', '~> 0.19.0'
 gem 'bootstrap', '~> 4.4.1'
 gem 'font-awesome-rails', '>= 4.7.0.7'
 gem 'jquery-rails', '>= 4.4.0'

@@ -9,15 +9,15 @@ gem 'font-awesome-rails', '>= 4.7.0.7'
 gem 'jquery-rails', '>= 4.4.0'
 gem 'json'
 gem 'mail'
-gem "actionview", ">= 5.2.4.5"
-gem "activesupport", ">= 5.2.4.3"
-gem "actionpack", ">= 5.2.4.5"
-gem "activestorage", ">= 5.2.4.5"
+gem "actionview", ">= 5.2.6"
+gem "activesupport", ">= 5.2.6"
+gem "actionpack", ">= 5.2.6"
+gem "activestorage", ">= 5.2.6"
 gem "nokogiri", ">= 1.11.4"
-gem "activerecord", ">= 5.2.4.5"
+gem "activerecord", ">= 5.2.6"
 gem 'whenever'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.4', '>= 5.2.4.5'
+gem 'rails', '~> 5.2.6'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use Puma as the app server
@@ -34,7 +34,7 @@ gem 'coffee-rails', '~> 4.2', '>= 4.2.2'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.5'
+gem 'jbuilder', '~> 2.11', '>= 2.11.2'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password

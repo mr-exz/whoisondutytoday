@@ -12,12 +12,12 @@ gem 'mail'
 gem "actionview", ">= 5.2.4.5"
 gem "activesupport", ">= 5.2.4.3"
 gem "actionpack", ">= 5.2.4.5"
-gem "activestorage", ">= 5.2.4.5"
+gem "activestorage", ">= 5.2.8.1"
 gem "nokogiri", ">= 1.11.4"
-gem "activerecord", ">= 5.2.4.5"
+gem "activerecord", ">= 5.2.8.1"
 gem 'whenever'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.4', '>= 5.2.4.5'
+gem 'rails', '~> 5.2.8', '>= 5.2.8.1'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use Puma as the app server

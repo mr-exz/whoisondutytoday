@@ -305,7 +305,7 @@ DEPENDENCIES
   mail
   nokogiri (>= 1.13.4)
   puma (~> 4.3.12)
-  rails (~> 5.2.6)
+  rails (~> 5.2.8.1)
   sass-rails (~> 5.1, >= 5.1.0)
   selenium-webdriver
   slack-ruby-bot

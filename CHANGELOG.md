@@ -1,4 +1,16 @@
 # Changelog
+## 0.7.0
+### Improvements
+- Added support of many people.
+- Added support of winter/summer time.
+- Added option create duty hours for other people.
+- Added option define `action` from slack message.
+- Added sync missed users from Opsgenie.
+
+### Fixes
+- Fixed publishing docker image with latest tag.
+- Fixed reminder of not answered requests.
+
 ## 0.6.8
 ### Improvements
 - Added github flow

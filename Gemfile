@@ -1,27 +1,27 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.3'
+ruby '2.7.5'
 gem 'slack-ruby-bot'
-gem 'async-websocket', '~> 0.8.0'
+gem 'async-websocket', '~> 0.19.0'
 gem 'bootstrap', '~> 4.4.1'
 gem 'font-awesome-rails', '>= 4.7.0.7'
 gem 'jquery-rails', '>= 4.4.0'
 gem 'json'
 gem 'mail'
-gem "actionview", ">= 5.2.4.5"
-gem "activesupport", ">= 5.2.4.3"
-gem "actionpack", ">= 5.2.4.5"
-gem "activestorage", ">= 5.2.4.5"
-gem "nokogiri", ">= 1.11.4"
+gem "actionview", ">= 5.2.6"
+gem "activesupport", ">= 5.2.6"
+gem "actionpack", ">= 5.2.6"
+gem "activestorage", ">= 5.2.6"
+gem "nokogiri", ">= 1.13.4"
 gem "activerecord", ">= 5.2.4.5"
 gem 'whenever'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.4', '>= 5.2.4.5'
+gem 'rails', '~> 5.2.6'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use Puma as the app server
-gem 'puma', '~> 4.3.9'
+gem 'puma', '~> 4.3.12'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.1', '>= 5.1.0'
 # Use Uglifier as compressor for JavaScript assets

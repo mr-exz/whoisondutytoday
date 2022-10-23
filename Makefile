@@ -24,7 +24,7 @@ tag-latest-force:
 push:
 	docker push ${DOCKER_REGISTRY_URL}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
 ifeq ("$(BRANCH)", "master")
-	docker push ${DOCKER_REGISTRY_URL}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}:latest
+	docker push ${DOCKER_REGISTRY_URL}/${DOCKER_IMAGE_NAME}:latest
 endif
 
 all: build tag-latest push

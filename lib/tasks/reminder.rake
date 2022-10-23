@@ -5,12 +5,16 @@ namespace :reminder do
     channels = Channel.where(reminder_enabled: true)
 
     channels.each do |channel|
-      duty = Duty.where(channel_id: channel.slack_channel_id).where(enabled: true).take!
-      time = DateTime.now
-      reason = Commands.answer(time,duty)
-      unless reason.nil?
-        p "Reason to skip reminder:" + reason
-        next
+      begin
+        duty = Duty.where(channel_id: channel.slack_channel_id).where(enabled: true).take!
+        time = DateTime.now
+        reason = Commands.answer(time,duty,nil,nil )
+        unless reason.nil?
+          p "Reason to skip reminder:" + reason
+          next
+        end
+      rescue => e
+        p e.message
       end
 
       messages = Message.where(remind_needed: true).where(channel_id: channel.slack_channel_id).where("created_at < ?", 15.minute.ago)
@@ -25,10 +29,17 @@ namespace :reminder do
           options = {}
           options[:message_ts] = message.thread_ts || message.ts
           options[:channel] = message.channel_id
-          message_info = client.chat_getPermalink(options)
-          permalinks.append(message_info['permalink'])
+          begin
+            message_info = client.chat_getPermalink(options)
+            permalinks.append(message_info['permalink'])
+          rescue => e
+            # delete from database messages which was deleted, to avoid unnecessary reminders
+            if e.message == 'message_not_found'
+              message.delete
+            end
+            p e.message
+          end
         end
-
 
         client.chat_postMessage(
           channel: duty.user_id,

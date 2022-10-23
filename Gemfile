@@ -9,10 +9,11 @@ gem 'font-awesome-rails', '>= 4.7.0.7'
 gem 'jquery-rails', '>= 4.4.0'
 gem 'json'
 gem 'mail'
-gem "actionview", ">= 5.2.6"
-gem "activesupport", ">= 5.2.6"
-gem "actionpack", ">= 5.2.6"
-gem "activestorage", ">= 5.2.6"
+gem 'io-event'
+gem "actionview", ">= 5.2.8.1"
+gem "activesupport", ">= 5.2.8.1"
+gem "actionpack", ">= 5.2.8.1"
+gem "activestorage", ">= 5.2.8.1"
 gem "nokogiri", ">= 1.13.4"
 gem "activerecord", ">= 5.2.4.5"
 gem 'whenever'

@@ -1,9 +1,9 @@
-FROM ruby:2.7
+FROM ruby:2.7.6-slim
 ARG DOCKER_IMAGE_TAG
 
 ENV DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG
 
-RUN apt-get update -qq && apt-get install -y nodejs cron \
+RUN apt-get update -qq && apt-get install -y nodejs cron ubuntu-dev-tools \
     && apt-get clean autoclean \
     && apt-get autoremove -y \
     && mkdir /myapp \

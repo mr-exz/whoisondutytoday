@@ -7,6 +7,8 @@ with escalation option.
 
 [Changelog](./CHANGELOG.md)
 
+![Build](https://github.com/mr-exz/whoisondutytoday/actions/workflows/docker-build.yml/badge.svg)
+
 ## Features
 - Call duty person over Opsgenie service.
 - User can enable themselves in channel as a duty person.

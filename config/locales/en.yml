@@ -18,6 +18,8 @@ en:
         -- `duty set opsgenie escalation` - will configure all duties in channel with escalation name from Opsgenie, example `duty set opsgenie escalation My_Team_Escalation`.
         -- `answer set custom text` - configure custom text in answers from bot, example `answer set custom text nobody will help you, wait for next day`.
         -- `answer delete custom text` - delete custom text answer, use default.
+        -- `answer enable hide reason` - Hide reason like `You asked at non working day.`, only your custom text will be displayed.
+        -- `answer disable hide reason` - Show reason like `You asked at non working day.`.
         Commands in dirrect messages:
         -- `my status lunch` - set status on lunch.
         -- `my status work` - set status on duty.

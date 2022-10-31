@@ -72,12 +72,12 @@ class Bot < SlackRubyBot::Bot
     Commands.answer_delete_custom_text(client: client, data: data, match: match)
   end
 
-  command 'answer enable hide reason' do |client, data, match|
-    Commands.answer_enable_hide_reason(client: client, data: data, match: match)
+  command 'answer enable hide reason' do |client, data|
+    Commands.answer_enable_hide_reason(client: client, data: data)
   end
 
-  command 'answer disable hide reason' do |client, data, match|
-    Commands.answer_disable_hide_reason(client: client, data: data, match: match)
+  command 'answer disable hide reason' do |client, data|
+    Commands.answer_disable_hide_reason(client: client, data: data)
   end
 
   command(/.*/) do |client, data|

@@ -59,6 +59,12 @@ en:
       text: "All duties in this channel synced with Opsgenie."
     opsgenie-escalation-name:
       text: "All duties in this channel now have escalation."
+    enable:
+      hide_reason:
+        text: "Reason is hidden"
+    disable:
+      hide_reason:
+        text: "Reason should be displayed"
   reply:
     non-working-time:
       subject: "Something happened"

@@ -54,7 +54,6 @@ class Commands
   end
 
   def self.answer_delete_custom_text(client:, data:, match:)
-    custom_text = match['expression']
     Answer.where(channel_id: data.channel).delete_all
 
     client.web_client.chat_postMessage(
@@ -319,7 +318,7 @@ class Commands
       text = I18n.t('reply.non-working-time.text',name: client.self.name)
     else
       text = answer.body
-      if answer.hide_reason
+      if answer.hide_reason == 1
         reason = ""
       end
     end
@@ -421,6 +420,26 @@ class Commands
         text: I18n.t('commands.unknown.text', name: client.self.name),
         thread_ts: data.thread_ts || data.ts,
         as_user: true
+    )
+  end
+
+  def self.answer_enable_hide_reason(client:, data:)
+    Answer.where(channel_id: data.channel).update_all(hide_reason: true)
+    client.web_client.chat_postMessage(
+      channel: data.channel,
+      text: I18n.t('commands.enable.hide_reason.text', name: client.self.name),
+      thread_ts: data.thread_ts || data.ts,
+      as_user: true
+    )
+  end
+
+  def self.answer_disable_hide_reason(client:, data:)
+    Answer.where(channel_id: data.channel).update_all(hide_reason: false)
+    client.web_client.chat_postMessage(
+      channel: data.channel,
+      text: I18n.t('commands.disable.hide_reason.text', name: client.self.name),
+      thread_ts: data.thread_ts || data.ts,
+      as_user: true
     )
   end
 

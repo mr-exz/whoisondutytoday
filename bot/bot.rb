@@ -2,7 +2,7 @@ require 'date'
 require_relative 'commands'
 
 class Bot < SlackRubyBot::Bot
-  SlackRubyBot::Client.logger.level = Logger::INFO
+  SlackRubyBot::Client.logger.level = Logger::WARN
 
   command 'help' do |client, data|
     Commands.help(client: client, data: data)
@@ -70,6 +70,14 @@ class Bot < SlackRubyBot::Bot
 
   command 'answer delete custom text' do |client, data, match|
     Commands.answer_delete_custom_text(client: client, data: data, match: match)
+  end
+
+  command 'answer enable hide reason' do |client, data, match|
+    Commands.answer_enable_hide_reason(client: client, data: data, match: match)
+  end
+
+  command 'answer disable hide reason' do |client, data, match|
+    Commands.answer_disable_hide_reason(client: client, data: data, match: match)
   end
 
   command(/.*/) do |client, data|

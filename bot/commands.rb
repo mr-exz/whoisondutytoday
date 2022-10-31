@@ -52,7 +52,12 @@ class Commands
       as_user: true
     )
 
-    self.watch(client: client, data: data, match: match)
+    client.web_client.chat_postMessage(
+      channel: data.channel,
+      text: custom_text,
+      thread_ts: data.thread_ts || data.ts,
+      as_user: true
+    )
   end
 
   def self.answer_delete_custom_text(client:, data:, match:)
@@ -348,7 +353,6 @@ class Commands
     time = DateTime.strptime(data.ts, '%s')
 
     # skip processing events and data without client_msg_id
-    p data
     return if data.respond_to?(:client_msg_id) == false and data.respond_to?(:files) == false
 
     begin

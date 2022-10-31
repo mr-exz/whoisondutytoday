@@ -46,7 +46,7 @@ en:
         text: "Now <@%{name}> on duty."
     answer:
       created:
-        text: "Custom answer created, now bot will use that text."
+        text: "Custom answer created, now but will use that text, below you can see how it will look like:"
       deleted:
         text: "Custom answer deleted for this channel."
     user:

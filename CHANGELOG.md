@@ -6,7 +6,8 @@
 - Added option create duty hours for other people.
 - Added option define `action` from slack message.
 - Added sync missed users from Opsgenie.
-- Added command hide reason [#113](/../../issues/113). 
+- Added command hide reason [#113](/../../issues/113).
+- Added display custom message [#116](/../../issues/116)
 
 ### Fixes
 - Fixed publishing docker image with latest tag.

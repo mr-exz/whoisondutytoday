@@ -1,7 +1,7 @@
 require 'date'
 require_relative 'commands'
 
-class Bot < SlackRubyBot::Bot
+class Router < SlackRubyBot::Bot
   SlackRubyBot::Client.logger.level = Logger::WARN
 
   command 'help' do |client, data|

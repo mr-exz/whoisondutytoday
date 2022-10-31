@@ -5,9 +5,10 @@ This bot allow you configure working time in Slack channels.\
 And if somebody will write at non working hours, bot will reply on message,\
 with escalation option.
 
-[Changelog](./CHANGELOG.md)
+* [Changelog](./CHANGELOG.md)
+* [Docker](https://hub.docker.com/r/mrexz/whoisondutytoday)
+* ![Build](https://github.com/mr-exz/whoisondutytoday/actions/workflows/docker-build.yml/badge.svg)
 
-![Build](https://github.com/mr-exz/whoisondutytoday/actions/workflows/docker-build.yml/badge.svg)
 
 ## Features
 - Call duty person over Opsgenie service.

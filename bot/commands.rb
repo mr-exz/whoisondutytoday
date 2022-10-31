@@ -319,6 +319,9 @@ class Commands
       text = I18n.t('reply.non-working-time.text',name: client.self.name)
     else
       text = answer.body
+      if answer.hide_reason
+        reason = ""
+      end
     end
 
     client.web_client.chat_postMessage(
@@ -330,20 +333,6 @@ class Commands
                 text: text,
                 color: '#3AA3E3',
                 attachment_type: 'default'
-                # actions: [
-                #     {
-                #         name: "decision",
-                #         text: "No",
-                #         type: "button",
-                #         value: "no"
-                #     },
-                #     {
-                #         name: "decision",
-                #         text: "Yes",
-                #         type: "button",
-                #         value: "yes"
-                #     }
-                # ]
             }
         ],
         thread_ts: data.thread_ts || data.ts,

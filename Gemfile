@@ -2,20 +2,19 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.7.6'
-gem 'slack-ruby-bot'
-gem 'async-websocket', '~> 0.19.0'
+gem 'slack-ruby-bot', '~> 0.16.0'
+gem 'async-websocket', '~> 0.8.0'
 gem 'bootstrap', '~> 4.4.1'
 gem 'font-awesome-rails', '>= 4.7.0.7'
 gem 'jquery-rails', '>= 4.4.0'
 gem 'json'
 gem 'mail'
-gem 'io-event'
-gem "actionview", ">= 5.2.8.1"
-gem "activesupport", ">= 5.2.8.1"
-gem "actionpack", ">= 5.2.8.1"
-gem "activestorage", ">= 5.2.8.1"
-gem "nokogiri", ">= 1.13.4"
-gem "activerecord", ">= 5.2.4.5"
+gem 'actionview', '>= 5.2.8.1'
+gem 'activesupport', '>= 5.2.8.1'
+gem 'actionpack', '>= 5.2.8.1'
+gem 'activestorage', '>= 5.2.8.1'
+gem 'nokogiri', '>= 1.13.4'
+gem 'activerecord', '>= 5.2.4.5'
 gem 'whenever'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.8.1'

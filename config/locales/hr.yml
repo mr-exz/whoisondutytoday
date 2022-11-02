@@ -39,6 +39,8 @@ hr:
           holidays: "Oprosti, dežurna osoba u praznicima."
     opsgenie-schedule-name:
       text: ""
+    thread:
+      checked: ""
   reply:
     non-working-time:
       subject: "Nešto se dogodilo"

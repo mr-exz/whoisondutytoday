@@ -18,6 +18,9 @@ en:
         -- `duty set opsgenie escalation` - will configure all duties in channel with escalation name from Opsgenie, example `duty set opsgenie escalation My_Team_Escalation`.
         -- `answer set custom text` - configure custom text in answers from bot, example `answer set custom text nobody will help you, wait for next day`.
         -- `answer delete custom text` - delete custom text answer, use default.
+        -- `answer enable hide reason` - Hide reason like `You asked at non working day.`, only your custom text will be displayed.
+        -- `answer disable hide reason` - Show reason like `You asked at non working day.`.
+        -- `checked` - Mark thread is checked.
         Commands in dirrect messages:
         -- `my status lunch` - set status on lunch.
         -- `my status work` - set status on duty.
@@ -44,7 +47,7 @@ en:
         text: "Now <@%{name}> on duty."
     answer:
       created:
-        text: "Custom answer created, now bot will use that text."
+        text: "Custom answer created, now but will use that text, below you can see how it will look like:"
       deleted:
         text: "Custom answer deleted for this channel."
     user:
@@ -52,13 +55,21 @@ en:
         configured:
           text: "User status configured `%{status}`"
         enabled:
-          duty: "%{user} on duty today."
+          duty: "%{user} on duty today. Duty hours: from %{duty_from} to %{duty_to} (UTC)"
           lunch: "Sorry, duty person on lunch."
           holidays: "Sorry, duty person on holidays."
     opsgenie-schedule-name:
       text: "All duties in this channel synced with Opsgenie."
     opsgenie-escalation-name:
       text: "All duties in this channel now have escalation."
+    enable:
+      hide_reason:
+        text: "Reason is hidden"
+    disable:
+      hide_reason:
+        text: "Reason should be displayed"
+    thread:
+      checked: "Reminder disabled for this thread"
   reply:
     non-working-time:
       subject: "Something happened"

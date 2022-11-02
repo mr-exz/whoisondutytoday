@@ -1,8 +1,8 @@
 require 'date'
 require_relative 'commands'
 
-class Bot < SlackRubyBot::Bot
-  SlackRubyBot::Client.logger.level = Logger::INFO
+class Router < SlackRubyBot::Bot
+  SlackRubyBot::Client.logger.level = Logger::WARN
 
   command 'help' do |client, data|
     Commands.help(client: client, data: data)
@@ -30,6 +30,10 @@ class Bot < SlackRubyBot::Bot
 
   command 'who is on duty?' do |client, data|
     Commands.who_is_on_duty(data: data, client: client)
+  end
+
+  command 'checked' do |client, data|
+    Commands.thread_checked(data: data, client: client)
   end
 
   command 'duty create' do |client, data, match|
@@ -69,7 +73,15 @@ class Bot < SlackRubyBot::Bot
   end
 
   command 'answer delete custom text' do |client, data, match|
-    Commands.answer_delete_custom_text(client: client, data: data, match: match)
+    Commands.answer_delete_custom_text(client: client, data: data)
+  end
+
+  command 'answer enable hide reason' do |client, data|
+    Commands.answer_enable_hide_reason(client: client, data: data)
+  end
+
+  command 'answer disable hide reason' do |client, data|
+    Commands.answer_disable_hide_reason(client: client, data: data)
   end
 
   command(/.*/) do |client, data|

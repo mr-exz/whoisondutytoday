@@ -4,7 +4,6 @@ services:
     image: mrexz/whoisondutytoday:latest
     restart: always
     container_name: whoisondutytoday
-    build: .
     volumes:
       - /opt/whoisondutytoday/db/data/:/myapp/db/data/
     ports:

@@ -6,7 +6,7 @@ class MessageProcessor
 
   def collectUserInfo(data:)
     user = User.where(slack_user_id: data.user).first
-    if user.blank?
+    if user.blank? and user.updated_at < 1.day.ago
       user_info = @slack_web_client.users_info(user: data.user)
 
       user = User.new

@@ -5,11 +5,9 @@
 - Added display custom message [#116](/../../issues/116)
 - Added display hours for person on duty [#100](/../../issues/100)
 - Added option mark thread as replied [#99](/../../issues/99)
-- Added support of many people.
-- Added support of winter/summer time.
-- Added option create duty hours for other people.
-- Added option define `action` from slack message.
-- Added sync missed users from Opsgenie.
+- Added support of winter/summer time. [#70](/../../issues/70)
+### Bugfixes
+- Check for nil [#85](/../../issues/85).
 
 ### Fixes
 - Fixed publishing docker image with latest tag.

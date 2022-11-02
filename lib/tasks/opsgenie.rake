@@ -6,9 +6,11 @@ namespace :opsgenie do
     notification = NotifyOpsgenie.new
 
     opsgenie_schedules.each do |shedule_name|
-      json_response = JSON.parse(notification.GetOnCall(schedule_name: shedule_name).body)
-      user = User.where('lower(contacts) = ?', json_response['data']['onCallRecipients'][0].downcase).first
-      duties = Duty.where(user_id: user.slack_user_id,opsgenie_schedule_name: shedule_name)
+      if json_response['data'] != nil
+        json_response = JSON.parse(notification.GetOnCall(schedule_name: shedule_name).body)
+        user = User.where('lower(contacts) = ?', json_response['data']['onCallRecipients'][0].downcase).first
+        duties = Duty.where(user_id: user.slack_user_id,opsgenie_schedule_name: shedule_name)
+      end  
 
       duties.each do |duty|
         begin

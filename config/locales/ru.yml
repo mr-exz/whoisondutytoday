@@ -39,6 +39,8 @@ ru:
           holidays: "Извините, дежурный на каникулах."
     opsgenie-schedule-name:
       text: ""
+    thread:
+      checked: ""
   reply:
     non-working-time:
       subject: "Что то  случилось"

@@ -32,6 +32,10 @@ class Router < SlackRubyBot::Bot
     Commands.who_is_on_duty(data: data, client: client)
   end
 
+  command 'checked' do |client, data|
+    Commands.thread_checked(data: data, client: client)
+  end
+
   command 'duty create' do |client, data, match|
     Commands.duty_create(client: client, data: data, match: match)
   end
@@ -69,7 +73,7 @@ class Router < SlackRubyBot::Bot
   end
 
   command 'answer delete custom text' do |client, data, match|
-    Commands.answer_delete_custom_text(client: client, data: data, match: match)
+    Commands.answer_delete_custom_text(client: client, data: data)
   end
 
   command 'answer enable hide reason' do |client, data|

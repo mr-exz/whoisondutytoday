@@ -60,7 +60,7 @@ class Commands
     )
   end
 
-  def self.answer_delete_custom_text(client:, data:, match:)
+  def self.answer_delete_custom_text(client:, data:)
     Answer.where(channel_id: data.channel).delete_all
 
     client.web_client.chat_postMessage(
@@ -214,7 +214,7 @@ class Commands
     end
   end
 
-  def self.channel_reminder_enabled(client:, data:, match:)
+  def self.channel_reminder_enabled(client:, data:)
     channel = Channel.where(slack_channel_id: data.channel).first
     channel.reminder_enabled = true
     channel.save
@@ -225,7 +225,7 @@ class Commands
     )
   end
 
-  def self.channel_reminder_disabled(client:, data:, match:)
+  def self.channel_reminder_disabled(client:, data:)
     channel = Channel.where(slack_channel_id: data.channel).first
     channel.reminder_enabled = false
     channel.save
@@ -314,8 +314,23 @@ class Commands
     duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
     client.say(
       channel: data.channel,
-      text: I18n.t('commands.user.status.enabled.duty', user: duty.user.real_name),
+      text: I18n.t('commands.user.status.enabled.duty',
+                   user: duty.user.real_name ,
+                   duty_from: duty.duty_from.strftime('%H:%M').to_s,
+                   duty_to:duty.duty_to.strftime('%H:%M').to_s
+      ),
       thread_ts: data.thread_ts || data.ts
+    )
+  end
+
+  def self.thread_checked(data:, client:)
+    message_processor = MessageProcessor.new
+    message_processor.disable_message_from_remind(data)
+    client.web_client.chat_postMessage(
+      channel: data.channel,
+      text: I18n.t('commands.thread.checked'),
+      thread_ts: data.thread_ts || data.ts,
+      as_user: true
     )
   end
 

@@ -54,7 +54,7 @@ en:
         configured:
           text: "User status configured `%{status}`"
         enabled:
-          duty: "%{user} on duty today."
+          duty: "%{user} on duty today. Duty hours: from %{duty_from} to %{duty_to} (UTC)"
           lunch: "Sorry, duty person on lunch."
           holidays: "Sorry, duty person on holidays."
     opsgenie-schedule-name:
@@ -67,6 +67,8 @@ en:
     disable:
       hide_reason:
         text: "Reason should be displayed"
+    thread:
+      checked: "Reminder disabled for this thread"
   reply:
     non-working-time:
       subject: "Something happened"

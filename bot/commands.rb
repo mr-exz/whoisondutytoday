@@ -325,7 +325,7 @@ class Commands
 
   def self.thread_checked(data:, client:)
     message_processor = MessageProcessor.new
-    message_processor.disable_message_from_remind(data)
+    message_processor.disable_message_from_remind(data: data)
     client.web_client.chat_postMessage(
       channel: data.channel,
       text: I18n.t('commands.thread.checked'),

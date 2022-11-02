@@ -20,6 +20,7 @@ en:
         -- `answer delete custom text` - delete custom text answer, use default.
         -- `answer enable hide reason` - Hide reason like `You asked at non working day.`, only your custom text will be displayed.
         -- `answer disable hide reason` - Show reason like `You asked at non working day.`.
+        -- `checked` - Mark thread is checked.
         Commands in dirrect messages:
         -- `my status lunch` - set status on lunch.
         -- `my status work` - set status on duty.

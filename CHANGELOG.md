@@ -1,4 +1,8 @@
 # Changelog
+## 0.7.1
+### Bugfixes
+- Check for nil [#85](/../../issues/85).
+
 ## 0.7.0
 ### Improvements
 - Added command hide reason [#113](/../../issues/113).

@@ -21,6 +21,8 @@ en:
         -- `answer enable hide reason` - Hide reason like `You asked at non working day.`, only your custom text will be displayed.
         -- `answer disable hide reason` - Show reason like `You asked at non working day.`.
         -- `checked` - Mark thread is checked.
+        -- `action create problem:NEWERROR action:What to do with this error` - Create answer from bot on this key word problem.
+        -- `action delete problem:NEWERROR` - Delete answer from bot on this key word.
         Commands in dirrect messages:
         -- `my status lunch` - set status on lunch.
         -- `my status work` - set status on duty.
@@ -70,6 +72,11 @@ en:
         text: "Reason should be displayed"
     thread:
       checked: "Reminder disabled for this thread"
+    action:
+      created:
+        text: "Action created for problem"
+      deleted:
+        text: "Action deleted for problem"
   reply:
     non-working-time:
       subject: "Something happened"
@@ -82,3 +89,5 @@ en:
     opsgenie:
         text: "Alert opened, soon person on call will contact you."
         error: "Failed to call duty person, Opsgenie replied with error: %{message}."
+    known-problem:
+      subject: "I found action for known problem, maybe it can help you:"

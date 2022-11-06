@@ -1,5 +1,4 @@
 class ActionsController < ApplicationController
-  skip_before_action :verify_authenticity_token
   def index
     @actions = Action.all
     respond_to do |format|
@@ -10,7 +9,7 @@ class ActionsController < ApplicationController
   end
 
   def create
-    action = Action.new(problem: params["problem"], action: params["aktion"], channel: params["channel"])
+    action = Action.new(problem: params["problem"], action: params["action"], channel: params["channel"])
     action.save
   end
 

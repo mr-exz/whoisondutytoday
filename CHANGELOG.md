@@ -1,4 +1,8 @@
 # Changelog
+## 0.8.0
+### Improvements
+- Added option create action in chat with bot [#124](/../../issues/124)
+
 ## 0.7.1
 ### Bugfixes
 - Check for nil [#85](/../../issues/85).

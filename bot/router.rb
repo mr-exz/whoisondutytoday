@@ -84,6 +84,14 @@ class Router < SlackRubyBot::Bot
     Commands.answer_disable_hide_reason(client: client, data: data)
   end
 
+  command 'action create' do |client, data, match|
+    Commands.action_create(client: client, data: data, match: match)
+  end
+
+  command 'action delete' do |client, data, match|
+    Commands.action_delete(client: client, data: data, match: match)
+  end
+
   command(/.*/) do |client, data|
     Commands.unknown(client: client, data: data)
   end

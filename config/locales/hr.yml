@@ -53,3 +53,5 @@ hr:
     opsgenie:
       text: "Upozorenje se otvorilo, uskoro će vas osoba na poziv kontaktirati."
       error: "Nije uspio nazvati dežurnu osobu, opsgenie je odgovorio pogreškom: %{message}."
+    known-problem:
+      subject: ""

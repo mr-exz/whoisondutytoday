@@ -36,6 +36,36 @@ class Commands
       as_user: true
     )
   end
+  def self.action_create(client:, data:, match:)
+    action = Action.new(
+      problem: match['expression'][/problem:(.*) /, 1],
+      action: match['expression'][/ action:(.*)$/, 1],
+      channel: data.channel
+    )
+
+    action.save
+
+    client.web_client.chat_postMessage(
+      channel: data.channel,
+      text: I18n.t('commands.action.created.text'),
+      thread_ts: data.thread_ts || data.ts,
+      as_user: true
+    )
+  end
+
+  def self.action_delete(client:, data:, match:)
+    Action.where(
+      problem: match['expression'][/problem:(.*)/, 1],
+      channel: data.channel
+    ).delete_all
+
+    client.web_client.chat_postMessage(
+      channel: data.channel,
+      text: I18n.t('commands.action.deleted.text'),
+      thread_ts: data.thread_ts || data.ts,
+      as_user: true
+    )
+  end
 
   def self.answer_set_custom_text(client:, data:, match:)
     custom_text = match['expression']
@@ -116,7 +146,6 @@ class Commands
   def self.duty_create(client:, data:, match:)
     message_processor = MessageProcessor.new
     slack_web_client = Slack::Web::Client.new
-    user_info = slack_web_client.users_info(user: data.user)
     begin
       channel_info = slack_web_client.channels_info(channel: data.channel)
     rescue
@@ -363,6 +392,24 @@ class Commands
     message_processor.save_message(data: data)
   end
 
+  def self.reply_to_known_problem (client:, problem:, data:, action:)
+    client.web_client.chat_postMessage(
+      text: '%s' % I18n.t('reply.known-problem.subject'),
+      channel: data.channel,
+      attachments: [
+        {
+          text: "Problem: %s \nAction: %s" % [problem,action],
+          color: '#3AA3E3',
+          attachment_type: 'default'
+        }
+      ],
+      thread_ts: data.thread_ts || data.ts,
+      as_user: true
+    )
+    message_processor = MessageProcessor.new
+    message_processor.save_message(data: data)
+  end
+
   def self.watch(client:, data:, match:)
     message_processor = MessageProcessor.new
     time = DateTime.strptime(data.ts, '%s')
@@ -383,10 +430,21 @@ class Commands
 
       # don't reply on duty person messages
       return if data.user == duty.user.slack_user_id
+
+      # Answer if it is known problem
+      if data != nil and match != nil
+        Action.where(channel: data.channel).each do |action|
+          Regexp.new(/#{action.problem}/i).match(match[0][0]) do |_|
+            reply_to_known_problem(client: client,problem: action.problem,data: data,action: action.action)
+            return
+          end
+        end
+      end
+
       # check if message written in channel
       if data.respond_to?(:thread_ts) == false
         message_processor.collectUserInfo(data: data)
-        reason = self.answer(time, duty, match, data)
+        reason = self.answer(time, duty)
         reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
         return
       end
@@ -394,7 +452,7 @@ class Commands
       # check if message written in thread without answer from bot
       message = Message.where('ts=? OR thread_ts=?', data.thread_ts, data.thread_ts).where(reply_counter: 1)
       if message.blank?
-        reason = self.answer(time, duty, match, data)
+        reason = self.answer(time, duty)
         reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
       end
     rescue StandardError => e
@@ -402,7 +460,7 @@ class Commands
     end
   end
 
-  def self.answer(time, duty, match, data)
+  def self.answer(time, duty)
     reason = nil
 
     if time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N') or time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N')
@@ -422,14 +480,6 @@ class Commands
 
     if duty.user.status == 'holidays'
       reason = I18n.t('commands.user.status.enabled.holidays')
-    end
-
-    if data != nil and match != nil
-      Action.where(channel: data.channel).each do |action|
-        Regexp.new(/#{action.problem}/i).match(match[0][0]) do |_|
-          reason = action.action
-        end
-      end
     end
 
     reason

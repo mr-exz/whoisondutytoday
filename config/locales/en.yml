@@ -49,9 +49,11 @@ en:
         text: "Now <@%{name}> on duty."
     answer:
       created:
-        text: "Custom answer created, now but will use that text, below you can see how it will look like:"
+        text: "Custom answer created, now bot will use that text, below you can see how it will look like:"
       deleted:
         text: "Custom answer deleted for this channel."
+      failed:
+        text: "Custom answer creation failed, try again."
     user:
       status:
         configured:
@@ -67,6 +69,8 @@ en:
     enable:
       hide_reason:
         text: "Reason is hidden"
+        failed:
+          text: "Operation failed, try again."
     disable:
       hide_reason:
         text: "Reason should be displayed"
@@ -77,6 +81,8 @@ en:
         text: "Action created for problem"
       deleted:
         text: "Action deleted for problem"
+      failed:
+        text: "Operation failed, try again."
   reply:
     non-working-time:
       subject: "Something happened"

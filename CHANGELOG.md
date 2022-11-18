@@ -1,4 +1,8 @@
 # Changelog
+## 0.8.1
+### Bugfixes
+- Small bugfixes
+
 ## 0.8.0
 ### Improvements
 - Added option create action in chat with bot [#124](/../../issues/124)

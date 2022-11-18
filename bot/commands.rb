@@ -36,21 +36,30 @@ class Commands
       as_user: true
     )
   end
+
   def self.action_create(client:, data:, match:)
     action = Action.new(
-      problem: match['expression'][/problem:(.*) /, 1],
+      problem: match['expression'][/problem:(.*) action:/, 1],
       action: match['expression'][/ action:(.*)$/, 1],
       channel: data.channel
     )
 
-    action.save
+    if action.save
+      client.web_client.chat_postMessage(
+        channel: data.channel,
+        text: I18n.t('commands.action.created.text'),
+        thread_ts: data.thread_ts || data.ts,
+        as_user: true
+      )
+    else
+      client.web_client.chat_postMessage(
+        channel: data.channel,
+        text: I18n.t('commands.action.failed.text'),
+        thread_ts: data.thread_ts || data.ts,
+        as_user: true
+      )
+    end
 
-    client.web_client.chat_postMessage(
-      channel: data.channel,
-      text: I18n.t('commands.action.created.text'),
-      thread_ts: data.thread_ts || data.ts,
-      as_user: true
-    )
   end
 
   def self.action_delete(client:, data:, match:)
@@ -73,21 +82,31 @@ class Commands
     answer = Answer.new
     answer.body = custom_text
     answer.channel_id = data.channel
-    answer.save
 
-    client.web_client.chat_postMessage(
-      channel: data.channel,
-      text: I18n.t('commands.answer.created.text'),
-      thread_ts: data.thread_ts || data.ts,
-      as_user: true
-    )
+    if answer.save
 
-    client.web_client.chat_postMessage(
-      channel: data.channel,
-      text: custom_text,
-      thread_ts: data.thread_ts || data.ts,
-      as_user: true
-    )
+      client.web_client.chat_postMessage(
+        channel: data.channel,
+        text: I18n.t('commands.answer.created.text'),
+        thread_ts: data.thread_ts || data.ts,
+        as_user: true
+      )
+
+      client.web_client.chat_postMessage(
+        channel: data.channel,
+        text: custom_text,
+        thread_ts: data.thread_ts || data.ts,
+        as_user: true
+      )
+    else
+      client.web_client.chat_postMessage(
+        channel: data.channel,
+        text: I18n.t('commands.answer.failed.text'),
+        thread_ts: data.thread_ts || data.ts,
+        as_user: true
+      )
+    end
+
   end
 
   def self.answer_delete_custom_text(client:, data:)
@@ -344,9 +363,9 @@ class Commands
     client.say(
       channel: data.channel,
       text: I18n.t('commands.user.status.enabled.duty',
-                   user: duty.user.real_name ,
+                   user: duty.user.real_name,
                    duty_from: duty.duty_from.strftime('%H:%M').to_s,
-                   duty_to:duty.duty_to.strftime('%H:%M').to_s
+                   duty_to: duty.duty_to.strftime('%H:%M').to_s
       ),
       thread_ts: data.thread_ts || data.ts
     )
@@ -398,7 +417,7 @@ class Commands
       channel: data.channel,
       attachments: [
         {
-          text: "Problem: %s \nAction: %s" % [problem,action],
+          text: "Problem: %s \nAction: %s" % [problem, action],
           color: '#3AA3E3',
           attachment_type: 'default'
         }
@@ -435,7 +454,7 @@ class Commands
       if data != nil and match != nil
         Action.where(channel: data.channel).each do |action|
           Regexp.new(/#{action.problem}/i).match(match[0][0]) do |_|
-            reply_to_known_problem(client: client,problem: action.problem,data: data,action: action.action)
+            reply_to_known_problem(client: client, problem: action.problem, data: data, action: action.action)
             return
           end
         end
@@ -495,13 +514,21 @@ class Commands
   end
 
   def self.answer_enable_hide_reason(client:, data:)
-    Answer.where(channel_id: data.channel).update_all(hide_reason: true)
-    client.web_client.chat_postMessage(
-      channel: data.channel,
-      text: I18n.t('commands.enable.hide_reason.text', name: client.self.name),
-      thread_ts: data.thread_ts || data.ts,
-      as_user: true
-    )
+    if Answer.where(channel_id: data.channel).update_all(hide_reason: true)
+      client.web_client.chat_postMessage(
+        channel: data.channel,
+        text: I18n.t('commands.enable.hide_reason.text', name: client.self.name),
+        thread_ts: data.thread_ts || data.ts,
+        as_user: true
+      )
+    else
+      client.web_client.chat_postMessage(
+        channel: data.channel,
+        text: I18n.t('commands.enable.hide_reason.failed.text', name: client.self.name),
+        thread_ts: data.thread_ts || data.ts,
+        as_user: true
+      )
+    end
   end
 
   def self.answer_disable_hide_reason(client:, data:)

@@ -23,7 +23,7 @@ en:
         -- `checked` - Mark thread is checked.
         -- `action create problem:NEWERROR action:What to do with this error` - Create answer from bot on this key word problem.
         -- `action delete problem:NEWERROR` - Delete answer from bot on this key word.
-        Commands in dirrect messages:
+        Commands in direct messages:
         -- `my status lunch` - set status on lunch.
         -- `my status work` - set status on duty.
         -- `my status holidays` - set status on holidays.
@@ -49,9 +49,11 @@ en:
         text: "Now <@%{name}> on duty."
     answer:
       created:
-        text: "Custom answer created, now but will use that text, below you can see how it will look like:"
+        text: "Custom answer created, now bot will use that text, below you can see how it will look like:"
       deleted:
         text: "Custom answer deleted for this channel."
+      failed:
+        text: "Custom answer creation failed, try again."
     user:
       status:
         configured:
@@ -67,6 +69,8 @@ en:
     enable:
       hide_reason:
         text: "Reason is hidden"
+        failed:
+          text: "Operation failed, try again."
     disable:
       hide_reason:
         text: "Reason should be displayed"
@@ -77,6 +81,8 @@ en:
         text: "Action created for problem"
       deleted:
         text: "Action deleted for problem"
+      failed:
+        text: "Operation failed, try again."
   reply:
     non-working-time:
       subject: "Something happened"

@@ -41,6 +41,9 @@ hr:
       text: ""
     thread:
       checked: ""
+    action:
+      failed:
+        text: ""
   reply:
     non-working-time:
       subject: "Nešto se dogodilo"

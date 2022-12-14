@@ -5,8 +5,8 @@ ruby '2.7.6'
 gem 'slack-ruby-bot', '~> 0.16.0'
 gem 'async-websocket', '~> 0.8.0'
 gem 'bootstrap', '~> 4.4.1'
-gem 'font-awesome-rails', '>= 4.7.0.7'
-gem 'jquery-rails', '>= 4.4.0'
+gem 'font-awesome-rails', '>= 4.7.0.8'
+gem 'jquery-rails', '>= 4.5.0'
 gem 'json'
 gem 'mail'
 gem 'actionview', '>= 5.2.8.1'
@@ -34,7 +34,7 @@ gem 'coffee-rails', '~> 4.2', '>= 4.2.2'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.5'
+gem 'jbuilder', '~> 2.11', '>= 2.11.5'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password

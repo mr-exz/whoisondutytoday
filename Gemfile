@@ -2,22 +2,22 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.7.6'
-gem 'slack-ruby-bot', '~> 0.16.0'
+gem 'slack-ruby-bot', '~> 0.16.1'
 gem 'async-websocket', '~> 0.8.0'
 gem 'bootstrap', '~> 4.4.1'
-gem 'font-awesome-rails', '>= 4.7.0.7'
-gem 'jquery-rails', '>= 4.4.0'
+gem 'font-awesome-rails', '>= 4.7.0.8'
+gem 'jquery-rails', '>= 4.5.0'
 gem 'json'
 gem 'mail'
-gem 'actionview', '>= 5.2.8.1'
-gem 'activesupport', '>= 5.2.8.1'
-gem 'actionpack', '>= 5.2.8.1'
-gem 'activestorage', '>= 5.2.8.1'
+gem 'actionview', '>= 6.1.7.1'
+gem 'activesupport', '>= 6.1.7.1'
+gem 'actionpack', '>= 6.1.7.1'
+gem 'activestorage', '>= 6.1.7.1'
 gem 'nokogiri', '>= 1.13.4'
-gem 'activerecord', '>= 5.2.4.5'
+gem 'activerecord', '>= 6.1.7.1'
 gem 'whenever'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.8.1'
+gem 'rails', '~> 6.1.7.1'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use Puma as the app server
@@ -34,7 +34,7 @@ gem 'coffee-rails', '~> 4.2', '>= 4.2.2'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.5'
+gem 'jbuilder', '~> 2.11', '>= 2.11.5'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
@@ -65,7 +65,7 @@ end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 3.35.3'
+  gem 'capybara', '>= 3.37.1'
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'chromedriver-helper', '>= 2.1.1'

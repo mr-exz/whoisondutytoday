@@ -5,8 +5,8 @@ ruby '2.7.6'
 gem 'slack-ruby-bot', '~> 0.16.0'
 gem 'async-websocket', '~> 0.8.0'
 gem 'bootstrap', '~> 4.4.1'
-gem 'font-awesome-rails', '>= 4.7.0.7'
-gem 'jquery-rails', '>= 4.4.0'
+gem 'font-awesome-rails', '>= 4.7.0.8'
+gem 'jquery-rails', '>= 4.5.0'
 gem 'json'
 gem 'mail'
 gem 'actionview', '>= 5.2.8.1'
@@ -65,7 +65,7 @@ end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 3.35.3'
+  gem 'capybara', '>= 3.37.1'
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'chromedriver-helper', '>= 2.1.1'

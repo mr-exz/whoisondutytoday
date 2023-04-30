@@ -44,12 +44,12 @@ class Router < SlackRubyBot::Bot
     Commands.duty_create_for_user(client: client, data: data, match: match)
   end
 
-  command 'channel reminder enabled' do |client, data, match|
-    Commands.channel_reminder_enabled(client: client, data: data, match: match)
+  command 'channel reminder enabled' do |client, data|
+    Commands.channel_reminder_enabled(client: client, data: data)
   end
 
-  command 'channel reminder disabled' do |client, data, match|
-    Commands.channel_reminder_disabled(client: client, data: data, match: match)
+  command 'channel reminder disabled' do |client, data|
+    Commands.channel_reminder_disabled(client: client, data: data)
   end
 
   command 'duty update' do |client, data, match|

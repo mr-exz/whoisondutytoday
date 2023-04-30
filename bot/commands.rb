@@ -454,9 +454,8 @@ class Commands
       # Answer if it is known problem
       if data != nil and match != nil
         Action.where(channel: data.channel).each do |action|
-          Regexp.new(/#{action.problem}/i).match(match[0][0]) do |_|
+          Regexp.new(/#{action.problem}/i).match(data.text) do |_|
             reply_to_known_problem(client: client, problem: action.problem, data: data, action: action.action)
-            return
           end
         end
       end

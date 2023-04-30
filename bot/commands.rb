@@ -438,6 +438,7 @@ class Commands
 
     begin
       channel = Channel.where(slack_channel_id: data.channel).first
+      return if channel.nil?
       duty = Duty.where(channel_id: data.channel, enabled: true).first
       answer = Answer.where(channel_id: data.channel).first
 

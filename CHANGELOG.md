@@ -1,4 +1,13 @@
 # Changelog
+## 0.10.0
+### Improvements
+- Added `allow list` to perform call on duty person [#153](/../../issues/153)
+- Added Jira integration to create tasks from threads [#13](/../../issues/13)
+- Added option to set 2 custom answers, working and non working time [#154](/../../issues/154)
+- Added release notes announces
+- Updated dependencies 
+- Removed vagrant files
+
 ## 0.9.0
 ### Bugfixes
 - Opsgenie rake task fixes
@@ -6,6 +15,7 @@
 ### Improvements
 - Known-problem reply feature doesn't trigger if problem is in a code block [#134](/../../issues/134)
 - No non-working-hours message if known-problem reply triggered [#135](/../../issues/135) 
+
 ## 0.8.1
 ### Bugfixes
 - Small bugfixes

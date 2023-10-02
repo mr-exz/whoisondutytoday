@@ -1,28 +1,19 @@
 require 'date'
-require_relative 'commands'
-require_relative 'commands/help'
+require_relative 'commands/main'
 
-class Router < SlackRubyBot::Bot
+class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
   SlackRubyBot::Client.logger.level = Logger::WARN
 
   command 'help' do |client, data|
-    Help.exec(client: client, data: data)
+    WhoIsOnDutyTodaySlackBotModule::Commands::Help.call(client: client, data: data)
   end
 
   command 'call duty person' do |client, data|
-    Commands.call_of_duty(client: client, data: data)
+    WhoIsOnDutyTodaySlackBotModule::Commands::CallDutyPerson.call(client: client, data: data)
   end
 
-  command 'my status lunch' do |client, data|
-    Commands.set_user_status(client: client, data: data, status: 'lunch')
-  end
-
-  command 'my status holidays' do |client, data|
-    Commands.set_user_status(client: client, data: data, status: 'holidays')
-  end
-
-  command 'my status work' do |client, data|
-    Commands.set_user_status(client: client, data: data, status: 'work')
+  command 'my status' do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::MyStatus.call(client: client, data: data, match: match)
   end
 
   command 'i am on duty' do |client, data|

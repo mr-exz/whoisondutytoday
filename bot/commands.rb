@@ -120,48 +120,6 @@ class Commands
     )
   end
 
-  def self.call_of_duty(client:, data:)
-    duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
-    slack_web_client = Slack::Web::Client.new
-    client_info = slack_web_client.users_info(user: data.user)
-    options = {}
-    options[:message_ts] = data.thread_ts || data.ts
-    options[:channel] = data.channel
-    message_info = slack_web_client.chat_getPermalink(options)
-    notification = NotifyOpsgenie.new
-
-    recipient = {}
-    if !duty.opsgenie_escalation_name.nil?
-      recipient['name'] = duty.opsgenie_escalation_name
-      recipient['type'] = 'escalation'
-      recipient['field_name'] = 'name'
-    elsif !duty.opsgenie_schedule_name.nil?
-      recipient['name'] = duty.opsgenie_schedule_name
-      recipient['type'] = 'schedule'
-      recipient['field_name'] = 'name'
-    else
-      recipient['name'] = duty.user.contacts
-      recipient['type'] = 'user'
-      recipient['field_name'] = 'username'
-    end
-
-    response = notification.send(recipient, client_info, message_info)
-
-    json_response = JSON.parse(response.body)
-
-    if !json_response['result'].nil?
-      reply = I18n.t('reply.opsgenie.text')
-    elsif !json_response['message'].nil?
-      reply = I18n.t('reply.opsgenie.error', message: json_response['message'])
-    end
-
-    client.say(
-      channel: data.channel,
-      text: reply,
-      thread_ts: data.thread_ts || data.ts
-    )
-  end
-
   def self.duty_create(client:, data:, match:)
     message_processor = MessageProcessor.new
     slack_web_client = Slack::Web::Client.new
@@ -349,15 +307,6 @@ class Commands
     )
   end
 
-  def self.set_user_status(data:, client:, status:)
-    User.where(slack_user_id: data.user).update_all(status: status)
-    client.say(
-      channel: data.channel,
-      text: I18n.t('commands.user.status.configured.text', status: status),
-      thread_ts: data.thread_ts || data.ts
-    )
-  end
-
   def self.who_is_on_duty(data:, client:)
     duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
     client.say(
@@ -449,7 +398,7 @@ class Commands
       end
 
       # don't reply on duty person messages
-      return if data.user == duty.user.slack_user_id
+      #return if data.user == duty.user.slack_user_id
 
       # Answer if it is known problem
       if data != nil and match != nil
@@ -493,12 +442,8 @@ class Commands
       reason = I18n.t('reply.reason.non-working-day.text')
     end
 
-    if duty.user.status == 'lunch'
-      reason = I18n.t('commands.user.status.enabled.lunch')
-    end
-
-    if duty.user.status == 'holidays'
-      reason = I18n.t('commands.user.status.enabled.holidays')
+    unless duty.user.status.nil?
+      reason = I18n.t('commands.user.status.enabled.text', status: duty.user.status)
     end
 
     reason

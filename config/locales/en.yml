@@ -60,8 +60,7 @@ en:
           text: "User status configured `%{status}`"
         enabled:
           duty: "%{user} on duty today. Duty hours: from %{duty_from} to %{duty_to} (UTC)"
-          lunch: "Sorry, duty person on lunch."
-          holidays: "Sorry, duty person on holidays."
+          text: "Sorry, duty person on %{status}."
     opsgenie-schedule-name:
       text: "All duties in this channel synced with Opsgenie."
     opsgenie-escalation-name:

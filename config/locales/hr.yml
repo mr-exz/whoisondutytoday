@@ -35,8 +35,7 @@ hr:
           text: "Status korisnika konfiguriran `%{status}`"
         enabled:
           duty: "%{user} danas na dužnosti."
-          lunch: "Oprosti, dežurna osoba na ručku."
-          holidays: "Oprosti, dežurna osoba u praznicima."
+          text: "Sorry, duty person on %{status}."
     opsgenie-schedule-name:
       text: ""
     thread:

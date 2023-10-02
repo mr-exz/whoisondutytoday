@@ -35,8 +35,7 @@ ru:
           text: "Статус пользователя сконфигурирован: `%{status}`"
         enabled:
           duty: "%{user} сегодня дежурный."
-          lunch: "Извините, дежурный на обеде."
-          holidays: "Извините, дежурный на каникулах."
+          text: "Sorry, duty person on %{status}."
     opsgenie-schedule-name:
       text: ""
     thread:

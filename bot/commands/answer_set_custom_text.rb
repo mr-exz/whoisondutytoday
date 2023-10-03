@@ -9,14 +9,12 @@ module WhoIsOnDutyTodaySlackBotModule
         answer.channel_id = data.channel
 
         if answer.save
-
           client.web_client.chat_postMessage(
             channel: data.channel,
             text: I18n.t('commands.answer.created.text'),
             thread_ts: data.thread_ts || data.ts,
             as_user: true
           )
-
           client.web_client.chat_postMessage(
             channel: data.channel,
             text: custom_text,

@@ -23,7 +23,7 @@ module WhoIsOnDutyTodaySlackBotModule
             text: I18n.t('commands.duty.updated.text', fH: duty.duty_from.hour, fM: duty.duty_from.min, tH: duty.duty_to.hour, tM: duty.duty_to.min, status: duty.enabled),
             thread_ts: data.thread_ts || data.ts
           )
-          i_am_on_duty(data: data, client: client)
+          DutyCreate::i_am_on_duty(data: data, client: client)
         end
       end
     end

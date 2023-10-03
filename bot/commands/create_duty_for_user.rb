@@ -61,7 +61,6 @@ module WhoIsOnDutyTodaySlackBotModule
           thread_ts: data.thread_ts || data.ts
         )
       end
-
     end
   end
 end

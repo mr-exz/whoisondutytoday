@@ -1,6 +1,16 @@
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class DutyCreate
+      def self.i_am_on_duty(data:, client:)
+        Duty.where(channel_id: data.channel).where(user_id: data.user).update_all(enabled: true)
+        Duty.where(channel_id: data.channel).where.not(user_id: data.user).update_all(enabled: false)
+        client.say(
+          channel: data.channel,
+          text: I18n.t('commands.duty.enabled.text'),
+          thread_ts: data.thread_ts || data.ts
+        )
+      end
+
       def self.call(client:,data:,match:)
         message_processor = MessageProcessor.new
         slack_web_client = Slack::Web::Client.new

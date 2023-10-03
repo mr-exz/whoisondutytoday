@@ -21,7 +21,7 @@ module WhoIsOnDutyTodaySlackBotModule
           end
 
           # don't reply on duty person messages
-          #return if data.user == duty.user.slack_user_id
+          return if data.user == duty.user.slack_user_id
 
           # Answer if it is known problem
           if data != nil and match != nil
@@ -52,7 +52,6 @@ module WhoIsOnDutyTodaySlackBotModule
       end
 
       def self.reply_in_not_working_time (client, reason, data, answer)
-
         if answer.nil?
           text = I18n.t('reply.non-working-time.text', name: client.self.name)
         else

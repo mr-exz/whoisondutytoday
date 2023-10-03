@@ -17,78 +17,78 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
   end
 
   command 'i am on duty' do |client, data|
-    Commands.i_am_on_duty(data: data, client: client)
+    WhoIsOnDutyTodaySlackBotModule::Commands::IAmOnDuty.call(client: client, data: data)
   end
 
   command 'who is on duty?' do |client, data|
-    Commands.who_is_on_duty(data: data, client: client)
+    WhoIsOnDutyTodaySlackBotModule::Commands::WhoIsOnDuty.call(client: client, data: data)
   end
 
   command 'checked' do |client, data|
-    Commands.thread_checked(data: data, client: client)
+    WhoIsOnDutyTodaySlackBotModule::Commands::Checked.call(client: client, data: data)
   end
 
   command 'duty create' do |client, data, match|
-    Commands.duty_create(client: client, data: data, match: match)
+    WhoIsOnDutyTodaySlackBotModule::Commands::DutyCreate.call(client: client, data: data, match: match)
   end
 
   command 'create duty for user' do |client, data, match|
-    Commands.duty_create_for_user(client: client, data: data, match: match)
+    WhoIsOnDutyTodaySlackBotModule::Commands::CreateDutyForUser.call(client: client, data: data, match: match)
   end
 
   command 'channel reminder enabled' do |client, data|
-    Commands.channel_reminder_enabled(client: client, data: data)
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelReminderEnabled.call(client: client, data: data)
   end
 
   command 'channel reminder disabled' do |client, data|
-    Commands.channel_reminder_disabled(client: client, data: data)
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelReminderDisabled.call(client: client, data: data)
   end
 
   command 'duty update' do |client, data, match|
-    Commands.duty_update(client: client, data: data, match: match)
+    WhoIsOnDutyTodaySlackBotModule::Commands::DutyUpdate.call(client: client, data: data, match:match)
   end
 
-  command 'duty delete' do |client, data, match|
-    Commands.duty_delete(client: client, data: data, match: match)
+  command 'duty delete' do |client, data|
+    WhoIsOnDutyTodaySlackBotModule::Commands::DutyDelete.call(client: client, data: data)
   end
 
   command 'duty sync with opsgenie schedule' do |client, data, match|
-    Commands.duty_sync_with_opsgenie(client: client, data: data, match: match)
+    WhoIsOnDutyTodaySlackBotModule::Commands::DutySyncWithOpsgenieSchedule.call(client: client, data: data, match: match)
   end
 
   command 'duty set opsgenie escalation' do |client, data, match|
-    Commands.duty_set_opsgenie_escalation(client: client, data: data, match: match)
+    WhoIsOnDutyTodaySlackBotModule::Commands::DutySetOpsgenieEscalation.call(client: client, data: data, match: match)
   end
 
   command 'answer set custom text' do |client, data, match|
-    Commands.answer_set_custom_text(client: client, data: data, match: match)
+    WhoIsOnDutyTodaySlackBotModule::Commands::AnswerSetCustomText.call(client: client, data: data, match: match)
   end
 
-  command 'answer delete custom text' do |client, data, match|
-    Commands.answer_delete_custom_text(client: client, data: data)
+  command 'answer delete custom text' do |client, data|
+    WhoIsOnDutyTodaySlackBotModule::Commands::AnswerDeleteCustomText.call(client: client, data: data)
   end
 
   command 'answer enable hide reason' do |client, data|
-    Commands.answer_enable_hide_reason(client: client, data: data)
+    WhoIsOnDutyTodaySlackBotModule::Commands::AnswerEnableHideReason.call(client: client, data: data)
   end
 
   command 'answer disable hide reason' do |client, data|
-    Commands.answer_disable_hide_reason(client: client, data: data)
+    WhoIsOnDutyTodaySlackBotModule::Commands::AnswerEnableHideReason.call(client: client, data: data)
   end
 
   command 'action create' do |client, data, match|
-    Commands.action_create(client: client, data: data, match: match)
+    WhoIsOnDutyTodaySlackBotModule::Commands::ActionCreate.call(client: client, data: data, match: match)
   end
 
   command 'action delete' do |client, data, match|
-    Commands.action_delete(client: client, data: data, match: match)
+    WhoIsOnDutyTodaySlackBotModule::Commands::ActionDelete.call(client: client, data: data, match: match)
   end
 
   command(/.*/) do |client, data|
-    Commands.unknown(client: client, data: data)
+    WhoIsOnDutyTodaySlackBotModule::Commands::Unknown.call(client: client, data: data)
   end
 
   scan(/(.*)/) do |client, data, match|
-    Commands.watch(client: client, data: data, match: match)
+    WhoIsOnDutyTodaySlackBotModule::Commands::Other.call(client: client, data: data, match: match)
   end
 end

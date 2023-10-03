@@ -3,7 +3,7 @@ module WhoIsOnDutyTodaySlackBotModule
     class MyStatus
       def self.call(data:, client:, match:)
         status = match['expression']
-        if status.nil?
+        if status.nil? or status == 'work'
           User.where(slack_user_id: data.user).delete_all
         else
           User.where(slack_user_id: data.user).update_all(status: status)

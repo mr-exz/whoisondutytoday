@@ -1,4 +1,4 @@
-import 'bot/commands.rb'
+import 'bot/commands/main'
 
 namespace :reminder do
   task :remind => :environment do
@@ -8,7 +8,7 @@ namespace :reminder do
       begin
         duty = Duty.where(channel_id: channel.slack_channel_id).where(enabled: true).take!
         time = DateTime.now
-        reason = Commands.answer(time,duty)
+        reason = WhoIsOnDutyTodaySlackBotModule::Commands::Other.answer(time,duty)
         unless reason.nil?
           p "Reason to skip reminder:" + reason
           next

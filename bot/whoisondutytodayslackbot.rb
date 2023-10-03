@@ -3,8 +3,6 @@ require 'json'
 require_relative 'commands/main'
 require_relative 'notify'
 require_relative 'message_processor'
-
-
 class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
   SlackRubyBot::Client.logger.level = Logger::WARN
 

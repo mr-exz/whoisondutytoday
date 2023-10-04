@@ -24,7 +24,7 @@ class DutiesController < ApplicationController
 
   def update
     @duty = Duty.find(params[:id])
-    @duty.update(
+    Duty.update(
       opsgenie_escalation_name: params[:duty][:opsgenie_escalation_name],
       opsgenie_schedule_name: params[:duty][:opsgenie_schedule_name]
     )

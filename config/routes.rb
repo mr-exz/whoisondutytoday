@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  root to: 'duties#index'
-  get 'users/index'
+  root to: "duties#index"
+  get "users/index"
   resources :duties
   resources :messages
   resources :users

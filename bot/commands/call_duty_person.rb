@@ -13,27 +13,27 @@ module WhoIsOnDutyTodaySlackBotModule
 
         recipient = {}
         if !duty.opsgenie_escalation_name.nil?
-          recipient['name'] = duty.opsgenie_escalation_name
-          recipient['type'] = 'escalation'
-          recipient['field_name'] = 'name'
+          recipient["name"] = duty.opsgenie_escalation_name
+          recipient["type"] = "escalation"
+          recipient["field_name"] = "name"
         elsif !duty.opsgenie_schedule_name.nil?
-          recipient['name'] = duty.opsgenie_schedule_name
-          recipient['type'] = 'schedule'
-          recipient['field_name'] = 'name'
+          recipient["name"] = duty.opsgenie_schedule_name
+          recipient["type"] = "schedule"
+          recipient["field_name"] = "name"
         else
-          recipient['name'] = duty.user.contacts
-          recipient['type'] = 'user'
-          recipient['field_name'] = 'username'
+          recipient["name"] = duty.user.contacts
+          recipient["type"] = "user"
+          recipient["field_name"] = "username"
         end
 
         response = notification.send(recipient, client_info, message_info)
 
         json_response = JSON.parse(response.body)
 
-        if !json_response['result'].nil?
-          reply = I18n.t('reply.opsgenie.text')
-        elsif !json_response['message'].nil?
-          reply = I18n.t('reply.opsgenie.error', message: json_response['message'])
+        if !json_response["result"].nil?
+          reply = I18n.t("reply.opsgenie.text")
+        elsif !json_response["message"].nil?
+          reply = I18n.t("reply.opsgenie.error", message: json_response["message"])
         end
 
         client.say(

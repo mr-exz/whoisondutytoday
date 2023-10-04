@@ -1,5 +1,4 @@
 class MessageProcessor
-
   def initialize
     @slack_web_client = Slack::Web::Client.new
   end
@@ -10,17 +9,17 @@ class MessageProcessor
       user_info = @slack_web_client.users_info(user: data.user)
 
       user = User.new
-      user.slack_user_id = user_info['user']['id']
-      user.name = user_info['user']['name']
-      user.real_name = user_info['user']['real_name']
-      user.tz = user_info['user']['tz']
-      user.tz_offset = user_info['user']['tz_offset']
-      user.contacts = user_info['user']['profile']['email']
+      user.slack_user_id = user_info["user"]["id"]
+      user.name = user_info["user"]["name"]
+      user.real_name = user_info["user"]["real_name"]
+      user.tz = user_info["user"]["tz"]
+      user.tz_offset = user_info["user"]["tz_offset"]
+      user.contacts = user_info["user"]["profile"]["email"]
       user.save
     elsif user.updated_at < 1.day.ago
       user_info = @slack_web_client.users_info(user: data.user)
-      user.tz = user_info['user']['tz']
-      user.tz_offset = user_info['user']['tz_offset']
+      user.tz = user_info["user"]["tz"]
+      user.tz_offset = user_info["user"]["tz_offset"]
       user.updated_at = 1.minutes.ago
       user.save
     end
@@ -32,19 +31,19 @@ class MessageProcessor
       user_info = @slack_web_client.users_info(user: slack_user_id)
 
       user = User.new
-      user.slack_user_id = user_info['user']['id']
-      user.name = user_info['user']['name']
-      user.real_name = user_info['user']['real_name']
-      user.tz = user_info['user']['tz']
-      user.tz_offset = user_info['user']['tz_offset']
-      user.contacts = user_info['user']['profile']['email']
+      user.slack_user_id = user_info["user"]["id"]
+      user.name = user_info["user"]["name"]
+      user.real_name = user_info["user"]["real_name"]
+      user.tz = user_info["user"]["tz"]
+      user.tz_offset = user_info["user"]["tz_offset"]
+      user.contacts = user_info["user"]["profile"]["email"]
       user.save
     end
   end
 
   def save_message_for_reminder(data:)
     message = Message.new
-    message.message_id = data.client_msg_id || 'undefined'
+    message.message_id = data.client_msg_id || "undefined"
     message.ts = data.ts
     message.thread_ts = data.thread_ts
     message.event_ts = data.event_ts
@@ -62,7 +61,7 @@ class MessageProcessor
 
   def save_message(data:)
     message = Message.new
-    message.message_id = data.client_msg_id || 'undefined'
+    message.message_id = data.client_msg_id || "undefined"
     message.ts = data.ts
     message.thread_ts = data.thread_ts
     message.event_ts = data.event_ts

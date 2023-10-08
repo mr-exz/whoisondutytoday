@@ -1,8 +1,3 @@
-module WhoIsOnDutyTodaySlackBotModule
-  module Commands
-  end
-end
-
 require_relative "action_create"
 require_relative "action_delete"
 require_relative "allow_list"
@@ -26,3 +21,11 @@ require_relative "my_status"
 require_relative "other"
 require_relative "unknown"
 require_relative "who_is_on_duty"
+require_relative "thread_labels"
+require_relative "channel_labels_statistic"
+require_relative "thread_clean_labels"
+
+module WhoIsOnDutyTodaySlackBotModule
+  module Commands
+  end
+end

@@ -17,7 +17,7 @@ gem 'nokogiri', '>= 1.13.10'
 gem 'activerecord', '>= 6.1.7.3'
 gem 'whenever'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.7.3'
+gem 'rails', '~> 7.1.0.0'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use Puma as the app server

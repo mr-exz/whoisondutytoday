@@ -1,3 +1,4 @@
+require_relative '../../bot/commands/main'
 namespace :reminder do
   task remind: :environment do
     channels = Channel.where(reminder_enabled: true)

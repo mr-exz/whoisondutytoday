@@ -1,3 +1,4 @@
+require_relative '../../bot/commands/main'
 namespace :opsgenie do
   task rotate: :environment do
     opsgenie_schedules = Duty.where.not(opsgenie_schedule_name: nil).or(Duty.where(opsgenie_schedule_name: "")).map(&:opsgenie_schedule_name).uniq

@@ -53,19 +53,6 @@ class MessageProcessor
     message.save
   end
 
-  def save_message_for_statistic(data:,labels_ids:)
-    message = Message.new
-    message.message_id = data.client_msg_id || "undefined"
-    message.ts = data.ts
-    message.thread_ts = data.thread_ts
-    message.event_ts = data.event_ts
-    message.channel_id = data.channel
-    message.remind_needed = false
-    message.reply_counter = 1
-    message.label_ids = labels_ids
-    message.save
-  end
-
   def disable_message_from_remind(data:)
     message = Message.where(ts: data.thread_ts).first
     message.remind_needed = false

@@ -6,7 +6,7 @@ class CreateMessages < ActiveRecord::Migration[5.2]
       t.string :thread_ts, null: true
       t.string :event_ts, null: true
       t.integer :reply_counter,
-        t.timestamps
+      t.timestamps
     end
   end
 end

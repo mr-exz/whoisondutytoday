@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_10_06_153836) do
+ActiveRecord::Schema.define(version: 2023_10_09_175804) do
 
   create_table "actions", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -52,15 +52,6 @@ ActiveRecord::Schema.define(version: 2023_10_06_153836) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "message_labels", force: :cascade do |t|
-    t.integer "message_id", null: false
-    t.integer "label_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["label_id"], name: "index_message_labels_on_label_id"
-    t.index ["message_id"], name: "index_message_labels_on_message_id"
-  end
-
   create_table "messages", force: :cascade do |t|
     t.string "message_id", null: false
     t.string "ts"
@@ -72,6 +63,22 @@ ActiveRecord::Schema.define(version: 2023_10_06_153836) do
     t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x00007fec6d61db48>"
     t.boolean "remind_needed"
     t.string "channel_id"
+  end
+
+  create_table "slack_thread_labels", force: :cascade do |t|
+    t.integer "slack_thread_id", null: false
+    t.integer "label_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["label_id"], name: "index_slack_thread_labels_on_label_id"
+    t.index ["slack_thread_id"], name: "index_slack_thread_labels_on_slack_thread_id"
+  end
+
+  create_table "slack_threads", force: :cascade do |t|
+    t.string "thread_ts"
+    t.string "channel_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "teams", force: :cascade do |t|
@@ -94,6 +101,6 @@ ActiveRecord::Schema.define(version: 2023_10_06_153836) do
     t.index ["slack_user_id"], name: "index_users_on_slack_user_id", unique: true
   end
 
-  add_foreign_key "message_labels", "labels"
-  add_foreign_key "message_labels", "messages"
+  add_foreign_key "slack_thread_labels", "labels"
+  add_foreign_key "slack_thread_labels", "slack_threads"
 end

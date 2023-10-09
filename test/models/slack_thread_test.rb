@@ -1,6 +1,6 @@
 require "test_helper"
 
-class MessageLabelTest < ActiveSupport::TestCase
+class SlackThreadTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

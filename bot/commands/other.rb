@@ -111,7 +111,7 @@ module WhoIsOnDutyTodaySlackBotModule
           reason = I18n.t("reply.reason.non-working-day.text")
         end
 
-        unless duty.user.status.nil?
+        if !duty.user.status.nil? && !duty.user.status == "work"
           reason = I18n.t("commands.user.status.enabled.text", status: duty.user.status)
         end
 

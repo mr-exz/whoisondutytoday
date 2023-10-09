@@ -1,13 +1,13 @@
 # Changelog
 ## 0.10.0
 ### Improvements
+- Updated dependencies
+- Removed vagrant files
+- Added tagging threads by label for future statistics
 - Added `allow list` to perform call on duty person [#153](/../../issues/153)
 - Added Jira integration to create tasks from threads [#13](/../../issues/13)
 - Added option to set 2 custom answers, working and non working time [#154](/../../issues/154)
-- Added tagging threads by label for future statistics
 - Added release notes announces
-- Updated dependencies 
-- Removed vagrant files
 
 ## 0.9.0
 ### Bugfixes

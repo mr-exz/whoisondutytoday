@@ -8,7 +8,7 @@ module WhoIsOnDutyTodaySlackBotModule
 
         client.web_client.chat_postMessage(
           channel: data.channel,
-          text: I18n.t("commands.thread.statistic",start_date:start_date,end_date:end_date,labels:m.count.to_s),
+          text: I18n.t("commands.thread.statistic",start_date:start_date.strftime("%d.%m.%Y %H:%M"),end_date:end_date.strftime("%d.%m.%Y %H:%M"),labels:m.count.to_s),
           thread_ts: data.thread_ts || data.ts,
           as_user: true
         )

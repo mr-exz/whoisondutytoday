@@ -81,7 +81,7 @@ en:
         success: "Labels `%{labels}` assigned"
         error: "Something was wrong"
       statistic: |
-        Information between %{start_date} - %{end_date}
+        Period: %{start_date} - %{end_date}
         labels: %{labels}
       labels:
         cleaned: "Labels removed from thread"

@@ -1,11 +1,11 @@
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
-    class ThreadCleanLabels
+    class ChannelLabelsList
       def self.call(client:, data:, match:)
-        SlackThread.find_by(thread_ts: data.thread_ts).destroy
+        m = SlackThread.joins(:labels).where(channel_id: data.channel).group(:label).count.keys
         client.web_client.chat_postMessage(
           channel: data.channel,
-          text: I18n.t("commands.thread.labels.cleaned"),
+          text: m,
           thread_ts: data.thread_ts || data.ts,
           as_user: true
         )

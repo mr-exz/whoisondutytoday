@@ -90,12 +90,16 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::ThreadLabels.call(client: client, data: data, match: match)
   end
 
-  command "thread clean labels" do |client, data, match|
-    WhoIsOnDutyTodaySlackBotModule::Commands::ThreadCleanLabels.call(client: client, data: data, match: match)
+  command "thread labels clean" do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ThreadLabelsClean.call(client: client, data: data, match: match)
   end
 
   command "channel labels statistic" do |client, data, match|
     WhoIsOnDutyTodaySlackBotModule::Commands::ChannelLabelsStatistic.call(client: client, data: data, match: match)
+  end
+
+  command "channel labels list" do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelLabelsList.call(client: client, data: data, match: match)
   end
 
   command(/.*/) do |client, data|

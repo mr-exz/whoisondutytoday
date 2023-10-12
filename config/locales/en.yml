@@ -24,8 +24,8 @@ en:
         -- `action create problem:NEWERROR action:What to do with this error` - Create answer from bot on this key word problem.
         -- `action delete problem:NEWERROR` - Delete answer from bot on this key word.
         -- `thread labels` - will label thread by any label, use space as separator, example `thread labels label1 label2`.
-        -- `thread labels list` - will display all labels in this channel.
         -- `thread labels clean` - will remove all labels from thread where you write it.
+        -- `channel labels list` - will display all labels in this channel.
         -- `channel labels statistic` - will show labels count in channel for last week.
         Commands in direct messages:
         -- `my status *` - set any status when you cannot provide support in channel, bot will reply instead of you.

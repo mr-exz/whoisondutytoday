@@ -1,13 +1,11 @@
 # Changelog
 ## 0.10.0
 ### Improvements
+- Added MIT license
 - Updated dependencies
 - Removed vagrant files
-- Added labels feature for threads and show statistic for last 9 weeks
-- Added `allow list` to perform call on duty person [#153](/../../issues/153)
-- Added Jira integration to create tasks from threads [#13](/../../issues/13)
-- Added option to set 2 custom answers, working and non working time [#154](/../../issues/154)
-- Added release notes announces
+- Added labels feature for threads and show statistic for last 9 weeks.
+- Changed user status to custom.
 
 ## 0.9.0
 ### Bugfixes

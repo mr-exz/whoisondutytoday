@@ -4,8 +4,8 @@
 - Added MIT license
 - Updated dependencies
 - Removed vagrant files
-- Added labels feature for threads and show statistic for last 9 weeks.
-- Changed user status to custom.
+- Added labels feature for threads and show statistic for last 9 weeks
+- Changed user status to custom
 
 ## 0.9.0
 ### Bugfixes

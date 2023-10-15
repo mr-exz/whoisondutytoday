@@ -23,10 +23,13 @@ en:
         -- `checked` - Mark thread is checked.
         -- `action create problem:NEWERROR action:What to do with this error` - Create answer from bot on this key word problem.
         -- `action delete problem:NEWERROR` - Delete answer from bot on this key word.
+        -- `thread labels` - will label thread by any label, use space as separator, example `thread labels label1 label2`.
+        -- `thread labels clean` - will remove all labels from thread where you write it.
+        -- `channel labels list` - will display all labels in this channel.
+        -- `channel labels statistic` - will show labels count in channel for last week.
         Commands in direct messages:
-        -- `my status lunch` - set status on lunch.
-        -- `my status work` - set status on duty.
-        -- `my status holidays` - set status on holidays.
+        -- `my status *` - set any status when you cannot provide support in channel, bot will reply instead of you.
+        -- `my status work` - bot will stop telling your status, use it when you came back.
     channel:
       reminder:
         enabled:
@@ -60,8 +63,7 @@ en:
           text: "User status configured `%{status}`"
         enabled:
           duty: "%{user} on duty today. Duty hours: from %{duty_from} to %{duty_to} (UTC)"
-          lunch: "Sorry, duty person on lunch."
-          holidays: "Sorry, duty person on holidays."
+          text: "Sorry, duty person on %{status}."
     opsgenie-schedule-name:
       text: "All duties in this channel synced with Opsgenie."
     opsgenie-escalation-name:
@@ -76,6 +78,14 @@ en:
         text: "Reason should be displayed"
     thread:
       checked: "Reminder disabled for this thread"
+      labeled:
+        success: "Labels `%{labels}` assigned"
+        error: "Something was wrong"
+      statistic: |
+        Period: %{start_date} - %{end_date}
+        labels: %{labels}
+      labels:
+        cleaned: "Labels removed from thread"
     action:
       created:
         text: "Action created for problem"

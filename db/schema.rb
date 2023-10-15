@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_30_133740) do
+ActiveRecord::Schema.define(version: 2023_10_09_175804) do
 
   create_table "actions", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -29,9 +29,7 @@ ActiveRecord::Schema.define(version: 2023_04_30_133740) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "channel_id"
     t.boolean "reminder_enabled", default: false
-    t.index ["channel_id"], name: "index_channels_on_channel_id"
     t.index ["slack_channel_id"], name: "index_channels_on_slack_channel_id", unique: true
   end
 
@@ -48,6 +46,12 @@ ActiveRecord::Schema.define(version: 2023_04_30_133740) do
     t.string "opsgenie_escalation_name"
   end
 
+  create_table "labels", force: :cascade do |t|
+    t.string "label", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "messages", force: :cascade do |t|
     t.string "message_id", null: false
     t.string "ts"
@@ -56,9 +60,25 @@ ActiveRecord::Schema.define(version: 2023_04_30_133740) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "reply_counter"
-    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x0000563524093008>"
+    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x00007fec6d61db48>"
     t.boolean "remind_needed"
     t.string "channel_id"
+  end
+
+  create_table "slack_thread_labels", force: :cascade do |t|
+    t.integer "slack_thread_id", null: false
+    t.integer "label_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["label_id"], name: "index_slack_thread_labels_on_label_id"
+    t.index ["slack_thread_id"], name: "index_slack_thread_labels_on_slack_thread_id"
+  end
+
+  create_table "slack_threads", force: :cascade do |t|
+    t.string "thread_ts"
+    t.string "channel_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "teams", force: :cascade do |t|
@@ -81,4 +101,6 @@ ActiveRecord::Schema.define(version: 2023_04_30_133740) do
     t.index ["slack_user_id"], name: "index_users_on_slack_user_id", unique: true
   end
 
+  add_foreign_key "slack_thread_labels", "labels"
+  add_foreign_key "slack_thread_labels", "slack_threads"
 end

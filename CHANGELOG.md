@@ -1,4 +1,12 @@
 # Changelog
+## 0.10.0
+### Improvements
+- Added MIT license
+- Updated dependencies
+- Removed vagrant files
+- Added labels feature for threads and show statistic for last 9 weeks
+- Changed user status to custom
+
 ## 0.9.0
 ### Bugfixes
 - Opsgenie rake task fixes
@@ -6,6 +14,7 @@
 ### Improvements
 - Known-problem reply feature doesn't trigger if problem is in a code block [#134](/../../issues/134)
 - No non-working-hours message if known-problem reply triggered [#135](/../../issues/135) 
+
 ## 0.8.1
 ### Bugfixes
 - Small bugfixes

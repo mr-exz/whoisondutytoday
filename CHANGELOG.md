@@ -1,4 +1,9 @@
 # Changelog
+## 0.10.1
+### Improvements
+- Deleting no needed code
+
+
 ## 0.10.0
 ### Improvements
 - Added MIT license

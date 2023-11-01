@@ -2,6 +2,7 @@
 ## 0.10.1
 ### Improvements
 - Deleting no needed code
+- Improved statistic output, not it json like format.
 - Added `channel labels merge`
 
 ## 0.10.0

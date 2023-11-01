@@ -8,8 +8,8 @@ module WhoIsOnDutyTodaySlackBotModule
 
         if (label_from != nil?) || (label_to_id != nil?)
           m = SlackThreadLabel.joins(:label, :slack_thread).where(slack_thread: {channel_id: data.channel}, label: {label: label_from})
-          records_affected=m.update_all(label_id: label_to_id)
-          message = I18n.t("commands.channel.labels.merged.success.text",label_from:label_from,label_to:label_to,records_affected:records_affected)
+          records_count=m.update_all(label_id: label_to_id)
+          message = I18n.t("commands.channel.labels.merged.success.text",label_from:label_from,label_to:label_to,records_count:records_count)
         else
           message = I18n.t("commands.channel.labels.merged.error.text",label_from:label_from,label_to:label_to)
         end

@@ -1,8 +1,7 @@
 # Changelog
 ## 0.10.1
 ### Improvements
-- Deleting no needed code
-
+- Added `channel labels merge`
 
 ## 0.10.0
 ### Improvements

@@ -23,6 +23,7 @@ require_relative "unknown"
 require_relative "who_is_on_duty"
 require_relative "channel_labels_statistic"
 require_relative "channel_labels_list"
+require_relative "channel_labels_merge"
 require_relative "thread_labels_clean"
 require_relative "thread_labels"
 

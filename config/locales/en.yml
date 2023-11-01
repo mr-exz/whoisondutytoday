@@ -31,6 +31,12 @@ en:
         -- `my status *` - set any status when you cannot provide support in channel, bot will reply instead of you.
         -- `my status work` - bot will stop telling your status, use it when you came back.
     channel:
+      labels:
+        merged:
+          success:
+            text: "Labels merged %{label_from} -> %{label_to} records affected %{records_count}"
+          error:
+            text: "Merge %{label_from} -> %{label_to} failed, check label names"
       reminder:
         enabled:
           text: "Reminder in channel successfully enabled."

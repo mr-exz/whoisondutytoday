@@ -43,6 +43,13 @@ hr:
     action:
       failed:
         text: ""
+    channel:
+      labels:
+        merged:
+          error:
+            text: ""
+          success:
+            text: ""
   reply:
     non-working-time:
       subject: "Nešto se dogodilo"

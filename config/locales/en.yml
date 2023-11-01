@@ -89,7 +89,7 @@ en:
         error: "Something was wrong"
       statistic: |
         Period: %{start_date} - %{end_date}
-        labels: %{labels}
+        %{labels}
       labels:
         cleaned: "Labels removed from thread"
     action:

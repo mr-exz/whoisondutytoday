@@ -27,6 +27,7 @@ en:
         -- `thread labels clean` - will remove all labels from thread where you write it.
         -- `channel labels list` - will display all labels in this channel.
         -- `channel labels statistic` - will show labels count in channel for last week.
+        -- `channel labels merge` - will migrate existing threads in channel from one label to another, example `channel labels merge from:label1 to:label2`
         Commands in direct messages:
         -- `my status *` - set any status when you cannot provide support in channel, bot will reply instead of you.
         -- `my status work` - bot will stop telling your status, use it when you came back.

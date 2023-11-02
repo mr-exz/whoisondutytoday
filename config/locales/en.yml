@@ -4,7 +4,7 @@ en:
       text: "Sorry i don't understand you. Use `<@%{name}> help`"
     help:
       text: |
-        Version: %{version}
+        running version: %{version} | <https://github.com/mr-exz/whoisondutytoday|github> | <https://github.com/mr-exz/whoisondutytoday/blob/master/CHANGELOG.md|changelog>
         Commands in channel:
         -- `call duty person` - will send alert message to duty person.
         -- `i am on duty` - will set you as duty person in channel.
@@ -27,10 +27,17 @@ en:
         -- `thread labels clean` - will remove all labels from thread where you write it.
         -- `channel labels list` - will display all labels in this channel.
         -- `channel labels statistic` - will show labels count in channel for last week.
+        -- `channel labels merge` - will migrate existing threads in channel from one label to another, example `channel labels merge from:label1 to:label2`
         Commands in direct messages:
         -- `my status *` - set any status when you cannot provide support in channel, bot will reply instead of you.
         -- `my status work` - bot will stop telling your status, use it when you came back.
     channel:
+      labels:
+        merged:
+          success:
+            text: "Labels merged %{label_from} -> %{label_to} records affected %{records_count}"
+          error:
+            text: "Merge %{label_from} -> %{label_to} failed, check label names"
       reminder:
         enabled:
           text: "Reminder in channel successfully enabled."
@@ -83,7 +90,7 @@ en:
         error: "Something was wrong"
       statistic: |
         Period: %{start_date} - %{end_date}
-        labels: %{labels}
+        %{labels}
       labels:
         cleaned: "Labels removed from thread"
     action:

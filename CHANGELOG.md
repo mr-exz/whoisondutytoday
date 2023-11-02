@@ -1,4 +1,10 @@
 # Changelog
+## 0.10.1
+### Improvements
+- Deleting no needed code
+- Improved statistic output.
+- Added `channel labels merge`
+
 ## 0.10.0
 ### Improvements
 - Added MIT license

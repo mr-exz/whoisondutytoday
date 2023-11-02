@@ -8,6 +8,7 @@ with escalation option.
 * [Changelog](./CHANGELOG.md)
 * [Docker](https://hub.docker.com/r/mrexz/whoisondutytoday)
 * ![Build](https://github.com/mr-exz/whoisondutytoday/actions/workflows/docker-build.yml/badge.svg)
+* [![Known Vulnerabilities](https://snyk.io/test/github/mr-exz/whoisondutytoday/badge.svg)]
 
 
 ## Features

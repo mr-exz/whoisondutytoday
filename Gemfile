@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.7.6"
+ruby "2.7.8"
 gem "rubocop"
 gem "slack-ruby-bot", "~> 0.16.1"
 gem "async-websocket", "~> 0.8.0"

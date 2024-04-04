@@ -1,11 +1,8 @@
 # Changelog
-## 0.11.0
+
+## 0.10.2 
 ### Improvements
-- Added `action list` to display known actions in channel [#169](/../../issues/169)
-- Added `allow list` to perform call on duty person [#153](/../../issues/153)
-- Added Jira integration to create tasks from threads [#13](/../../issues/13)
-- Added option to set 2 custom answers, working and non working time [#154](/../../issues/154)
-- Added release notes announces
+- Dependencies updates
 
 ## 0.10.1
 ### Improvements

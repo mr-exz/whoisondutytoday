@@ -1,4 +1,9 @@
 # Changelog
+
+## 0.10.2 
+### Improvements
+- Dependencies updates
+
 ## 0.10.1
 ### Improvements
 - Deleting no needed code
@@ -15,7 +20,7 @@
 
 ## 0.9.0
 ### Bugfixes
-- Opsgenie rake task fixes
+- OpsGenie rake task fixes
 - Updated version in Gemfile
 ### Improvements
 - Known-problem reply feature doesn't trigger if problem is in a code block [#134](/../../issues/134)
@@ -61,8 +66,8 @@
 ## 0.6.6
 ### Improvements 
 - Switched to Ruby 2.7.3
-- [Rake job to sync person on call from OpsGenie shedule.](https://github.com/mr-exz/whoisondutytoday/issues/55)
-- [Improved sync with OpsGenie shedule.](https://github.com/mr-exz/whoisondutytoday/issues/29)
+- [Rake job to sync person on call from OpsGenie schedule.](https://github.com/mr-exz/whoisondutytoday/issues/55)
+- [Improved sync with OpsGenie schedule.](https://github.com/mr-exz/whoisondutytoday/issues/29)
 
 ### Fixes
 - [Fixed no replies to messages with attachments](https://github.com/mr-exz/whoisondutytoday/issues/56).
@@ -110,7 +115,7 @@
 
 ## 0.3.3
 ### Improvements 
-- Added Opsgenie escalation.
+- Added OpsGenie escalation.
 
 ## 0.3.2
 ### Improvements 
@@ -133,14 +138,14 @@
 
 ## 0.2.0
 ### Features
-- Syncing duty schedule from Opsgenie [25](https://github.com/mr-exz/whoisondutytoday/issues/25).
+- Syncing duty schedule from OpsGenie [25](https://github.com/mr-exz/whoisondutytoday/issues/25).
 ### Fixes
 - Display working hours in local time of requester [8](https://github.com/mr-exz/whoisondutytoday/issues/8).
 - Stop replying on messages in channel from duty person [26](https://github.com/mr-exz/whoisondutytoday/issues/26).
 
 ## 0.1.0
 ### Features
-- Call duty person over Opsgenie service.
+- Call duty person over OpsGenie service.
 - User can enable themselves in channel as a duty person.
 - Users in channel can ask bot who is on duty?
 - User can tell to bot create/update/delete his (user) duty schedule in channel.

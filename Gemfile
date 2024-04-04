@@ -5,20 +5,20 @@ ruby "2.7.8"
 gem "rubocop"
 gem "slack-ruby-bot", "~> 0.16.1"
 gem "async-websocket", "~> 0.8.0"
-gem "bootstrap", "~> 4.5.0"
+gem "bootstrap", "~> 4.6.0"
 gem "font-awesome-rails", ">= 4.7.0.8"
 gem "jquery-rails", ">= 4.6.0"
 gem "json"
 gem "mail"
-gem "actionview", ">= 6.1.7.3"
+gem "actionview", ">= 6.1.7.7"
 gem "activesupport", ">= 6.1.7.3"
-gem "actionpack", ">= 6.1.7.4"
-gem "activestorage", ">= 6.1.7.4"
-gem "nokogiri", ">= 1.13.10"
+gem "actionpack", ">= 7.0.8.1"
+gem "activestorage", ">= 7.0.8.1"
+gem "nokogiri", ">= 1.15.6"
 gem "activerecord", ">= 6.1.7.3"
 gem "whenever"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.7.4"
+gem "rails", "~> 7.0.8.1"
 # Use sqlite3 as the database for Active Record
 gem "sqlite3"
 # Use Puma as the app server
@@ -67,7 +67,7 @@ end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
-  gem "capybara", ">= 3.37.1"
+  gem "capybara", ">= 3.40.0"
   gem "selenium-webdriver"
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem "chromedriver-helper", ">= 2.1.1"

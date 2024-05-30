@@ -5,20 +5,20 @@ ruby "2.7.8"
 gem "rubocop"
 gem "slack-ruby-bot", "~> 0.16.1"
 gem "async-websocket", "~> 0.8.0"
-gem "bootstrap", "~> 4.5.0"
+gem "bootstrap", "~> 4.6.0"
 gem "font-awesome-rails", ">= 4.7.0.8"
 gem "jquery-rails", ">= 4.6.0"
 gem "json"
 gem "mail"
-gem "actionview", ">= 6.1.7.3"
+gem "actionview", ">= 6.1.7.7"
 gem "activesupport", ">= 6.1.7.3"
-gem "actionpack", ">= 6.1.7.4"
-gem "activestorage", ">= 6.1.7.4"
-gem "nokogiri", ">= 1.13.10"
+gem "actionpack", ">= 6.1.7.7"
+gem "activestorage", ">= 6.1.7.7"
+gem "nokogiri", ">= 1.16.5"
 gem "activerecord", ">= 6.1.7.3"
 gem "whenever"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.7.4"
+gem "rails", "~> 6.1.7.7"
 # Use sqlite3 as the database for Active Record
 gem "sqlite3"
 # Use Puma as the app server
@@ -35,7 +35,7 @@ gem "coffee-rails", "~> 5.0", ">= 5.0.0"
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem "turbolinks", "~> 5"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem "jbuilder", "~> 2.11", ">= 2.11.5"
+gem "jbuilder", "~> 2.12", ">= 2.12.0"
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
@@ -67,7 +67,7 @@ end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
-  gem "capybara", ">= 3.37.1"
+  gem "capybara", ">= 3.40.0"
   gem "selenium-webdriver"
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem "chromedriver-helper", ">= 2.1.1"

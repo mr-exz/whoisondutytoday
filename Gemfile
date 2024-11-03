@@ -2,7 +2,7 @@ source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "2.7.8"
-gem "rubocop"
+gem "rubocop", ">= 1.66.0"
 gem "slack-ruby-bot", "~> 0.16.1"
 gem "async-websocket", "~> 0.8.0"
 gem "bootstrap", "~> 4.5.0"
@@ -53,7 +53,7 @@ gem "bootsnap", ">= 1.1.0", require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
-  gem "standard", require: false
+  gem "standard", ">= 1.41.0", require: false
 end
 
 group :development do

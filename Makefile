@@ -20,7 +20,6 @@ endif
 tag-latest-force: ## Tag image any way with latest tag.
 	docker tag ${DOCKER_REGISTRY_URL}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} ${DOCKER_REGISTRY_URL}/${DOCKER_IMAGE_NAME}:latest
 
-
 push: ## Publish image to docker registry.
 	docker push ${DOCKER_REGISTRY_URL}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
 ifeq ("$(BRANCH)", "master")

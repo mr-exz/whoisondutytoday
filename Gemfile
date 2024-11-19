@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.7.8"
+ruby "3.3.6"
 gem "rubocop"
 gem "slack-ruby-bot", "~> 0.16.1"
 gem "async-websocket", "~> 0.8.0"
@@ -17,6 +17,8 @@ gem "activestorage", ">= 6.1.7.4"
 gem "nokogiri", ">= 1.13.10"
 gem "activerecord", ">= 6.1.7.3"
 gem "whenever"
+gem "mutex_m"
+gem "bigdecimal"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem "rails", "~> 6.1.7.4"
 # Use sqlite3 as the database for Active Record
@@ -53,6 +55,7 @@ gem "bootsnap", ">= 1.1.0", require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
+  gem 'rubocop', require: false
   gem "standard", require: false
 end
 

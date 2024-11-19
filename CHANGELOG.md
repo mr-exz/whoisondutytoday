@@ -1,4 +1,7 @@
 # Changelog
+## 0.10.3
+### Improvements
+- Update ruby up to `3.3.6`
 
 ## 0.10.2 
 ### Improvements

@@ -1,7 +1,7 @@
 # Changelog
 ## 0.11.0
 ### Features
-- Added Bitbucket commits report feature
+- Added Bitbucket Datacenter commits report feature
 
 ## 0.10.4
 ### Bugfixes

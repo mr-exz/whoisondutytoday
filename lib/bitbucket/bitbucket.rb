@@ -4,7 +4,7 @@ require 'json'
 # Class to operate with Bitbucket Datacenter Api
 class Bitbucket
   def initialize(options = {})
-    @url = options.fetch(:url, '')
+    @url = options.fetch(:url, '') # 'https://bitbucket-datacenter.example.com'
     @username = options.fetch(:username, '')
     @password = options.fetch(:password, '')
     @client = Faraday.new(url: @url) do |conn|

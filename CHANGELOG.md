@@ -1,4 +1,8 @@
 # Changelog
+## 0.11.0
+### Features
+- Added Bitbucket commits report feature
+
 ## 0.10.4
 ### Bugfixes
 - Gem::LoadError: can't activate sqlite3 (~> 1.4), already activated sqlite3-2.2.0-x86_64-linux-gnu.

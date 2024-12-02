@@ -1,0 +1,11 @@
+<h1>Recent Bitbucket Commits</h1>
+
+<ul>
+  <% @commits.each do |commit| %>
+    <li>
+      <strong>Commit Message:</strong> <%= commit.message %><br>
+      <strong>Author:</strong> <%= commit.author %><br>
+      <strong>Date:</strong> <%= commit.created_at %>
+    </li>
+  <% end %>
+</ul>

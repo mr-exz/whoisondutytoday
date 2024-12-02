@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_10_09_175804) do
+ActiveRecord::Schema.define(version: 2024_12_01_173553) do
 
   create_table "actions", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -22,6 +22,18 @@ ActiveRecord::Schema.define(version: 2023_10_09_175804) do
 
 # Could not dump table "answers" because of following StandardError
 #   Unknown type 'bool' for column 'hide_reason'
+
+  create_table "bitbucket_commits", force: :cascade do |t|
+    t.string "commit_id"
+    t.string "author"
+    t.text "message"
+    t.datetime "date"
+    t.string "project_key"
+    t.string "repo_slug"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["project_key", "repo_slug", "commit_id"], name: "index_bitbucket_commits_on_project_repo_commit", unique: true
+  end
 
   create_table "channels", id: false, force: :cascade do |t|
     t.string "slack_channel_id"
@@ -60,7 +72,7 @@ ActiveRecord::Schema.define(version: 2023_10_09_175804) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "reply_counter"
-    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x00007fec6d61db48>"
+    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x00000001265751f8>"
     t.boolean "remind_needed"
     t.string "channel_id"
   end

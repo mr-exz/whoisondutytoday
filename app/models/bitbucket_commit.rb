@@ -1,0 +1,3 @@
+
+class BitbucketCommit < ApplicationRecord
+end

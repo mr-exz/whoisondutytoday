@@ -9,9 +9,10 @@ module WhoIsOnDutyTodaySlackBotModule
         return unless user
         commits = BitbucketCommit.where('LOWER(author) = ?', user.contacts.downcase).order(date: :desc).limit(10)
         created_at = commits.first.created_at.strftime('%Y-%m-%d %H:%M:%S')
+
         commit_messages = commits.map { |commit|
           commit_url = generate_commit_url(commit)
-          "*#{commit.date.strftime('%Y-%m-%d')}*: <#{commit_url}|#{commit.message}>"
+          "*#{commit.date.strftime('%Y-%m-%d')}*: <#{commit_url}|#{commit.repo_slug}>"
         }.join("\n")
 
         client.web_client.chat_postMessage(

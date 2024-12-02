@@ -24,14 +24,18 @@ namespace :bitbucket do
             print "Commit in database: #{last_commit.commit_id} and #{commit['id']} equal, skip adding\n"
           else
             print "Saving commit #{commit['id']} of repository: #{project['key']} #{repository['slug']}\n"
-            BitbucketCommit.create(
-              commit_id: commit['id'],
-              author: commit['author']['emailAddress'],
-              message: commit['message'],
-              date: Time.at(commit['authorTimestamp'] / 1000),
-              project_key: project['key'],
-              repo_slug: repository['slug']
-            )
+            begin
+              BitbucketCommit.create(
+                commit_id: commit['id'],
+                author: commit['author']['emailAddress'],
+                message: commit['message'],
+                date: Time.at(commit['authorTimestamp'] / 1000),
+                project_key: project['key'],
+                repo_slug: repository['slug']
+              )
+            rescue ActiveRecord::RecordNotUnique
+              print "Commit #{commit['id']} already exists, skipping\n"
+            end
           end
         end
       end

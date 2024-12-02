@@ -1,4 +1,8 @@
 # Changelog
+## 0.12.0
+### Features
+- Added new action `git commits` - it will return last 10 user commits
+
 ## 0.11.0
 ### Features
 - Added Bitbucket Datacenter commits report feature

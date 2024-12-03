@@ -10,20 +10,25 @@ namespace :bitbucket do
       print "Discovery repos of project: #{project['key']}\n"
       repositories = bitbucket.repositories(project['key'])
       repositories.each do |repository|
-        last_commit = BitbucketCommit.where(project_key: project['key'], 
-                                            repo_slug: repository['slug']).order(date: :desc).first
-        if last_commit
-          print "Last commit of repository: #{repository['slug']} is #{last_commit.commit_id}\n"
-          commits = bitbucket.commits(project['key'], repository['slug'], last_commit.commit_id)
-        else
-          print "Discovery all commits of repository: #{repository['slug']}\n"
-          commits = bitbucket.commits(project['key'], repository['slug'])
-        end
-        commits.each do |commit|
-          if last_commit && commit['id'] == last_commit.commit_id
-            print "Commit in database: #{last_commit.commit_id} and #{commit['id']} equal, skip adding\n"
-          else
-            print "Saving commit #{commit['id']} of repository: #{project['key']} #{repository['slug']}\n"
+        print "Discovery commits of git repo #{project['key']}:#{repository['slug']}\n"
+
+        branches = bitbucket.branches(project['key'], repository['slug'])
+
+        branches.each do |branch|
+          print "Discovery all commits #{project['key']}:#{repository['slug']}:#{branch['id']}\n"
+          commits = bitbucket.commits(project['key'], repository['slug'], branch['id'])
+
+          print "Discovered #{commits.count} commits, trying to save.\n"
+
+          # Get all existing commit IDs from the database
+          existing_commit_ids = BitbucketCommit.where(project_key: project['key'], repo_slug: repository['slug']).pluck(:commit_id)
+
+          # Filter out commits that already exist in the database
+          new_commits = commits.reject { |commit| existing_commit_ids.include?(commit['id']) }
+
+          print "#{new_commits.count} new commits to save\n"
+
+          new_commits.each do |commit|
             begin
               BitbucketCommit.create(
                 commit_id: commit['id'],
@@ -33,8 +38,9 @@ namespace :bitbucket do
                 project_key: project['key'],
                 repo_slug: repository['slug']
               )
+              print "Commit #{commit['id']} of repository: #{project['key']}:#{repository['slug']} saved\n"
             rescue ActiveRecord::RecordNotUnique
-              print "Commit #{commit['id']} already exists, skipping\n"
+              print "Commit #{commit['id']} of repository: #{project['key']}:#{repository['slug']} already exist\n"
             end
           end
         end

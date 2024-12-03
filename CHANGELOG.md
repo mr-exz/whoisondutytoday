@@ -1,4 +1,9 @@
 # Changelog
+## 0.13.0
+### Improvements
+- Better logging of sync git repos
+- Added sync of non default branches
+
 ## 0.12.1
 ### Bugfixes
 - Layout and constraint fixes

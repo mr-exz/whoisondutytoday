@@ -51,12 +51,32 @@ class Bitbucket
     repositories
   end
 
+  def branches(project_key, repo_slug)
+    branches = []
+    start = 0
+    limit = 25
+
+    loop do
+      response = @client.get("/rest/api/1.0/projects/#{project_key}/repos/#{repo_slug}/branches", start: start, limit: limit)
+      break unless response.success?
+
+      data = JSON.parse(response.body)
+      branches.concat(data['values'])
+
+      break if data['isLastPage']
+
+      start = data['nextPageStart']
+    end
+
+    branches
+  end
+
   def commits(project_key, repo_slug, since_commit = nil)
     commits = []
     start = 0
     limit = 25
     params = { start: start, limit: limit }
-    params[:since] = since_commit if since_commit
+    params[:until] = since_commit if since_commit
 
     loop do
       response = @client.get("/rest/api/1.0/projects/#{project_key}/repos/#{repo_slug}/commits", params)
@@ -71,5 +91,8 @@ class Bitbucket
     end
 
     commits
+  end
+  def commit_count(commits)
+    commits.size
   end
 end

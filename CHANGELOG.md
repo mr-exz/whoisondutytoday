@@ -1,4 +1,7 @@
 # Changelog
+## 0.13.1
+- Fixes in sync git repos
+
 ## 0.13.0
 ### Improvements
 - Better logging of sync git repos

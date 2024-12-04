@@ -14,14 +14,14 @@ namespace :bitbucket do
 
         branches = bitbucket.branches(project['key'], repository['slug'])
 
+        # Get all existing commit IDs from the database
+        existing_commit_ids = BitbucketCommit.where(project_key: project['key'], repo_slug: repository['slug']).pluck(:commit_id)
+
         branches.each do |branch|
           print "Discovery all commits #{project['key']}:#{repository['slug']}:#{branch['id']}\n"
           commits = bitbucket.commits(project['key'], repository['slug'], branch['id'])
 
           print "Discovered #{commits.count} commits, trying to save.\n"
-
-          # Get all existing commit IDs from the database
-          existing_commit_ids = BitbucketCommit.where(project_key: project['key'], repo_slug: repository['slug']).pluck(:commit_id)
 
           # Filter out commits that already exist in the database
           new_commits = commits.reject { |commit| existing_commit_ids.include?(commit['id']) }

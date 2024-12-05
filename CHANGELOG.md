@@ -1,5 +1,11 @@
 # Changelog
+
+## 0.13.2
+### Improvements
+- Increased limit for elements
+
 ## 0.13.1
+### Improvements
 - Fixes in sync git repos
 
 ## 0.13.0

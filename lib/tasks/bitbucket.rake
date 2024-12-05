@@ -13,6 +13,7 @@ namespace :bitbucket do
         print "Discovery commits of git repo #{project['key']}:#{repository['slug']}\n"
 
         branches = bitbucket.branches(project['key'], repository['slug'])
+        print "Discovered #{branches.count} branches\n"
 
         # Get all existing commit IDs from the database
         existing_commit_ids = BitbucketCommit.where(project_key: project['key'], repo_slug: repository['slug']).pluck(:commit_id)

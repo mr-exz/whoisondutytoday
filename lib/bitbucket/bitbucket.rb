@@ -16,7 +16,7 @@ class Bitbucket
   def projects
     projects = []
     start = 0
-    limit = 25
+    limit = 1000
 
     loop do
       response = @client.get('/rest/api/1.0/projects',start: start, limit: limit)
@@ -34,7 +34,7 @@ class Bitbucket
   def repositories(project_key)
     repositories = []
     start = 0
-    limit = 25
+    limit = 1000
 
     loop do
       response = @client.get("/rest/api/1.0/projects/#{project_key}/repos", start: start, limit: limit)
@@ -54,7 +54,7 @@ class Bitbucket
   def branches(project_key, repo_slug)
     branches = []
     start = 0
-    limit = 25
+    limit = 1000
 
     loop do
       response = @client.get("/rest/api/1.0/projects/#{project_key}/repos/#{repo_slug}/branches", start: start, limit: limit)
@@ -74,7 +74,7 @@ class Bitbucket
   def commits(project_key, repo_slug, since_commit = nil)
     commits = []
     start = 0
-    limit = 25
+    limit = 1000
     params = { start: start, limit: limit }
     params[:until] = since_commit if since_commit
 
@@ -92,6 +92,7 @@ class Bitbucket
 
     commits
   end
+
   def commit_count(commits)
     commits.size
   end

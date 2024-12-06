@@ -15,13 +15,29 @@ namespace :bitbucket do
         logger.info("Discovery commits of git repo #{project['key']}:#{repository['slug']}")
 
         # Get the most recent commit from the database
-        last_commit = BitbucketCommit.where(project_key: project['key'],
+        last_commit_created = BitbucketCommit.where(project_key: project['key'],
                                             repo_slug: repository['slug']).order(created_at: :desc).first
 
+        last_commit_by_date = BitbucketCommit.where(project_key: project['key'],
+                                                    repo_slug: repository['slug']).order(date: :desc).first
+
         # Skip sync if the last commit was added less than 24 hours ago
-        if last_commit && last_commit.created_at > 24.hours.ago
-          logger.info("Skipping sync for repository: #{project['key']}:#{repository['slug']} as the last commit was added less than 24 hours ago")
+        if last_commit_created && last_commit_created.created_at < 24.hours.ago
+          logger.info("Skipping sync for repository: #{project['key']}:#{repository['slug']} as the last commit was added #{last_commit_created.created_at} less than 24 hours ago")
           next
+        end
+
+        last_branch_date=bitbucket.last_branch_created_date(project['key'], repository['slug'])
+        logger.info("Last branch of repository: #{project['key']}:#{repository['slug']} is #{last_branch_date}")
+
+        last_pr_date=bitbucket.last_pull_request_created_date(project['key'], repository['slug'])
+        logger.info("Last pull request of repository: #{project['key']}:#{repository['slug']} is #{last_pr_date}")
+
+        if last_commit_by_date && (last_commit_by_date.date > last_branch_date || last_commit_by_date.date > last_pr_date)
+          logger.info("Skipping sync for repository: #{project['key']}:#{repository['slug']} as the last commit was added #{last_commit_by_date.date} after the last branch or pull request")
+          next
+        else
+          logger.info("Syncing commits for repository: #{project['key']}:#{repository['slug']} synce last commit was added #{last_commit_by_date.date} before the last branch or pull request")
         end
 
         # Get all existing commit IDs from the database

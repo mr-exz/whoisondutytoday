@@ -1,4 +1,8 @@
 # Changelog
+## 0.16.0
+### Improvements
+- Added more logic around skipping repos without new changes
+
 ## 0.15.0
 ### Improvements
 - Added skip repo sync if last import was less 1 day ago

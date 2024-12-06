@@ -1,4 +1,8 @@
 # Changelog
+## 0.15.0
+### Improvements
+- Added skip repo sync if last import was less 1 day ago
+
 ## 0.14.2
 ### Bugfixes
 - Deleted hardcoded params

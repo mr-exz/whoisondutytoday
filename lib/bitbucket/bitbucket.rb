@@ -155,7 +155,7 @@ class Bitbucket
   def all_branches_commits(project_key, repo_slug, max_threads = 10)
     all_commits = []
     branches = branches(project_key, repo_slug)
-    @logger.info("Discovered #{branches.count} branches\n")
+    @logger.info("Discovered #{branches.count} branches")
     mutex = Mutex.new
     queue = Queue.new
 

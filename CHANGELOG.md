@@ -1,4 +1,8 @@
 # Changelog
+## 0.14.2
+### Bugfixes
+- Deleted hardcoded params
+
 ## 0.14.1
 ### Bugfixes
 - Deleted wrong name in response

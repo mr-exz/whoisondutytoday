@@ -5,12 +5,10 @@ namespace :bitbucket do
     bitbucket = Bitbucket.new(url: ENV['BITBUCKET_URL'],
                               username: ENV['BITBUCKET_USERNAME'],
                               password: ENV['BITBUCKET_PASSWORD'])
-    # projects = bitbucket.projects
-    projects = [{ 'key' => 'IAF' }]
+    projects = bitbucket.projects
     projects.each do |project|
       print "Discovery repos of project: #{project['key']}\n"
-      #repositories = bitbucket.repositories(project['key'])
-      repositories = [{ 'slug' => 'service-config' }]
+      repositories = bitbucket.repositories(project['key'])
       repositories.each do |repository|
         print "Discovery commits of git repo #{project['key']}:#{repository['slug']}\n"
 

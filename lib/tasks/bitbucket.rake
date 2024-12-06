@@ -36,8 +36,10 @@ namespace :bitbucket do
         if last_commit_by_date && (last_commit_by_date.date > last_branch_date || last_commit_by_date.date > last_pr_date)
           logger.info("Skipping sync for repository: #{project['key']}:#{repository['slug']} as the last commit was added #{last_commit_by_date.date} after the last branch or pull request")
           next
-        else
+        elsif last_commit_by_date
           logger.info("Syncing commits for repository: #{project['key']}:#{repository['slug']} synce last commit was added #{last_commit_by_date.date} before the last branch or pull request")
+        else
+          logger.info("Syncing commits for repository: #{project['key']}:#{repository['slug']} as there is no last commit date available")
         end
 
         # Get all existing commit IDs from the database

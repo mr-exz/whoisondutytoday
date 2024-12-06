@@ -1,4 +1,8 @@
 # Changelog
+## 0.16.1
+### Bugfixes
+- Date fixes
+
 ## 0.16.0
 ### Improvements
 - Added more logic around skipping repos without new changes

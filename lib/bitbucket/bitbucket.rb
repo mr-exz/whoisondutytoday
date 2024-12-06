@@ -229,7 +229,7 @@ class Bitbucket
     branches = branches(project_key, repo_slug)
     return Time.at(0).utc if branches.empty?
 
-    last_branch = branches.max_by { |branch| branch['latestCommit'] }
+    last_branch = branches.first
     commit_author_timestamp(project_key, repo_slug, last_branch['latestCommit'])
   end
 
@@ -238,9 +238,12 @@ class Bitbucket
     return Time.at(0).utc if pull_requests.empty?
 
     last_pr = pull_requests.max_by { |pr| pr['createdDate'] }
-    Time.at(last_pr['createdDate'] / 1000).utc
-  end
+    pr_commits = pull_request_commits(project_key, repo_slug, last_pr['id'])
+    return Time.at(0).utc if pr_commits.empty?
 
+    last_commit = pr_commits.max_by { |commit| commit['authorTimestamp'] }
+    Time.at(last_commit['authorTimestamp'] / 1000).utc
+  end
   def commit_author_timestamp(project_key, repo_slug, commit_id)
     commit = fetch_data("/rest/api/1.0/projects/#{project_key}/repos/#{repo_slug}/commits/#{commit_id}")
     return Time.at(0).utc if commit.empty? || !commit['authorTimestamp']

@@ -33,11 +33,11 @@ namespace :bitbucket do
         last_pr_date=bitbucket.last_pull_request_created_date(project['key'], repository['slug'])
         logger.info("Last pull request of repository: #{project['key']}:#{repository['slug']} is #{last_pr_date}")
 
-        if last_commit_by_date && (last_commit_by_date.date > last_branch_date || last_commit_by_date.date > last_pr_date)
-          logger.info("Skipping sync for repository: #{project['key']}:#{repository['slug']} as the last commit was added #{last_commit_by_date.date} after the last branch or pull request")
+        if last_commit_by_date && (last_commit_by_date.date >= last_branch_date && last_commit_by_date.date >= last_pr_date)
+          logger.info("Skipping sync for repository: #{project['key']}:#{repository['slug']} as the last commit was added #{last_commit_by_date.date} after the last branch and pull request")
           next
         elsif last_commit_by_date
-          logger.info("Syncing commits for repository: #{project['key']}:#{repository['slug']} synce last commit was added #{last_commit_by_date.date} before the last branch or pull request")
+          logger.info("Syncing commits for repository: #{project['key']}:#{repository['slug']} synce last commit was added #{last_commit_by_date.date} before the last branch and pull request")
         else
           logger.info("Syncing commits for repository: #{project['key']}:#{repository['slug']} as there is no last commit date available")
         end

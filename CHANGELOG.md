@@ -1,4 +1,8 @@
 # Changelog
+## 0.16.2
+### Bugfixes
+- Fixes in skip logic
+
 ## 0.16.1
 ### Bugfixes
 - Date fixes

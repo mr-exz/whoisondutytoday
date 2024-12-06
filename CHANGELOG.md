@@ -1,4 +1,8 @@
 # Changelog
+## 0.14.1
+### Bugfixes
+- Deleted wrong name in response
+
 ## 0.14.0
 ### Improvements
 - Added multithreading for sync git repos

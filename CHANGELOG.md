@@ -1,4 +1,9 @@
 # Changelog
+## 0.14.0
+### Improvements
+- Added multithreading for sync git repos
+- Added pull request commits discovery
+- Added additional logging for sync git repos
 
 ## 0.13.2
 ### Improvements

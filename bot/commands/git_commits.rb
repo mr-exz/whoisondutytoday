@@ -7,6 +7,14 @@ module WhoIsOnDutyTodaySlackBotModule
         message_processor.collectUserInfoBySlackUserId(user_name)
         user = User.where(slack_user_id: user_name).first
         return unless user
+
+        client.web_client.chat_postMessage(
+          channel: data.channel,
+          text: "Got your request, #{user.name}. Let me check the latest commits for you.",
+          thread_ts: data.thread_ts || data.ts,
+          as_user: true
+        )
+
         commits = BitbucketCommit.where('LOWER(author) = ?', user.contacts.downcase).order(date: :desc).limit(10)
         created_at = commits.first.created_at.strftime('%Y-%m-%d %H:%M:%S')
 

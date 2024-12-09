@@ -1,4 +1,8 @@
 # Changelog
+## 0.16.3
+### Bugfixes
+- Fixes memory leak in sync git repos
+
 ## 0.16.2
 ### Bugfixes
 - Fixes in skip logic

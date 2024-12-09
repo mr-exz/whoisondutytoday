@@ -176,12 +176,14 @@ class Bitbucket
           @logger.info("Discovered #{commit_count(branch_commits)} commits of branch: #{branch['id']}")
           mutex.synchronize do
             all_commits.concat(branch_commits)
+            all_commits = all_commits.uniq { |commit| commit['id'] }
           end
         end
       end
     end
 
     workers.each(&:join)
+
     all_commits
   end
 
@@ -209,6 +211,7 @@ class Bitbucket
           @logger.info("Discovered #{commit_count(pr_commits)} commits of pull request: #{pr['id']}")
           mutex.synchronize do
             all_commits.concat(pr_commits)
+            all_commits = all_commits.uniq { |commit| commit['id'] }
           end
         end
       end
@@ -222,7 +225,7 @@ class Bitbucket
     all_commits = []
     all_commits.concat(all_branches_commits(project_key, repo_slug))
     all_commits.concat(all_pull_request_commits(project_key, repo_slug))
-    all_commits
+    all_commits.uniq { |commit| commit['id'] }
   end
 
   def last_branch_created_date(project_key, repo_slug)
@@ -244,6 +247,7 @@ class Bitbucket
     last_commit = pr_commits.max_by { |commit| commit['authorTimestamp'] }
     Time.at(last_commit['authorTimestamp'] / 1000).utc
   end
+
   def commit_author_timestamp(project_key, repo_slug, commit_id)
     commit = fetch_data("/rest/api/1.0/projects/#{project_key}/repos/#{repo_slug}/commits/#{commit_id}")
     return Time.at(0).utc if commit.empty? || !commit['authorTimestamp']

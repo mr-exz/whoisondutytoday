@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_15_143713) do
+ActiveRecord::Schema[7.0].define(version: 2024_12_15_180033) do
   create_table "actions", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -19,8 +19,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_15_143713) do
     t.string "channel"
   end
 
-# Could not dump table "answers" because of following StandardError
-#   Unknown type 'bool' for column 'hide_reason'
+  create_table "answers", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "channel_id"
+    t.boolean "hide_reason"
+  end
 
   create_table "bitbucket_commits", force: :cascade do |t|
     t.string "commit_id"

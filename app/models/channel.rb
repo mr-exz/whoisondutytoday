@@ -1,7 +1,7 @@
 class Channel < ApplicationRecord
   self.primary_key = 'slack_channel_id'
 
-  def reminder
+  def reminder_enabled
     settings['reminder_enabled']
   end
 

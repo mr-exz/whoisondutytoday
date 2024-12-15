@@ -29,6 +29,8 @@ require_relative 'thread_labels'
 require_relative 'git_commits'
 require_relative 'channel_tag_reporter_in_thread_enable'
 require_relative 'channel_tag_reporter_in_thread_disable'
+require_relative 'channel_auto_answer_enable'
+require_relative 'channel_auto_answer_disable'
 
 module WhoIsOnDutyTodaySlackBotModule
   module Commands

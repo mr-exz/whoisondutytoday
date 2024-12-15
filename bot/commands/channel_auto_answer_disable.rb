@@ -1,6 +1,6 @@
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
-    class ChannelAutoAnswerEnable < SlackRubyBot::Commands::Base
+    class ChannelAutoAnswerDisable < SlackRubyBot::Commands::Base
       def self.call(client:, data:)
         channel = Channel.find_or_initialize_by(slack_channel_id: data.channel)
         channel.update(auto_answer_enabled: false)

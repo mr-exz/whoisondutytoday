@@ -64,6 +64,8 @@ en:
         text: "Custom answer deleted for this channel."
       failed:
         text: "Custom answer creation failed. Try again."
+      invalid_format:
+        text: "Invalid format."
     user:
       status:
         configured:

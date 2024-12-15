@@ -13,7 +13,6 @@ module WhoIsOnDutyTodaySlackBotModule
           return if channel.nil?
 
           duty = Duty.where(channel_id: data.channel, enabled: true).first
-          answer = Answer.where(channel_id: data.channel).first
 
           # store messages where reminder enabled
           if channel.reminder_enabled == true
@@ -41,7 +40,7 @@ module WhoIsOnDutyTodaySlackBotModule
           if data.respond_to?(:thread_ts) == false
             message_processor.collectUserInfo(data: data)
             reason = self.answer(time, duty)
-            reply_in_not_working_time(client, reason, data, answer, channel) unless reason.nil?
+            reply_in_not_working_time(client, reason, data, channel) unless reason.nil?
             return
           end
 
@@ -49,19 +48,31 @@ module WhoIsOnDutyTodaySlackBotModule
           message = Message.where('ts=? OR thread_ts=?', data.thread_ts, data.thread_ts).where(reply_counter: 1)
           if message.blank?
             reason = self.answer(time, duty)
-            reply_in_not_working_time(client, reason, data, answer, channel) unless reason.nil?
+            reply_in_not_working_time(client, reason, data, channel) unless reason.nil?
           end
         rescue StandardError => e
           print e
         end
       end
 
-      def self.reply_in_not_working_time(client, reason, data, answer, channel)
-        if answer.nil?
+      def self.reply_in_not_working_time(client, reason, data, channel)
+
+        answers = Answer.where(channel_id: data.channel)
+
+        if answers.empty?
           text = I18n.t('reply.non-working-time.text', name: client.self.name)
         else
-          text = answer.body
-          reason = '' if answer.hide_reason == 1
+          working_hours_answer = answers.find { |answer| answer.answer_type == 'working_time' }
+          non_working_hours_answer = answers.find { |answer| answer.answer_type == 'non_working_time' }
+
+          if working_hours_answer && within_working_hours?(channel)
+            text = working_hours_answer.body
+          elsif non_working_hours_answer
+            text = non_working_hours_answer.body
+            reason = '' if non_working_hours_answer.hide_reason == 1
+          else
+            text = I18n.t('reply.non-working-time.text', name: client.self.name)
+          end
         end
 
         client.web_client.chat_postMessage(
@@ -110,6 +121,10 @@ module WhoIsOnDutyTodaySlackBotModule
           to_time = duty.duty_to.utc.strftime('%H:%M').to_s
           current_time = time.utc.strftime('%H:%M').to_s
           reason = I18n.t('reply.reason.non-working-hours.text', fT: from_time, tT: to_time, cT: current_time)
+        else
+          if channel.auto_answer_enabled
+            reason = I18n.t('reply.reason.auto-answer.text')
+          end
         end
 
         unless duty.duty_days.split(',').include?(time.utc.strftime('%u'))
@@ -131,6 +146,20 @@ module WhoIsOnDutyTodaySlackBotModule
             thread_ts: data.thread_ts || data.ts
           )
         end
+      end
+
+      def self.within_working_hours?(channel)
+        # Implement logic to check if the current time is within working hours
+        # This is a placeholder implementation
+        current_time = Time.now.utc
+        duty = Duty.where(channel_id: channel.slack_channel_id, enabled: true).first
+        return false if duty.nil?
+
+        from_time = duty.duty_from.utc.strftime('%H%M%S%N')
+        to_time = duty.duty_to.utc.strftime('%H%M%S%N')
+        current_time_str = current_time.strftime('%H%M%S%N')
+
+        current_time_str >= from_time && current_time_str <= to_time
       end
     end
   end

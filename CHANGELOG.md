@@ -1,4 +1,8 @@
 # Changelog
+## 0.17.0
+### Improvements
+- Security updates of dependencies
+
 ## 0.16.3
 ### Bugfixes
 - Fixes memory leak in sync git repos

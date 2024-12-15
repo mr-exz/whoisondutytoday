@@ -18,4 +18,16 @@ class Channel < ApplicationRecord
     self.settings ||= {}
     self.settings['tag_reporter_enabled'] = value
   end
+  def tag_reporter(user_id)
+    tag_reporter_enabled ? "<@#{user_id}>" : ""
+  end
+
+  def auto_answer_enabled
+    settings['auto_answer_enabled']
+  end
+
+  def auto_answer_enabled=(value)
+    self.settings ||= {}
+    self.settings['auto_answer_enabled'] = value
+  end
 end

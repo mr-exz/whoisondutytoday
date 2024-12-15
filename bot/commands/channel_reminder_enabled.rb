@@ -2,8 +2,8 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ChannelReminderEnabled
       def self.call(client:, data:)
-        channel = Channel.where(slack_channel_id: data.channel).first
-        channel.reminder_enabled = true
+        channel = Channel.find_or_initialize_by(slack_channel_id: data.channel)
+        channel.update(reminder_enabled: true)
         channel.save
         client.say(
           channel: data.channel,

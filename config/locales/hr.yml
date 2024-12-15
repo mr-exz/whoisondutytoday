@@ -1,66 +1,116 @@
 hr:
   commands:
     unknown:
-      text: "Oprosti što te ne razumijem."
+      text: "Oprostite, ne razumijem vas. Koristite `<@%{name}> help`"
     help:
       text: |
-        Verzija: %{version}
-        Naredbe u kanalu:
-        -- `call duty person` - pozvati dežurnu osobu.
-        -- `i am on duty` - umetnite na dežurstvo.
-        -- `who is on duty?` - uznatʹ ko dežurnyj.
-        -- `duty create` - stvoriti radno vrijeme, primjerice `duty create from 8:00 to 17:00`.
-        -- `duty update` - ažurirajte radne sate, primjerice `duty update from 8:00 to 17:00`.
-        -- `duty delete` - uklonit će dužnost.
-        -- `duty sync with opsgenie schedule` - konfigurirat će sve dužnosti u kanalu s nazivom rasporeda u Opsgenie, primjerice `duty sync with opsgenie schedule My_Team_Schedule`.
-        Naredbe u privatnim porukama:
-        -- `my status lunch` - postavite status na večeri.
-        -- `my status work` - postaviti status na dužnosti.
-        -- `my status holidays` - postaviti status na praznicima.
+        Verzija: %{version} | <https://github.com/mr-exz/whoisondutytoday|github> | <https://github.com/mr-exz/whoisondutytoday/blob/master/CHANGELOG.md|changelog>
+        Komande u kanalu:
+        -- `call duty person` - poslat će poruku osobi na dužnosti.
+        -- `i am on duty` - postavit će vas kao osobu na dužnosti u kanalu.
+        -- `who is on duty?` - prikazat će ime osobe na dužnosti.
+        -- `channel reminder enabled` - omogućit će podsjetnik za neodgovorene poruke u kanalu.
+        -- `channel reminder disabled` - onemogućit će podsjetnik za neodgovorene poruke u kanalu.
+        -- `duty create` - stvorit će dužnost, vrijeme treba biti definirano u vašoj lokalnoj vremenskoj zoni, primjer `duty create from 8:00 to 17:00`.
+        -- `duty update` - ažurirat će dužnost, vrijeme treba biti definirano u vašoj lokalnoj vremenskoj zoni, primjer `duty update from 8:00 to 17:00`.
+        -- `duty delete` - izbrisat će dužnost.
+        -- `duty sync with opsgenie schedule` - konfigurirat će sve dužnosti u kanalu s rasporedom iz Opsgenie, primjer `duty sync with opsgenie schedule My_Team_Schedule`.
+        -- `duty set opsgenie escalation` - konfigurirat će sve dužnosti u kanalu s eskalacijom iz Opsgenie, primjer `duty set opsgenie escalation My_Team_Escalation`.
+        -- `answer set custom text` - konfigurirat će prilagođeni tekst u odgovorima bota, primjer `answer set custom text nobody will help you, wait for next day`.
+        -- `answer delete custom text` - izbrisat će prilagođeni tekst odgovora, koristit će se zadani.
+        -- `answer enable hide reason` - sakrit će razlog poput `Pitali ste izvan radnog vremena.`, prikazat će se samo vaš prilagođeni tekst.
+        -- `answer disable hide reason` - prikazat će razlog poput `Pitali ste izvan radnog vremena.`.
+        -- `checked` - označit će nit kao provjerenu.
+        -- `action create problem:NEWERROR action:What to do with this error` - stvorit će odgovor bota na ovu ključnu riječ problem.
+        -- `action delete problem:NEWERROR` - izbrisat će odgovor bota na ovu ključnu riječ.
+        -- `thread labels` - označit će nit bilo kojom oznakom, koristite razmak kao separator, primjer `thread labels label1 label2`.
+        -- `thread labels clean` - uklonit će sve oznake iz niti gdje to napišete.
+        -- `channel labels list` - prikazat će sve oznake u ovom kanalu.
+        -- `channel labels statistic` - prikazat će broj oznaka u kanalu za prošli tjedan.
+        -- `channel labels merge` - migrirat će postojeće niti u kanalu iz jedne oznake u drugu, primjer `channel labels merge from:label1 to:label2`
+        Komande u izravnim porukama:
+        -- `my status *` - postavit će bilo koji status kada ne možete pružiti podršku u kanalu, bot će odgovoriti umjesto vas.
+        -- `my status work` - bot će prestati govoriti vaš status, koristite ga kada se vratite.
+    channel:
+      labels:
+        merged:
+          success:
+            text: "Oznake spojene %{label_from} -> %{label_to} broj zapisa %{records_count}"
+          error:
+            text: "Spajanje %{label_from} -> %{label_to} nije uspjelo, provjerite nazive oznaka"
+      reminder:
+        enabled:
+          text: "Podsjetnik u kanalu uspješno omogućen."
+        disabled:
+          text: "Podsjetnik u kanalu uspješno onemogućen."
     duty:
       created:
-        text: "Obveza od %{fH}:%{fM} do %{tH}:%{tM} stvoreno (UTC vrijeme), omogućeno: %{status}"
+        text: "Dužnost od %{fH}:%{fM} do %{tH}:%{tM} stvorena (UTC), omogućeno: %{status}."
       exist:
-        text: "Dužnost već postoji %{fH}:%{fM} do %{tH}:%{tM} (UTC vrijeme), omogućeno: %{status}"
-        error: "Nemate službene evidencije za ovaj kanal"
+        text: "Dužnost već postoji %{fH}:%{fM} do %{tH}:%{tM} (UTC), omogućeno: %{status}."
+        error: "Nemate zapis o dužnosti za ovaj kanal"
       updated:
-        text: "Ažurirano radno vrijeme, od %{fH}:%{fM} do %{tH}:%{tM} (UTC vrijeme), omogućeno: %{status}"
+        text: "Radno vrijeme dužnosti ažurirano, od %{fH}:%{fM} do %{tH}:%{tM} (UTC), omogućeno: %{status}."
       deleted:
-        text: "Obaveza je izbrisana za ovaj kanal."
+        text: "Dužnost izbrisana za ovaj kanal."
       enabled:
-        text: "Sad si na dužnosti."
+        text: "Sada ste na dužnosti."
+      enabled-for-user:
+        text: "Sada je <@%{name}> na dužnosti."
+    answer:
+      created:
+        text: "Prilagođeni odgovor stvoren, sada će bot koristiti taj tekst, ispod možete vidjeti kako će izgledati:"
+      deleted:
+        text: "Prilagođeni odgovor izbrisan za ovaj kanal."
+      failed:
+        text: "Stvaranje prilagođenog odgovora nije uspjelo, pokušajte ponovno."
     user:
       status:
         configured:
           text: "Status korisnika konfiguriran `%{status}`"
         enabled:
-          duty: "%{user} danas na dužnosti."
-          text: "Sorry, duty person on %{status}."
+          duty: "%{user} na dužnosti danas. Radno vrijeme dužnosti: od %{duty_from} do %{duty_to} (UTC)"
+          text: "Oprostite, osoba na dužnosti je na %{status}."
     opsgenie-schedule-name:
-      text: ""
+      text: "Sve dužnosti u ovom kanalu sinkronizirane su s Opsgenie."
+    opsgenie-escalation-name:
+      text: "Sve dužnosti u ovom kanalu sada imaju eskalaciju."
+    enable:
+      hide_reason:
+        text: "Razlog je skriven"
+        failed:
+          text: "Operacija nije uspjela, pokušajte ponovno."
+    disable:
+      hide_reason:
+        text: "Razlog bi trebao biti prikazan"
     thread:
-      checked: ""
-    action:
-      failed:
-        text: ""
-    channel:
+      checked: "Podsjetnik onemogućen za ovu nit"
+      labeled:
+        success: "Oznake `%{labels}` dodijeljene"
+        error: "Nešto je pošlo po zlu"
+      statistic: |
+        Razdoblje: %{start_date} - %{end_date}
+        %{labels}
       labels:
-        merged:
-          error:
-            text: ""
-          success:
-            text: ""
+        cleaned: "Oznake uklonjene iz niti"
+    action:
+      created:
+        text: "Akcija stvorena za problem"
+      deleted:
+        text: "Akcija izbrisana za problem"
+      failed:
+        text: "Operacija nije uspjela, pokušajte ponovno."
   reply:
     non-working-time:
       subject: "Nešto se dogodilo"
-      text: "Trebam li gnjaviti osobu na poziv? Naredba za tip: `<@%{name}> call duty person`"
+      text: "Za hitne slučajeve upišite naredbu: `<@%{name}> call duty person` ili pričekajte radno vrijeme."
     reason:
       non-working-hours:
-        text: "Pitali ste u neradno vrijeme. Sati podrške %{fT} - %{tT}. Trenutno vrijeme je: %{cT}."
+        text: "Pitali ste izvan radnog vremena. Radno vrijeme podrške %{fT} - %{tT}. Trenutno vrijeme je: %{cT} (UTC)."
       non-working-day:
-        text: "Pitali ste neradnim danom."
+        text: "Pitali ste izvan radnog dana."
     opsgenie:
-      text: "Upozorenje se otvorilo, uskoro će vas osoba na poziv kontaktirati."
-      error: "Nije uspio nazvati dežurnu osobu, opsgenie je odgovorio pogreškom: %{message}."
+      text: "Upozorenje otvoreno, uskoro će vas kontaktirati osoba na dužnosti."
+      error: "Nije uspjelo pozivanje osobe na dužnosti, Opsgenie je odgovorio s greškom: %{message}."
     known-problem:
-      subject: ""
+      subject: "Pronašao sam akciju za poznati problem, možda vam može pomoći:"

@@ -10,11 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_12_01_173553) do
-
+ActiveRecord::Schema[7.0].define(version: 2024_12_15_143713) do
   create_table "actions", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "problem"
     t.string "action"
     t.string "channel"
@@ -27,11 +26,11 @@ ActiveRecord::Schema.define(version: 2024_12_01_173553) do
     t.string "commit_id"
     t.string "author"
     t.text "message"
-    t.datetime "date"
+    t.datetime "date", precision: nil
     t.string "project_key"
     t.string "repo_slug"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["project_key", "repo_slug", "commit_id"], name: "index_bitbucket_commits_on_project_repo_commit", unique: true
   end
 
@@ -39,29 +38,29 @@ ActiveRecord::Schema.define(version: 2024_12_01_173553) do
     t.string "slack_channel_id"
     t.string "name"
     t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "reminder_enabled", default: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.json "settings"
     t.index ["slack_channel_id"], name: "index_channels_on_slack_channel_id", unique: true
   end
 
   create_table "duties", force: :cascade do |t|
-    t.datetime "duty_from", null: false
-    t.datetime "duty_to", null: false
+    t.datetime "duty_from", precision: nil, null: false
+    t.datetime "duty_to", precision: nil, null: false
     t.string "duty_days", default: "1,2,3,4,5"
     t.string "channel_id", null: false
     t.string "user_id", null: false
     t.boolean "enabled"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "opsgenie_schedule_name"
     t.string "opsgenie_escalation_name"
   end
 
   create_table "labels", force: :cascade do |t|
     t.string "label", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "messages", force: :cascade do |t|
@@ -69,10 +68,10 @@ ActiveRecord::Schema.define(version: 2024_12_01_173553) do
     t.string "ts"
     t.string "thread_ts"
     t.string "event_ts"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "reply_counter"
-    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x00000001265751f8>"
+    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x00000001247100a0>"
     t.boolean "remind_needed"
     t.string "channel_id"
   end
@@ -80,8 +79,8 @@ ActiveRecord::Schema.define(version: 2024_12_01_173553) do
   create_table "slack_thread_labels", force: :cascade do |t|
     t.integer "slack_thread_id", null: false
     t.integer "label_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["label_id"], name: "index_slack_thread_labels_on_label_id"
     t.index ["slack_thread_id"], name: "index_slack_thread_labels_on_slack_thread_id"
   end
@@ -89,15 +88,15 @@ ActiveRecord::Schema.define(version: 2024_12_01_173553) do
   create_table "slack_threads", force: :cascade do |t|
     t.string "thread_ts"
     t.string "channel_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "teams", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "users", id: false, force: :cascade do |t|
@@ -107,8 +106,8 @@ ActiveRecord::Schema.define(version: 2024_12_01_173553) do
     t.string "contacts"
     t.string "tz"
     t.integer "tz_offset"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "status"
     t.index ["slack_user_id"], name: "index_users_on_slack_user_id", unique: true
   end

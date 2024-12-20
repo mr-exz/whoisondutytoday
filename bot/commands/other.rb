@@ -3,7 +3,6 @@ module WhoIsOnDutyTodaySlackBotModule
     class Other
       def self.call(client:, data:, match:)
         message_processor = MessageProcessor.new
-        time = DateTime.strptime(data.ts, '%s')
 
         # skip processing events and data without client_msg_id
         return if (data.respond_to?(:client_msg_id) == false) && (data.respond_to?(:files) == false)
@@ -37,26 +36,43 @@ module WhoIsOnDutyTodaySlackBotModule
               message_processor.disable_message_from_remind(data: data)
             end
           end
+
           # check if message written in channel
           if data.respond_to?(:thread_ts) == false
             message_processor.collectUserInfo(data: data)
-            reason = self.answer(time, duty)
-            reply_in_not_working_time(client, reason, data, channel) unless reason.nil?
+            reply_in_not_working_time(client, data, channel, duty)
             return
           end
 
           # check if message written in thread without answer from bot
           message = Message.where('ts=? OR thread_ts=?', data.thread_ts, data.thread_ts).where(reply_counter: 1)
           if message.blank?
-            reason = self.answer(time, duty)
-            reply_in_not_working_time(client, reason, data, channel) unless reason.nil?
+            reply_in_not_working_time(client, data, channel, duty)
           end
         rescue StandardError => e
           print e
         end
       end
 
-      def self.reply_in_not_working_time(client, reason, data, channel)
+      def self.reply_in_not_working_time(client, data, channel, duty)
+
+        reason = nil
+        time = DateTime.strptime(data.ts, '%s')
+
+        unless within_working_hours?(duty)
+          from_time = duty.duty_from.utc.strftime('%H:%M').to_s
+          to_time = duty.duty_to.utc.strftime('%H:%M').to_s
+          current_time = time.utc.strftime('%H:%M').to_s
+          reason = I18n.t('reply.reason.non-working-hours.text', fT: from_time, tT: to_time, cT: current_time)
+        end
+
+        unless duty.duty_days.split(',').include?(time.utc.strftime('%u'))
+          reason = I18n.t('reply.reason.non-working-day.text')
+        end
+
+        reason = I18n.t('commands.user.status.enabled.text', status: duty.user.status) unless duty.user.status.nil?
+
+        return if reason.nil?
 
         # search for custom answer
         answers = Answer.where(channel_id: data.channel)
@@ -95,12 +111,11 @@ module WhoIsOnDutyTodaySlackBotModule
         answers = Answer.where(channel_id: data.channel)
 
         if answers.empty?
-          # use standard answer for not working time if no custom
-          text = I18n.t('reply.non-working-time.text', name: client.self.name)
+          return
         else
-          non_working_hours_answer = answers.find { |answer| answer.answer_type == 'non_working_time' }
-          text = non_working_hours_answer.body
-          reason = '' if non_working_hours_answer.hide_reason == 1
+          working_hours_answer = answers.find { |answer| answer.answer_type == 'working_time' }
+          text = working_hours_answer.body
+          reason = '' if working_hours_answer.hide_reason == 1
         end
 
         client.web_client.chat_postMessage(
@@ -139,25 +154,6 @@ module WhoIsOnDutyTodaySlackBotModule
         message_processor = MessageProcessor.new
         message_processor.save_message(data: data)
         send_tagged_message(client,channel,data)
-      end
-
-      def self.answer(time, duty, chanel)
-        reason = nil
-
-        unless within_working_hours?(chanel)
-          from_time = duty.duty_from.utc.strftime('%H:%M').to_s
-          to_time = duty.duty_to.utc.strftime('%H:%M').to_s
-          current_time = time.utc.strftime('%H:%M').to_s
-          reason = I18n.t('reply.reason.non-working-hours.text', fT: from_time, tT: to_time, cT: current_time)
-        end
-
-        unless duty.duty_days.split(',').include?(time.utc.strftime('%u'))
-          reason = I18n.t('reply.reason.non-working-day.text')
-        end
-
-        reason = I18n.t('commands.user.status.enabled.text', status: duty.user.status) unless duty.user.status.nil?
-
-        reason
       end
 
       def self.send_tagged_message(client, channel, data)

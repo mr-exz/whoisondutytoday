@@ -6,31 +6,8 @@ en:
       text: |
         Running version: %{version} | <https://github.com/mr-exz/whoisondutytoday|GitHub> | <https://github.com/mr-exz/whoisondutytoday/blob/master/CHANGELOG.md|Changelog>
         Commands in channel:
-        -- `call duty person` - Will send an alert message to the duty person.
-        -- `i am on duty` - Will set you as the duty person in the channel.
-        -- `who is on duty?` - Will display the name of the duty person.
-        -- `channel reminder enabled` - Will enable reminders for unanswered messages in the channel.
-        -- `channel reminder disabled` - Will disable reminders for unanswered messages in the channel.
-        -- `duty create` - Will create a duty. Time should be defined in your local timezone, e.g., `duty create from 8:00 to 17:00`.
-        -- `duty update` - Will update a duty. Time should be defined in your local timezone, e.g., `duty update from 8:00 to 17:00`.
-        -- `duty delete` - Will delete a duty.
-        -- `duty sync with opsgenie schedule` - Will configure all duties in the channel with the schedule name from Opsgenie, e.g., `duty sync with opsgenie schedule My_Team_Schedule`.
-        -- `duty set opsgenie escalation` - Will configure all duties in the channel with the escalation name from Opsgenie, e.g., `duty set opsgenie escalation My_Team_Escalation`.
-        -- `answer set custom text` - Will configure custom text in answers from the bot, e.g., `answer set custom text nobody will help you, wait for next day`.
-        -- `answer delete custom text` - Will delete the custom text answer and use the default.
-        -- `answer enable hide reason` - Will hide the reason like `You asked at a non-working day.` Only your custom text will be displayed.
-        -- `answer disable hide reason` - Will show the reason like `You asked at a non-working day.`.
-        -- `checked` - Will mark the thread as checked.
-        -- `action create problem:NEWERROR action:What to do with this error` - Will create an answer from the bot for this keyword problem.
-        -- `action delete problem:NEWERROR` - Will delete the answer from the bot for this keyword.
-        -- `thread labels` - Will label the thread with any label. Use space as a separator, e.g., `thread labels label1 label2`.
-        -- `thread labels clean` - Will remove all labels from the thread where you write it.
-        -- `channel labels list` - Will display all labels in this channel.
-        -- `channel labels statistic` - Will show the label count in the channel for the last week.
-        -- `channel labels merge` - Will migrate existing threads in the channel from one label to another, e.g., `channel labels merge from:label1 to:label2`.
         Commands in direct messages:
-        -- `my status *` - Will set any status when you cannot provide support in the channel. The bot will reply instead of you.
-        -- `my status work` - The bot will stop telling your status. Use it when you come back.
+
     channel:
       labels:
         merged:

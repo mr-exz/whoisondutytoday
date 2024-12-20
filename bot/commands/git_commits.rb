@@ -1,6 +1,9 @@
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class UserCommits
+
+      DESCRIPTION = 'Will display the last 10 commits of a user.'.freeze
+      EXAMPLE = 'Usage: `git commits @user`'.freeze
       def self.call(client:, data:, match:)
         message_processor = MessageProcessor.new
         user_name = match['expression'][/<@(.+)>/, 1]

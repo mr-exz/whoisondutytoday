@@ -1,6 +1,5 @@
 require_relative 'action_create'
 require_relative 'action_delete'
-require_relative 'allow_list'
 require_relative 'answer_delete_custom_text'
 require_relative 'answer_disable_hide_reason'
 require_relative 'answer_enable_hide_reason'

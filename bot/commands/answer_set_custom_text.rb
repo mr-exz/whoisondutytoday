@@ -1,6 +1,8 @@
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class AnswerSetCustomText
+      DESCRIPTION = 'Will configure custom text in answers from the bot.'.freeze
+      EXAMPLE = 'Usage: `answer set custom text nobody will help you, wait for next day`'.freeze
       def self.call(client:, data:, match:)
         expression = match['expression']
 

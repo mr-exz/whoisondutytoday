@@ -31,7 +31,8 @@ module WhoIsOnDutyTodaySlackBotModule
           if !data.nil? && !match.nil?
             Action.where(channel: data.channel).each do |action|
               /#{action.problem}/i.match(data.text) do |_|
-                reply_to_known_problem(client: client, problem: action.problem, data: data, action: action.action, channel: channel)
+                reply_to_known_problem(client: client, problem: action.problem, data: data, action: action.action,
+                                       channel: channel)
               end
             end
           end
@@ -57,6 +58,7 @@ module WhoIsOnDutyTodaySlackBotModule
 
       def self.reply_in_not_working_time(client, reason, data, channel)
 
+        # search for custom answer
         answers = Answer.where(channel_id: data.channel)
 
         if answers.empty?
@@ -65,9 +67,9 @@ module WhoIsOnDutyTodaySlackBotModule
           working_hours_answer = answers.find { |answer| answer.answer_type == 'working_time' }
           non_working_hours_answer = answers.find { |answer| answer.answer_type == 'non_working_time' }
 
-          if working_hours_answer && within_working_hours?(channel)
+          if working_hours_answer && within_working_hours?(channel) && channel.auto_answer_enabled
             text = working_hours_answer.body
-          elsif non_working_hours_answer
+          elsif non_working_hours_answer && !within_working_hours?(channel)
             text = non_working_hours_answer.body
             reason = '' if non_working_hours_answer.hide_reason == 1
           else
@@ -113,18 +115,14 @@ module WhoIsOnDutyTodaySlackBotModule
         send_tagged_message(client,channel,data)
       end
 
-      def self.answer(time, duty)
+      def self.answer(time, duty, chanel)
         reason = nil
 
-        if (time.utc.strftime('%H%M%S%N') < duty.duty_from.utc.strftime('%H%M%S%N')) || (time.utc.strftime('%H%M%S%N') > duty.duty_to.utc.strftime('%H%M%S%N'))
+        unless within_working_hours?(chanel)
           from_time = duty.duty_from.utc.strftime('%H:%M').to_s
           to_time = duty.duty_to.utc.strftime('%H:%M').to_s
           current_time = time.utc.strftime('%H:%M').to_s
           reason = I18n.t('reply.reason.non-working-hours.text', fT: from_time, tT: to_time, cT: current_time)
-        else
-          if channel.auto_answer_enabled
-            reason = I18n.t('reply.reason.auto-answer.text')
-          end
         end
 
         unless duty.duty_days.split(',').include?(time.utc.strftime('%u'))

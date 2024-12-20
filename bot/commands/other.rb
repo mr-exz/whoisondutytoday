@@ -40,14 +40,22 @@ module WhoIsOnDutyTodaySlackBotModule
           # check if message written in channel
           if data.respond_to?(:thread_ts) == false
             message_processor.collectUserInfo(data: data)
-            reply_in_not_working_time(client, data, channel, duty)
+            if within_working_hours?(duty)
+              reply_in_working_time(client, data, channel, duty)
+            else
+              reply_in_not_working_time(client, data, channel, duty)
+            end
             return
           end
 
           # check if message written in thread without answer from bot
           message = Message.where('ts=? OR thread_ts=?', data.thread_ts, data.thread_ts).where(reply_counter: 1)
           if message.blank?
-            reply_in_not_working_time(client, data, channel, duty)
+            if within_working_hours?(duty)
+              reply_in_working_time(client, data, channel, duty)
+            else
+              reply_in_not_working_time(client, data, channel, duty)
+            end
           end
         rescue StandardError => e
           print e
@@ -105,7 +113,7 @@ module WhoIsOnDutyTodaySlackBotModule
         send_tagged_message(client,channel,data)
       end
 
-      def self.reply_in_working_time(client, reason, data, channel)
+      def self.reply_in_working_time(client, data, channel, duty)
 
         # search for custom answer
         answers = Answer.where(channel_id: data.channel)

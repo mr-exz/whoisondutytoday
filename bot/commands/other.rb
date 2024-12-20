@@ -12,21 +12,6 @@ module WhoIsOnDutyTodaySlackBotModule
           channel = Channel.where(slack_channel_id: data.channel).first
           return if channel.nil?
 
-          duty = Duty.where(channel_id: data.channel, enabled: true).first
-
-          # store messages where reminder enabled
-          if channel.reminder_enabled == true
-            if (data.respond_to?(:thread_ts) == false) && (data.user != duty.user.slack_user_id)
-              message_processor.save_message_for_reminder(data: data)
-            end
-            if (data.user == duty.user.slack_user_id) && (data.respond_to?(:thread_ts) == true)
-              message_processor.disable_message_from_remind(data: data)
-            end
-          end
-
-          # don't reply on duty person messages
-          #return if data.user == duty.user.slack_user_id
-
           # Answer if it is known problem
           if !data.nil? && !match.nil?
             Action.where(channel: data.channel).each do |action|
@@ -37,6 +22,21 @@ module WhoIsOnDutyTodaySlackBotModule
             end
           end
 
+          duty = Duty.where(channel_id: data.channel, enabled: true).first
+          return if duty.nil?
+
+          # don't reply on duty person messages
+          #return if data.user == duty.user.slack_user_id
+
+          # store messages where reminder enabled
+          if channel.reminder_enabled == true
+            if (data.respond_to?(:thread_ts) == false) && (data.user != duty.user.slack_user_id)
+              message_processor.save_message_for_reminder(data: data)
+            end
+            if (data.user == duty.user.slack_user_id) && (data.respond_to?(:thread_ts) == true)
+              message_processor.disable_message_from_remind(data: data)
+            end
+          end
           # check if message written in channel
           if data.respond_to?(:thread_ts) == false
             message_processor.collectUserInfo(data: data)
@@ -62,19 +62,45 @@ module WhoIsOnDutyTodaySlackBotModule
         answers = Answer.where(channel_id: data.channel)
 
         if answers.empty?
+          # use standard answer for not working time if no custom
           text = I18n.t('reply.non-working-time.text', name: client.self.name)
         else
-          working_hours_answer = answers.find { |answer| answer.answer_type == 'working_time' }
           non_working_hours_answer = answers.find { |answer| answer.answer_type == 'non_working_time' }
+          text = non_working_hours_answer.body
+          reason = '' if non_working_hours_answer.hide_reason == 1
+        end
 
-          if working_hours_answer && within_working_hours?(channel) && channel.auto_answer_enabled
-            text = working_hours_answer.body
-          elsif non_working_hours_answer && !within_working_hours?(channel)
-            text = non_working_hours_answer.body
-            reason = '' if non_working_hours_answer.hide_reason == 1
-          else
-            text = I18n.t('reply.non-working-time.text', name: client.self.name)
-          end
+        client.web_client.chat_postMessage(
+          text: '%s' % reason,
+          channel: data.channel,
+          attachments: [
+            {
+              fallback: I18n.t('reply.non-working-time.subject'),
+              text: text,
+              color: '#3AA3E3',
+              attachment_type: 'default'
+            }
+          ],
+          thread_ts: data.thread_ts || data.ts,
+          as_user: true
+        )
+        message_processor = MessageProcessor.new
+        message_processor.save_message(data: data)
+        send_tagged_message(client,channel,data)
+      end
+
+      def self.reply_in_working_time(client, reason, data, channel)
+
+        # search for custom answer
+        answers = Answer.where(channel_id: data.channel)
+
+        if answers.empty?
+          # use standard answer for not working time if no custom
+          text = I18n.t('reply.non-working-time.text', name: client.self.name)
+        else
+          non_working_hours_answer = answers.find { |answer| answer.answer_type == 'non_working_time' }
+          text = non_working_hours_answer.body
+          reason = '' if non_working_hours_answer.hide_reason == 1
         end
 
         client.web_client.chat_postMessage(
@@ -146,18 +172,12 @@ module WhoIsOnDutyTodaySlackBotModule
         end
       end
 
-      def self.within_working_hours?(channel)
-        # Implement logic to check if the current time is within working hours
-        # This is a placeholder implementation
+      def self.within_working_hours?(duty)
         current_time = Time.now.utc
-        duty = Duty.where(channel_id: channel.slack_channel_id, enabled: true).first
-        return false if duty.nil?
-
         from_time = duty.duty_from.utc.strftime('%H%M%S%N')
         to_time = duty.duty_to.utc.strftime('%H%M%S%N')
         current_time_str = current_time.strftime('%H%M%S%N')
-
-        current_time_str >= from_time && current_time_str <= to_time
+        current_time_str > from_time && current_time_str < to_time
       end
     end
   end

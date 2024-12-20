@@ -53,11 +53,11 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
   end
 
   command 'channel auto answer enable' do |client, data|
-    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelAutoAnserEnable.call(client: client, data: data)
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelAutoAnswerEnable.call(client: client, data: data)
   end
 
-  command 'channel auto answer enable' do |client, data|
-    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelAutoAnserDisable.call(client: client, data: data)
+  command 'channel auto answer disable' do |client, data|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelAutoAnswerDisable.call(client: client, data: data)
   end
 
   command 'channel tag reporter in thread enable' do |client, data|

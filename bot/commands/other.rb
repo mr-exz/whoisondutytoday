@@ -12,7 +12,6 @@ module WhoIsOnDutyTodaySlackBotModule
           channel = Channel.where(slack_channel_id: data.channel).first
           return if channel.nil?
           duty = Duty.where(channel_id: data.channel, enabled: true).first
-          answer = Answer.where(channel_id: data.channel).first
 
           # store messages where reminder needed
           if channel.reminder_enabled == true
@@ -40,7 +39,9 @@ module WhoIsOnDutyTodaySlackBotModule
           if data.respond_to?(:thread_ts) == false
             message_processor.collectUserInfo(data: data)
             reason = self.answer(time, duty)
-            reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
+            auto_answer_at_working_time(client, channel, data)
+            reply_in_not_working_time(client, reason, data, channel) unless reason.nil?
+            send_tagged_message(client, channel, data)
             return
           end
 
@@ -48,14 +49,18 @@ module WhoIsOnDutyTodaySlackBotModule
           message = Message.where('ts=? OR thread_ts=?', data.thread_ts, data.thread_ts).where(reply_counter: 1)
           if message.blank?
             reason = self.answer(time, duty)
-            reply_in_not_working_time(client, reason, data, answer) unless reason.nil?
+            auto_answer_at_working_time(client, channel, data)
+            reply_in_not_working_time(client, reason, data, channel) unless reason.nil?
+            send_tagged_message(client, channel, data)
           end
         rescue StandardError => e
           print e
         end
       end
 
-      def self.reply_in_not_working_time(client, reason, data, answer)
+      def self.reply_in_not_working_time(client, reason, data, channel)
+        answer = Answer.where(channel_id: data.channel, answer_type: 'non_working_time').first
+
         if answer.nil?
           text = I18n.t('reply.non-working-time.text', name: client.self.name)
         else
@@ -79,7 +84,6 @@ module WhoIsOnDutyTodaySlackBotModule
         )
         message_processor = MessageProcessor.new
         message_processor.save_message(data: data)
-        send_tagged_message(client,channel,data)
       end
 
       def self.reply_to_known_problem(client:, problem:, data:, action:)
@@ -98,7 +102,6 @@ module WhoIsOnDutyTodaySlackBotModule
         )
         message_processor = MessageProcessor.new
         message_processor.save_message(data: data)
-        send_tagged_message(client,channel,data)
       end
 
       def self.answer(time, duty)
@@ -124,11 +127,28 @@ module WhoIsOnDutyTodaySlackBotModule
         if channel.tag_reporter_enabled
           user_tag = channel.tag_reporter(data.user)
           client.say(
-            text: "#{user_tag}, we would appreciate your attention on this matter. Thank you!",
+            text: "#{user_tag}, we would appreciate your attention. Thank you!",
             channel: data.channel,
             as_user: true,
             thread_ts: data.thread_ts || data.ts
           )
+        end
+      end
+
+      def self.auto_answer_at_working_time(client, channel, data)
+        if channel.auto_answer_enabled
+          answer = Answer.where(channel_id: data.channel, answer_type: 'working_time').first
+          unless answer.nil?
+            text = answer.body
+            client.web_client.chat_postMessage(
+              text: '%s' % text,
+              channel: data.channel,
+              thread_ts: data.thread_ts || data.ts,
+              as_user: true
+            )
+            message_processor = MessageProcessor.new
+            message_processor.save_message(data: data)
+          end
         end
       end
     end

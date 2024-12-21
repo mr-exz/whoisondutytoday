@@ -1,3 +1,4 @@
+# lib/message_processor.rb
 class MessageProcessor
   def initialize
     @slack_web_client = Slack::Web::Client.new

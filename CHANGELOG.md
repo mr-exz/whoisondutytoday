@@ -1,4 +1,13 @@
 # Changelog
+## 0.17.0
+### Improvements
+- Security updates of dependencies
+- Added feature to enable bot answer at working time [#192](/../../issues/192)
+- Added feature to tag reporter in thread
+- OpsGenie code moved to lib folder
+- MessageProcessor moved to lib folder
+- Commands help refactored
+
 ## 0.16.3
 ### Bugfixes
 - Fixes memory leak in sync git repos

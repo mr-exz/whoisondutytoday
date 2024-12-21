@@ -1,6 +1,5 @@
 require_relative 'action_create'
 require_relative 'action_delete'
-require_relative 'allow_list'
 require_relative 'answer_delete_custom_text'
 require_relative 'answer_disable_hide_reason'
 require_relative 'answer_enable_hide_reason'
@@ -27,6 +26,10 @@ require_relative 'channel_labels_merge'
 require_relative 'thread_labels_clean'
 require_relative 'thread_labels'
 require_relative 'git_commits'
+require_relative 'channel_tag_reporter_in_thread_enable'
+require_relative 'channel_tag_reporter_in_thread_disable'
+require_relative 'channel_auto_answer_enable'
+require_relative 'channel_auto_answer_disable'
 
 module WhoIsOnDutyTodaySlackBotModule
   module Commands

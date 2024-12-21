@@ -1,64 +1,87 @@
 ru:
   commands:
     unknown:
-      text: "Извините я вас не понимаю."
-    help:
-      text: |
-        Версия: %{version}
-        Команды в канале:
-        -- `call duty person` - вызвать дежурного.
-        -- `i am on duty` - встать на дежурство.
-        -- `who is on duty?` - узнать кто дежурный.
-        -- `duty create` - создать рабочее время дежурного, пример `duty create from 8:00 to 17:00`.
-        -- `duty update` - обновить рабочее время дежурного, пример `duty update from 8:00 to 17:00`.
-        -- `duty delete` - удалить дежурство.
-        -- `duty sync with opsgenie schedule` - настроить все дежурства в канале с дежурством в Opsgenie, пример `duty sync with opsgenie schedule My_Team_Schedule`.
-        Команды в личных сообщениях:
-        -- `my status lunch` - установить статус на обеде.
-        -- `my status work` - установить статус на дежурстве.
-        -- `my status holidays` - установить статус на каникулах.
-    duty:
-      created:
-        text: "Дежурство с %{fH}:%{fM} по %{tH}:%{tM} создано (UTC время), включено: %{status}"
-      exist:
-        text: "Дежурство уже существует %{fH}:%{fM} по %{tH}:%{tM} (UTC время), включено: %{status}"
-        error: "You don't have duty record for this channel"
-      updated:
-        text: "Дежурство обновлено, с %{fH}:%{fM} по %{tH}:%{tM} (UTC время), включено: %{status}"
-      deleted:
-        text: "Дежурство удалено для этого канала."
-      enabled:
-        text: "Теперь ты дежурный."
-    user:
-      status:
-        configured:
-          text: "Статус пользователя сконфигурирован: `%{status}`"
-        enabled:
-          duty: "%{user} сегодня дежурный."
-          text: "Sorry, duty person on %{status}."
-    opsgenie-schedule-name:
-      text: ""
-    thread:
-      checked: ""
-    action:
-      failed:
-        text: ""
+      text: "Извините, я вас не понимаю. Используйте `<@%{name}> help`"
     channel:
       labels:
         merged:
-          error:
-            text: ""
           success:
-            text: ""
+            text: "Ярлыки объединены %{label_from} -> %{label_to} количество записей %{records_count}"
+          error:
+            text: "Объединение %{label_from} -> %{label_to} не удалось, проверьте названия ярлыков"
+      reminder:
+        enabled:
+          text: "Напоминание в канале успешно включено."
+        disabled:
+          text: "Напоминание в канале успешно отключено."
+    duty:
+      created:
+        text: "Дежурство с %{fH}:%{fM} до %{tH}:%{tM} создано (UTC), включено: %{status}."
+      exist:
+        text: "Дежурство уже существует %{fH}:%{fM} до %{tH}:%{tM} (UTC), включено: %{status}."
+        error: "У вас нет записи о дежурстве для этого канала"
+      updated:
+        text: "Часы дежурства обновлены, с %{fH}:%{fM} до %{tH}:%{tM} (UTC), включено: %{status}."
+      deleted:
+        text: "Дежурство удалено для этого канала."
+      enabled:
+        text: "Теперь вы на дежурстве."
+      enabled-for-user:
+        text: "Теперь <@%{name}> на дежурстве."
+    answer:
+      created:
+        text: "Пользовательский ответ создан, теперь бот будет использовать этот текст, ниже вы можете увидеть, как он будет выглядеть:"
+      deleted:
+        text: "Пользовательский ответ удален для этого канала."
+      failed:
+        text: "Создание пользовательского ответа не удалось, попробуйте снова."
+    user:
+      status:
+        configured:
+          text: "Статус пользователя настроен `%{status}`"
+        enabled:
+          duty: "%{user} на дежурстве сегодня. Часы дежурства: с %{duty_from} до %{duty_to} (UTC)"
+          text: "Извините, дежурный на %{status}."
+    opsgenie-schedule-name:
+      text: "Все дежурства в этом канале синхронизированы с Opsgenie."
+    opsgenie-escalation-name:
+      text: "Все дежурства в этом канале теперь имеют эскалацию."
+    enable:
+      hide_reason:
+        text: "Причина скрыта"
+        failed:
+          text: "Операция не удалась, попробуйте снова."
+    disable:
+      hide_reason:
+        text: "Причина должна быть показана"
+    thread:
+      checked: "Напоминание отключено для этой темы"
+      labeled:
+        success: "Ярлыки `%{labels}` назначены"
+        error: "Что-то пошло не так"
+      statistic: |
+        Период: %{start_date} - %{end_date}
+        %{labels}
+      labels:
+        cleaned: "Ярлыки удалены из темы"
+    action:
+      created:
+        text: "Действие создано для проблемы"
+      deleted:
+        text: "Действие удалено для проблемы"
+      failed:
+        text: "Операция не удалась, попробуйте снова."
   reply:
     non-working-time:
-      subject: "Что то  случилось"
-      text: "Вызвать дежурного ? Напишите команду: `<@%{name}> call duty person`"
+      subject: "Что-то случилось"
+      text: "В экстренных случаях введите команду: `<@%{name}> call duty person` или дождитесь его рабочих часов."
     reason:
       non-working-hours:
-        text: "Вы написали внерабочее время. Время работы дежурного %{fT} - %{tT}. Сейчас: %{cT}."
+        text: "Вы спросили внерабочее время. Время поддержки %{fT} - %{tT}. Текущее время: %{cT} (UTC)."
       non-working-day:
         text: "Вы спросили внерабочий день."
     opsgenie:
-      text: "Дежурный вызван, скоро он свяжется с вами."
-      error: "Не получилось вызвать дежурного, получено сообщение с ошибкой от Opsgenie: %{message}."
+      text: "Оповещение открыто, скоро с вами свяжется дежурный."
+      error: "Не удалось вызвать дежурного, Opsgenie ответил с ошибкой: %{message}."
+    known-problem:
+      subject: "Я нашел действие для известной проблемы, возможно, это поможет вам:"

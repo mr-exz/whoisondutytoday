@@ -1,8 +1,14 @@
 require 'date'
 require 'json'
+
+# Commands
 require_relative 'commands/main'
-require_relative 'notify'
-require_relative 'message_processor'
+
+# Libraries
+require_relative '../lib/opsgenie/notify_opsgenie'
+require_relative '../lib/message_processor/message_processor'
+
+
 class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
   SlackRubyBot::Client.logger.level = Logger::WARN
 
@@ -44,6 +50,22 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
 
   command 'channel reminder disabled' do |client, data|
     WhoIsOnDutyTodaySlackBotModule::Commands::ChannelReminderDisabled.call(client: client, data: data)
+  end
+
+  command 'channel auto answer enable' do |client, data|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelAutoAnswerEnable.call(client: client, data: data)
+  end
+
+  command 'channel auto answer disable' do |client, data|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelAutoAnswerDisable.call(client: client, data: data)
+  end
+
+  command 'channel tag reporter in thread enable' do |client, data|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelTagReporterInThreadEnable.call(client: client, data: data)
+  end
+
+  command 'channel tag reporter in thread disable' do |client, data|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelTagReporterInThreadDisable.call(client: client, data: data)
   end
 
   command 'duty update' do |client, data, match|

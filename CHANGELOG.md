@@ -1,4 +1,8 @@
 # Changelog
+## 0.17.1
+### Bugfixes
+- DB migration fixes
+
 ## 0.17.0
 ### Improvements
 - Security updates of dependencies

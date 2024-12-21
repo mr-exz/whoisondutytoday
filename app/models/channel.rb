@@ -2,7 +2,7 @@ class Channel < ApplicationRecord
   self.primary_key = 'slack_channel_id'
 
   def reminder_enabled
-    settings['reminder_enabled']
+    settings.present? && settings['reminder_enabled']
   end
 
   def reminder_enabled=(value)

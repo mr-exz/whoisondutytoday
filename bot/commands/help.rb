@@ -1,14 +1,17 @@
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class Help
-
       DESCRIPTION = 'Will show the available commands.'.freeze
-      EXAMPLE = 'Usage: `help`'.freeze
+      EXAMPLE = 'Command: `help`'.freeze
+
       def self.call(client:, data:)
         help_text = generate_help_text
+        version_info = "Running version: #{ENV['VERSION']} | <https://github.com/mr-exz/whoisondutytoday|GitHub> | <https://github.com/mr-exz/whoisondutytoday/blob/master/CHANGELOG.md|Changelog>"
+
         client.web_client.chat_postMessage(
           channel: data.channel,
-          text: help_text,
+          text: "Available commands:\n\n#{version_info}",
+          attachments: help_text,
           thread_ts: data.thread_ts || data.ts,
           as_user: true
         )
@@ -48,13 +51,20 @@ module WhoIsOnDutyTodaySlackBotModule
           UserCommits,
         ]
 
-        help_text = "Here are the available commands:\n\n"
-        commands.each do |command|
-          help_text += "* #{command::DESCRIPTION}\n"
-          help_text += "  #{command::EXAMPLE}\n\n"
+        commands.map do |command|
+          {
+            fallback: command::DESCRIPTION.to_s,
+            color: '#36a64f',
+            fields: [
+              {
+                title: command::EXAMPLE,
+                value: command::DESCRIPTION,
+                short: false
+              }
+            ]
+          }
         end
 
-        help_text
       end
     end
   end

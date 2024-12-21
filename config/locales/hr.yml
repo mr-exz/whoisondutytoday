@@ -2,35 +2,6 @@ hr:
   commands:
     unknown:
       text: "Oprostite, ne razumijem vas. Koristite `<@%{name}> help`"
-    help:
-      text: |
-        Verzija: %{version} | <https://github.com/mr-exz/whoisondutytoday|github> | <https://github.com/mr-exz/whoisondutytoday/blob/master/CHANGELOG.md|changelog>
-        Komande u kanalu:
-        -- `call duty person` - poslat će poruku osobi na dužnosti.
-        -- `i am on duty` - postavit će vas kao osobu na dužnosti u kanalu.
-        -- `who is on duty?` - prikazat će ime osobe na dužnosti.
-        -- `channel reminder enabled` - omogućit će podsjetnik za neodgovorene poruke u kanalu.
-        -- `channel reminder disabled` - onemogućit će podsjetnik za neodgovorene poruke u kanalu.
-        -- `duty create` - stvorit će dužnost, vrijeme treba biti definirano u vašoj lokalnoj vremenskoj zoni, primjer `duty create from 8:00 to 17:00`.
-        -- `duty update` - ažurirat će dužnost, vrijeme treba biti definirano u vašoj lokalnoj vremenskoj zoni, primjer `duty update from 8:00 to 17:00`.
-        -- `duty delete` - izbrisat će dužnost.
-        -- `duty sync with opsgenie schedule` - konfigurirat će sve dužnosti u kanalu s rasporedom iz Opsgenie, primjer `duty sync with opsgenie schedule My_Team_Schedule`.
-        -- `duty set opsgenie escalation` - konfigurirat će sve dužnosti u kanalu s eskalacijom iz Opsgenie, primjer `duty set opsgenie escalation My_Team_Escalation`.
-        -- `answer set custom text` - konfigurirat će prilagođeni tekst u odgovorima bota, primjer `answer set custom text nobody will help you, wait for next day`.
-        -- `answer delete custom text` - izbrisat će prilagođeni tekst odgovora, koristit će se zadani.
-        -- `answer enable hide reason` - sakrit će razlog poput `Pitali ste izvan radnog vremena.`, prikazat će se samo vaš prilagođeni tekst.
-        -- `answer disable hide reason` - prikazat će razlog poput `Pitali ste izvan radnog vremena.`.
-        -- `checked` - označit će nit kao provjerenu.
-        -- `action create problem:NEWERROR action:What to do with this error` - stvorit će odgovor bota na ovu ključnu riječ problem.
-        -- `action delete problem:NEWERROR` - izbrisat će odgovor bota na ovu ključnu riječ.
-        -- `thread labels` - označit će nit bilo kojom oznakom, koristite razmak kao separator, primjer `thread labels label1 label2`.
-        -- `thread labels clean` - uklonit će sve oznake iz niti gdje to napišete.
-        -- `channel labels list` - prikazat će sve oznake u ovom kanalu.
-        -- `channel labels statistic` - prikazat će broj oznaka u kanalu za prošli tjedan.
-        -- `channel labels merge` - migrirat će postojeće niti u kanalu iz jedne oznake u drugu, primjer `channel labels merge from:label1 to:label2`
-        Komande u izravnim porukama:
-        -- `my status *` - postavit će bilo koji status kada ne možete pružiti podršku u kanalu, bot će odgovoriti umjesto vas.
-        -- `my status work` - bot će prestati govoriti vaš status, koristite ga kada se vratite.
     channel:
       labels:
         merged:

@@ -2,12 +2,6 @@ en:
   commands:
     unknown:
       text: "Sorry, I don't understand you. Use `<@%{name}> help`."
-    help:
-      text: |
-        Running version: %{version} | <https://github.com/mr-exz/whoisondutytoday|GitHub> | <https://github.com/mr-exz/whoisondutytoday/blob/master/CHANGELOG.md|Changelog>
-        Commands in channel:
-        Commands in direct messages:
-
     channel:
       labels:
         merged:

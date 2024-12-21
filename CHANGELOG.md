@@ -6,6 +6,7 @@
 - Added feature to tag reporter in thread
 - OpsGenie code moved to lib folder
 - MessageProcessor moved to lib folder
+- Commands help refactored
 
 ## 0.16.3
 ### Bugfixes

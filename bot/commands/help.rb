@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class Help
       DESCRIPTION = 'Will show the available commands.'.freeze
-      EXAMPLE = 'Command: `help`'.freeze
+      EXAMPLE = 'Usage: `help`'.freeze
 
       def self.call(client:, data:)
         help_text = generate_help_text
@@ -10,7 +10,7 @@ module WhoIsOnDutyTodaySlackBotModule
 
         client.web_client.chat_postMessage(
           channel: data.channel,
-          text: "Available commands:\n\n#{version_info}",
+          text: "#{version_info}\n\nAvailable commands:",
           attachments: help_text,
           thread_ts: data.thread_ts || data.ts,
           as_user: true
@@ -33,6 +33,9 @@ module WhoIsOnDutyTodaySlackBotModule
           ChannelAutoAnswerDisable,
           ChannelTagReporterInThreadEnable,
           ChannelTagReporterInThreadDisable,
+          ChannelLabelsStatistic,
+          ChannelLabelsList,
+          ChannelLabelsMerge,
           DutyUpdate,
           DutyDelete,
           DutySyncWithOpsgenieSchedule,
@@ -45,9 +48,6 @@ module WhoIsOnDutyTodaySlackBotModule
           ActionDelete,
           ThreadLabelsClean,
           ThreadLabels,
-          ChannelLabelsStatistic,
-          ChannelLabelsList,
-          ChannelLabelsMerge,
           UserCommits,
         ]
 

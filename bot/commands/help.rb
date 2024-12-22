@@ -46,6 +46,8 @@ module WhoIsOnDutyTodaySlackBotModule
           AnswerEnableHideReason,
           ActionCreate,
           ActionDelete,
+          ActionShowProblems,
+          ActionShowAction,
           ThreadLabelsClean,
           ThreadLabels,
           UserCommits,
@@ -57,8 +59,7 @@ module WhoIsOnDutyTodaySlackBotModule
             color: '#36a64f',
             fields: [
               {
-                title: command::EXAMPLE,
-                value: command::DESCRIPTION,
+                value: "#{command::EXAMPLE}\n#{command::DESCRIPTION}",
                 short: false
               }
             ]

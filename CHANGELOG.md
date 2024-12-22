@@ -1,4 +1,9 @@
 # Changelog
+## 0.18.0
+### Improvements
+- Added command to display known problems for channel  [#169](/../../issues/169)
+- Added command to display solution for substring of known problem   [#169](/../../issues/169)
+
 ## 0.17.1
 ### Bugfixes
 - DB migration fixes

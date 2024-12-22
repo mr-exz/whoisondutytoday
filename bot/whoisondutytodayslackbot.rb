@@ -108,6 +108,14 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::ActionDelete.call(client: client, data: data, match: match)
   end
 
+  command 'action show problems' do |client, data|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ActionShowProblems.call(client: client, data: data)
+  end
+
+  command 'action show action for' do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ActionShowAction.call(client: client, data: data, match: match)
+  end
+
   command 'thread labels clean' do |client, data, match|
     WhoIsOnDutyTodaySlackBotModule::Commands::ThreadLabelsClean.call(client: client, data: data, match: match)
   end

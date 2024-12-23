@@ -1,18 +1,24 @@
 # Slack bot Whoisondutytoday
 
 ## Description
-This bot allow you configure working time in Slack channels.\
-And if somebody will write at non working hours, bot will reply on message,\
-with escalation option.
+This is a Slack bot designed to manage and interact with users on support channels. \
+It provides various commands to:
+* Call the duty person.
+* Show and update user on support statuses where it absent.
+* Manage duty schedules (create, update, delete, sync with Opsgenie).
+* Enable or disable channel-specific features like reminders, auto-answer, and tagging.
+* Handle custom text for answers.
+* Manage actions and show related problems.
+* Clean and display thread labels.
+* Show statistics and manage channel labels.
+* Display user commits from Bitbucket.
+* Remind about threads without replies.
 
+## Links
 * [Changelog](./CHANGELOG.md)
 * [Docker](https://hub.docker.com/r/mrexz/whoisondutytoday)
 * ![Build](https://github.com/mr-exz/whoisondutytoday/actions/workflows/docker-build.yml/badge.svg)
 * ![Known Vulnerabilities](https://snyk.io/test/github/mr-exz/whoisondutytoday/badge.svg)
-
-
-## Features
-
 
 ## Bot commands
 ```
@@ -31,9 +37,6 @@ Copy file and define variables. Create bot [here](https://slack.com/intl/en-hr/h
 
 ```bash
 cp ./production.env.example ./production.env
-```
-
-```bash
 docker-compose build
 docker-compose up
 ```

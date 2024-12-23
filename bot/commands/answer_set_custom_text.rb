@@ -19,7 +19,7 @@ module WhoIsOnDutyTodaySlackBotModule
           return
         end
 
-        Answer.where(channel_id: data.channel, type: answer_type).delete_all
+        Answer.where(channel_id: data.channel, answer_type: answer_type).delete_all
         answer = Answer.new
         answer.body = custom_text
         answer.channel_id = data.channel

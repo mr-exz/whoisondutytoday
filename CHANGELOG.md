@@ -1,4 +1,8 @@
 # Changelog
+## 0.18.1
+### Bugfixes
+- DB migration fixes
+
 ## 0.18.0
 ### Improvements
 - Added command to display known problems for channel  [#169](/../../issues/169)

@@ -44,28 +44,16 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::CreateDutyForUser.call(client: client, data: data, match: match)
   end
 
-  command 'channel reminder enabled' do |client, data|
-    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelReminderEnabled.call(client: client, data: data)
+  command '^channel reminder_enabled=.*$' do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelReminder.call(client: client, data: data, match: match)
   end
 
-  command 'channel reminder disabled' do |client, data|
-    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelReminderDisabled.call(client: client, data: data)
+  command '/^channel auto_answer=.*$/' do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelAutoAnswer.call(client: client, data: data, match: match)
   end
 
-  command 'channel auto answer enable' do |client, data|
-    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelAutoAnswerEnable.call(client: client, data: data)
-  end
-
-  command 'channel auto answer disable' do |client, data|
-    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelAutoAnswerDisable.call(client: client, data: data)
-  end
-
-  command 'channel tag reporter in thread enable' do |client, data|
-    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelTagReporterInThreadEnable.call(client: client, data: data)
-  end
-
-  command 'channel tag reporter in thread disable' do |client, data|
-    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelTagReporterInThreadDisable.call(client: client, data: data)
+  command '^channel tag_reporter_enabled=.*$/' do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelTagReporterInThread.call(client: client, data: data, match: match)
   end
 
   command 'duty update' do |client, data, match|

@@ -1,7 +1,7 @@
 require_relative '../../bot/commands/main'
 namespace :reminder do
   task remind: :environment do
-    channels = Channel.where("settings->>'reminder_enabled' = 'true'")
+    channels = Channel.where("json_extract(settings, '$.reminder_enabled') = ?", true)
 
     channels.each do |channel|
       begin

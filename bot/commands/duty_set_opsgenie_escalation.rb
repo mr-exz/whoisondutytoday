@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class DutySetOpsgenieEscalation
       DESCRIPTION = 'Will configure all duties in the channel with the escalation name from Opsgenie.'.freeze
-      EXAMPLE = 'Usage: `duty set opsgenie escalation My_Team_Escalation`'.freeze
+      EXAMPLE = '`duty set opsgenie escalation <escalation name>` example: `duty set opsgenie escalation My_Team_Escalation`'.freeze
       def self.call(client:, data:, match:)
         opsgenie_escalation_name = match['expression']
         Duty.where(channel_id: data.channel).update_all(opsgenie_escalation_name: opsgenie_escalation_name)

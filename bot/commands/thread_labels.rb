@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ThreadLabels
       DESCRIPTION = 'Will label the thread with any label. Use space as a separator.'.freeze
-      EXAMPLE = 'Usage: `thread labels label1 label2`'.freeze
+      EXAMPLE = '`thread labels <label>` example: `thread labels label1 label2`'.freeze
       def self.call(client:, data:, match:)
         label_ids = []
         match['expression'].split.each do |label|

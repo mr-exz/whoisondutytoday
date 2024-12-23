@@ -43,7 +43,7 @@ module WhoIsOnDutyTodaySlackBotModule
           AnswerSetCustomText,
           AnswerDeleteCustomText,
           AnswerEnableHideReason,
-          AnswerEnableHideReason,
+          AnswerDisableHideReason,
           ActionCreate,
           ActionDelete,
           ActionShowProblems,

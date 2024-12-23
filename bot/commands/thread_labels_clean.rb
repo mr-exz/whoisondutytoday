@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ThreadLabelsClean
       DESCRIPTION = 'Will remove all labels from the thread where you write it.'.freeze
-      EXAMPLE = 'Usage: `thread labels clean`'.freeze
+      EXAMPLE = '`thread labels clean`'.freeze
       def self.call(client:, data:, match:)
         SlackThread.find_by(thread_ts: data.thread_ts).destroy
         client.web_client.chat_postMessage(

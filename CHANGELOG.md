@@ -1,4 +1,8 @@
 # Changelog
+## 0.18.2
+### Bugfixes
+- Fixing version display in help
+
 ## 0.18.1
 ### Bugfixes
 - DB migration fixes

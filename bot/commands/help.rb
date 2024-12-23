@@ -6,7 +6,7 @@ module WhoIsOnDutyTodaySlackBotModule
 
       def self.call(client:, data:)
         help_text = generate_help_text
-        version_info = "Running version: #{ENV['VERSION']} | <https://github.com/mr-exz/whoisondutytoday|GitHub> | <https://github.com/mr-exz/whoisondutytoday/blob/master/CHANGELOG.md|Changelog>"
+        version_info = "Running version: #{Whoisondutytoday::Application::VERSION} | <https://github.com/mr-exz/whoisondutytoday|GitHub> | <https://github.com/mr-exz/whoisondutytoday/blob/master/CHANGELOG.md|Changelog>"
 
         client.web_client.chat_postMessage(
           channel: data.channel,

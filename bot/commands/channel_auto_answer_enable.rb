@@ -3,7 +3,7 @@ module WhoIsOnDutyTodaySlackBotModule
     class ChannelAutoAnswerEnable < SlackRubyBot::Commands::Base
 
       DESCRIPTION = 'Bot will answer on any message in channel at working time'.freeze
-      EXAMPLE = 'Usage: `channel auto answer enable`'.freeze
+      EXAMPLE = '`channel auto answer enable`'.freeze
       def self.call(client:, data:)
         channel = Channel.find_or_initialize_by(slack_channel_id: data.channel)
         channel.update(auto_answer_enabled: true)

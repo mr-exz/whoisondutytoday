@@ -3,7 +3,7 @@ module WhoIsOnDutyTodaySlackBotModule
     class CreateDutyForUser
 
       DESCRIPTION = 'Will create a duty for a user in the channel.'.freeze
-      EXAMPLE = 'Usage: `duty create for @user from 09:00 to 17:00`'.freeze
+      EXAMPLE = '`duty create for <user> from <from time> to <to time>` example: `duty create for @user from 09:00 to 17:00`'.freeze
       def self.call(client:, data:, match:)
         message_processor = MessageProcessor.new
         slack_web_client = Slack::Web::Client.new

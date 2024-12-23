@@ -3,7 +3,7 @@ module WhoIsOnDutyTodaySlackBotModule
     class ChannelReminderDisabled
 
       DESCRIPTION = 'Will disable reminders for unanswered messages in the channel.'.freeze
-      EXAMPLE = 'Usage: `channel reminder disabled`'.freeze
+      EXAMPLE = '`channel reminder disabled`'.freeze
       def self.call(client:, data:)
         channel = Channel.find_or_initialize_by(slack_channel_id: data.channel)
         channel.update(reminder_enabled: false)

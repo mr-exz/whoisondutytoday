@@ -50,7 +50,7 @@ module WhoIsOnDutyTodaySlackBotModule
           ActionShowAction,
           ThreadLabelsClean,
           ThreadLabels,
-          UserCommits,
+          UserCommits
         ]
 
         commands.map do |command|

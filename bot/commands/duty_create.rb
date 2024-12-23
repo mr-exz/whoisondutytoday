@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class DutyCreate
       DESCRIPTION = 'Will create a duty. Time should be defined in your local timezone.'.freeze
-      EXAMPLE = 'Usage: `duty create from 8:00 to 17:00`'.freeze
+      EXAMPLE = '`duty create from <from time> to <to time>` example: `duty create from 8:00 to 17:00`'.freeze
       def self.i_am_on_duty(data:, client:)
         Duty.where(channel_id: data.channel).where(user_id: data.user).update_all(enabled: true)
         Duty.where(channel_id: data.channel).where.not(user_id: data.user).update_all(enabled: false)

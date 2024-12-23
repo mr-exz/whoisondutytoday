@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ChannelLabelsList
       DESCRIPTION = 'Will display all labels in this channel.'.freeze
-      EXAMPLE = 'Usage: `channel labels list`'.freeze
+      EXAMPLE = '`channel labels list`'.freeze
       def self.call(client:, data:, match:)
         m = SlackThread.joins(:labels).where(channel_id: data.channel).group(:label).count.keys
         client.web_client.chat_postMessage(

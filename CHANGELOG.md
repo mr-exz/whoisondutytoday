@@ -1,4 +1,9 @@
 # Changelog
+## 0.18.3
+### Bugfixes
+- Reminder fixes
+- Help documentation fixes
+
 ## 0.18.2
 ### Bugfixes
 - Fixing version display in help

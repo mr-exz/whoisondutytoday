@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ActionShowProblems
       DESCRIPTION = 'Will display problems for this channel'.freeze
-      EXAMPLE = 'Usage: `action show problems`'.freeze
+      EXAMPLE = '`action show problems`'.freeze
       def self.call(client:, data:)
         problems = Action.where(channel: data.channel).where.not(action: nil)
 

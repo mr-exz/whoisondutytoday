@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class WhoIsOnDuty
       DESCRIPTION = 'Will display the name of the duty person.'.freeze
-      EXAMPLE = 'Usage: `who is on duty?`'.freeze
+      EXAMPLE = '`who is on duty?`'.freeze
       def self.call(client:, data:)
         duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
         client.say(

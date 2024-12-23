@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ChannelLabelsStatistic
       DESCRIPTION = 'Will show the label count in the channel for the last week.'.freeze
-      EXAMPLE = 'Usage: `channel labels statistic`'.freeze
+      EXAMPLE = '`channel labels statistic`'.freeze
       def self.call(client:, data:, match:)
         message = ''
         (0..8).to_a.each do |x|;

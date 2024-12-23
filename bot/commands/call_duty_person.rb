@@ -3,7 +3,7 @@ module WhoIsOnDutyTodaySlackBotModule
     class CallDutyPerson
 
       DESCRIPTION = 'Will send an alert message to the duty person.'.freeze
-      EXAMPLE = 'Usage: `call duty person`'.freeze
+      EXAMPLE = '`call duty person`'.freeze
       def self.call(client:, data:)
         duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
         slack_web_client = Slack::Web::Client.new

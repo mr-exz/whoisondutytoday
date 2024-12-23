@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ActionDelete
       DESCRIPTION = 'Will delete the answer from the bot for this keyword.'.freeze
-      EXAMPLE = 'Usage: `action delete problem:NEWERROR`'.freeze
+      EXAMPLE = '`action delete problem:<exact substring>` example: `action delete problem:NEWERROR`'.freeze
       def self.call(client:, data:, match:)
         Action.where(
           problem: match['expression'][/problem:(.*)/, 1],

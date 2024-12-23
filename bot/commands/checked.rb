@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class Checked
       DESCRIPTION = 'Will mark the thread as checked.'.freeze
-      EXAMPLE = 'Usage: `checked`'.freeze
+      EXAMPLE = '`checked`'.freeze
       def self.call(client:, data:)
         message_processor = MessageProcessor.new
         message_processor.disable_message_from_remind(data: data)

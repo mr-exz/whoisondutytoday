@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ActionCreate
       DESCRIPTION = 'Will create an answer from the bot for this keyword problem.'.freeze
-      EXAMPLE = 'Usage: `action create problem:NEWERROR action:What to do with this error`'.freeze
+      EXAMPLE = '`action create problem:<substring> action:<what to do if substring found>` example: `action create problem:NEWERROR action:What to do with this error`'.freeze
       def self.call(client:, data:, match:)
         action = Action.new(
           problem: match['expression'][/problem:(.*) action:/, 1],

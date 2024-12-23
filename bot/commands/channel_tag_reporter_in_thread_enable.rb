@@ -3,7 +3,7 @@ module WhoIsOnDutyTodaySlackBotModule
     class ChannelTagReporterInThreadEnable < SlackRubyBot::Commands::Base
 
       DESCRIPTION = 'Bot will tag the reporter in the thread.'.freeze
-      EXAMPLE = 'Usage: `channel tag reporter in thread enable`'.freeze
+      EXAMPLE = '`channel tag reporter in thread enable`'.freeze
       def self.call(client:, data:)
         channel = Channel.find_or_initialize_by(slack_channel_id: data.channel)
         channel.update(tag_reporter_enabled: true)

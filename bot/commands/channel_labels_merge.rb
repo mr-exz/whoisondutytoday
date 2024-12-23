@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ChannelLabelsMerge
       DESCRIPTION = 'Will migrate existing threads in the channel from one label to another.'.freeze
-      EXAMPLE = 'Usage: `channel labels merge from:label1 to:label2`'.freeze
+      EXAMPLE = '`channel labels merge from:<label 1> to:<label 2>` example: `channel labels merge from:jenkins_issue to:jenkins_problem`'.freeze
       def self.call(client:, data:, match:)
         label_from = match['expression'][/from:(.*) to:/, 1]
         label_to = match['expression'][/ to:(.*)$/, 1]

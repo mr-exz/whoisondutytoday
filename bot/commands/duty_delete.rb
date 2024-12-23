@@ -2,8 +2,8 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class DutyDelete
 
-      DESCRIPTION = 'Will delete a duty.'.freeze
-      EXAMPLE = 'Usage: `duty delete`'.freeze
+      DESCRIPTION = 'Will delete a duty in channel where you write it.'.freeze
+      EXAMPLE = '`duty delete`'.freeze
       def self.call(client:, data:)
         duty = Duty.where(user_id: data.user, channel_id: data.channel).first
         if duty.blank?

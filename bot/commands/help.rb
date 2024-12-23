@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class Help
       DESCRIPTION = 'Will show the available commands.'.freeze
-      EXAMPLE = 'Usage: `help`'.freeze
+      EXAMPLE = '`help`'.freeze
 
       def self.call(client:, data:)
         help_text = generate_help_text
@@ -43,7 +43,7 @@ module WhoIsOnDutyTodaySlackBotModule
           AnswerSetCustomText,
           AnswerDeleteCustomText,
           AnswerEnableHideReason,
-          AnswerEnableHideReason,
+          AnswerDisableHideReason,
           ActionCreate,
           ActionDelete,
           ActionShowProblems,

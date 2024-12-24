@@ -2,6 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class Other
       def self.call(client:, data:, match:)
+        log_event("Incoming data: #{data}")
         message_processor = MessageProcessor.new
         time = DateTime.strptime(data.ts, '%s')
 
@@ -150,6 +151,10 @@ module WhoIsOnDutyTodaySlackBotModule
             message_processor.save_message(data: data)
           end
         end
+      end
+      def self.log_event(message)
+        logger = Logger.new(STDOUT)
+        logger.info(message)
       end
     end
   end

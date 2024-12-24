@@ -3,6 +3,7 @@
 ### Improvements
 - Improved help description
 - Updated documentation
+- Code refactoring
 
 ## 0.18.3
 ### Bugfixes

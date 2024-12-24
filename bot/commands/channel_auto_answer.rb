@@ -2,15 +2,15 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ChannelAutoAnswer < SlackRubyBot::Commands::Base
       DESCRIPTION = 'Bot will answer on any message in channel at working time'.freeze
-      EXAMPLE = 'channel auto_answer_enabled=<boolean> example `channel auto_answer_enabled=true`'.freeze
+      EXAMPLE = 'channel auto_answer_enabled <boolean> example `channel auto_answer_enabled true`'.freeze
 
       def self.call(client:, data:, match:)
-        value = match['expression'].split('=').last.strip
+        value = match['expression']
 
         unless %w[true false].include?(value)
           client.say(
             channel: data.channel,
-            text: "Invalid value for auto-answer. Please use 'true' or 'false'.",
+            text: "Invalid value for auto_answer_enabled. Please use 'true' or 'false'.",
             thread_ts: data.thread_ts || data.ts
           )
           return
@@ -22,7 +22,7 @@ module WhoIsOnDutyTodaySlackBotModule
 
         client.say(
           channel: data.channel,
-          text: "Channel auto-answer has been set to '#{value}'.",
+          text: "Channel auto_answer_enabled has been set to '#{value}'.",
           thread_ts: data.thread_ts || data.ts
         )
       end

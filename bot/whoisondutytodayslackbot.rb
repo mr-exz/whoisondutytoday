@@ -44,15 +44,15 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::CreateDutyForUser.call(client: client, data: data, match: match)
   end
 
-  command '^channel reminder_enabled=.*$' do |client, data, match|
+  command 'channel reminder_enabled' do |client, data, match|
     WhoIsOnDutyTodaySlackBotModule::Commands::ChannelReminder.call(client: client, data: data, match: match)
   end
 
-  command '/^channel auto_answer=.*$/' do |client, data, match|
+  command 'channel auto_answer_enabled' do |client, data, match|
     WhoIsOnDutyTodaySlackBotModule::Commands::ChannelAutoAnswer.call(client: client, data: data, match: match)
   end
 
-  command '^channel tag_reporter_enabled=.*$/' do |client, data, match|
+  command 'channel tag_reporter_enabled' do |client, data, match|
     WhoIsOnDutyTodaySlackBotModule::Commands::ChannelTagReporterInThread.call(client: client, data: data, match: match)
   end
 

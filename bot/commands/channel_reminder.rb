@@ -1,14 +1,18 @@
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ChannelReminder < SlackRubyBot::Commands::Base
-      DESCRIPTION = 'Enable or disable channel reminders.'.freeze
-      EXAMPLE = 'example `channel reminder=true` or `channel reminder=false`'.freeze
+      DESCRIPTION = 'Enable or disable channel reminder feature. Bot will remind you about threads without your response'.freeze
+      EXAMPLE = '`channel reminder_enabled <boolean>` example `channel reminder_enabled true`'.freeze
 
       def self.call(client:, data:, match:)
-        value = match['expression'].split('=').last.strip
+        value = match['expression']
 
         unless %w[true false].include?(value)
-          client.say(channel: data.channel, text: "Invalid value for reminder. Please use 'true' or 'false'.")
+          client.say(
+            channel: data.channel, 
+            text: "Invalid value for reminder_enabled. Please use 'true' or 'false'.",
+            thread_ts: data.thread_ts || data.ts
+          )
           return
         end
 
@@ -18,7 +22,7 @@ module WhoIsOnDutyTodaySlackBotModule
 
         client.say(
           channel: data.channel,
-          text: "Channel reminder has been set to '#{value}'.",
+          text: "Channel reminder_enabled has been set to '#{value}'.",
           thread_ts: data.thread_ts || data.ts
         )
       end

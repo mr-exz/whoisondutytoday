@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class AnswerDeleteCustomText
       DESCRIPTION = 'Will delete all custom text in channel.'.freeze
-      EXAMPLE = 'Usage: `answer delete custom text`'.freeze
+      EXAMPLE = '`answer delete custom text`'.freeze
       def self.call(client:, data:)
         Answer.where(channel_id: data.channel).delete_all
 

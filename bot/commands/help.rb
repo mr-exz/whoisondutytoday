@@ -27,12 +27,9 @@ module WhoIsOnDutyTodaySlackBotModule
           Checked,
           DutyCreate,
           CreateDutyForUser,
-          ChannelReminderEnabled,
-          ChannelReminderDisabled,
-          ChannelAutoAnswerEnable,
-          ChannelAutoAnswerDisable,
-          ChannelTagReporterInThreadEnable,
-          ChannelTagReporterInThreadDisable,
+          ChannelReminder,
+          ChannelAutoAnswer,
+          ChannelTagReporterInThread,
           ChannelLabelsStatistic,
           ChannelLabelsList,
           ChannelLabelsMerge,
@@ -50,7 +47,7 @@ module WhoIsOnDutyTodaySlackBotModule
           ActionShowAction,
           ThreadLabelsClean,
           ThreadLabels,
-          UserCommits,
+          UserCommits
         ]
 
         commands.map do |command|

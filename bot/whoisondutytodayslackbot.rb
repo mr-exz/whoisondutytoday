@@ -136,3 +136,4 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::Other.call(client: client, data: data, match: match)
   end
 end
+

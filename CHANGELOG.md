@@ -1,4 +1,9 @@
 # Changelog
+## 0.19.0
+### Improvements
+- Improved help description
+- Updated documentation
+
 ## 0.18.3
 ### Bugfixes
 - Reminder fixes

@@ -1,4 +1,8 @@
 # Changelog
+## 0.19.1
+### Bugfixes
+- Fixed issue with new lines `\n` in custom answer.
+
 ## 0.19.0
 ### Improvements
 - Improved help description

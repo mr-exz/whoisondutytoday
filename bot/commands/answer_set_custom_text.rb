@@ -6,9 +6,9 @@ module WhoIsOnDutyTodaySlackBotModule
       def self.call(client:, data:, match:)
         expression = match['expression']
 
-        if expression =~ /type:(\w+)\s+text:(.+)/
+        if expression =~ /type:(\w+)\s+text:(.+)/m
           answer_type = ::Regexp.last_match(1)
-          custom_text = ::Regexp.last_match(2)
+          custom_text = ::Regexp.last_match(2).strip
         else
           client.web_client.chat_postMessage(
             channel: data.channel,

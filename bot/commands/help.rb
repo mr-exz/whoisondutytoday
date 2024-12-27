@@ -26,7 +26,6 @@ module WhoIsOnDutyTodaySlackBotModule
           WhoIsOnDuty,
           Checked,
           DutyCreate,
-          CreateDutyForUser,
           ChannelReminder,
           ChannelAutoAnswer,
           ChannelTagReporterInThread,

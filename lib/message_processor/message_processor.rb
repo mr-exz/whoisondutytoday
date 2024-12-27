@@ -27,19 +27,14 @@ class MessageProcessor
   end
 
   def collectUserInfoBySlackUserId(slack_user_id)
-    user = User.where(slack_user_id: slack_user_id).first
-    if user.blank?
-      user_info = @slack_web_client.users_info(user: slack_user_id)
-
-      user = User.new
-      user.slack_user_id = user_info["user"]["id"]
-      user.name = user_info["user"]["name"]
-      user.real_name = user_info["user"]["real_name"]
-      user.tz = user_info["user"]["tz"]
-      user.tz_offset = user_info["user"]["tz_offset"]
-      user.contacts = user_info["user"]["profile"]["email"]
-      user.save
-    end
+    user_info = @slack_web_client.users_info(user: slack_user_id)
+    user = User.find_or_initialize_by(slack_user_id: user_info["user"]["id"])
+    user.name = user_info["user"]["name"]
+    user.real_name = user_info["user"]["real_name"]
+    user.tz = user_info["user"]["tz"]
+    user.tz_offset = user_info["user"]["tz_offset"]
+    user.contacts = user_info["user"]["profile"]["email"]
+    user.save
   end
 
   def save_message_for_reminder(data:)

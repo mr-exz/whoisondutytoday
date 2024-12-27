@@ -1,4 +1,9 @@
 # Changelog
+## 0.19.2
+### Bugfixes
+- Fixed creation of duty for other users.
+- Improved error handling.
+
 ## 0.19.1
 ### Bugfixes
 - Fixed issue with new lines `\n` in custom answer.

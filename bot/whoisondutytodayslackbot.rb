@@ -36,12 +36,12 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::Checked.call(client: client, data: data)
   end
 
-  command 'duty create' do |client, data, match|
+  command 'duty create for' do |client, data, match|
     WhoIsOnDutyTodaySlackBotModule::Commands::DutyCreate.call(client: client, data: data, match: match)
   end
 
-  command 'create duty for user' do |client, data, match|
-    WhoIsOnDutyTodaySlackBotModule::Commands::CreateDutyForUser.call(client: client, data: data, match: match)
+  command 'duty delete for' do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::DutyDelete.call(client: client, data: data, match: match)
   end
 
   command 'channel reminder_enabled' do |client, data, match|
@@ -54,14 +54,6 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
 
   command 'channel tag_reporter_enabled' do |client, data, match|
     WhoIsOnDutyTodaySlackBotModule::Commands::ChannelTagReporterInThread.call(client: client, data: data, match: match)
-  end
-
-  command 'duty update' do |client, data, match|
-    WhoIsOnDutyTodaySlackBotModule::Commands::DutyUpdate.call(client: client, data: data, match: match)
-  end
-
-  command 'duty delete' do |client, data|
-    WhoIsOnDutyTodaySlackBotModule::Commands::DutyDelete.call(client: client, data: data)
   end
 
   command 'duty sync with opsgenie schedule' do |client, data, match|

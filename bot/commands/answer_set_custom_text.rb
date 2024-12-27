@@ -46,6 +46,12 @@ module WhoIsOnDutyTodaySlackBotModule
             as_user: true
           )
         end
+      rescue StandardError => e
+        client.say(
+          channel: data.channel,
+          text: e,
+          thread_ts: data.thread_ts || data.ts
+        )
       end
     end
   end

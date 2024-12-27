@@ -1,4 +1,8 @@
 # Changelog
+## 0.19.3
+### Bugfixes
+- Deleted not used code
+
 ## 0.19.2
 ### Bugfixes
 - Fixed creation of duty for other users.

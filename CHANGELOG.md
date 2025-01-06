@@ -1,4 +1,8 @@
 # Changelog
+## 0.19.5
+### Bugfixes
+- Fixed hider reason disable feature
+
 ## 0.19.4
 ### Bugfixes
 - Fixing hide reason feature

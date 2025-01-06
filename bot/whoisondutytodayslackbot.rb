@@ -77,7 +77,7 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
   end
 
   command 'answer disable hide reason' do |client, data|
-    WhoIsOnDutyTodaySlackBotModule::Commands::AnswerEnableHideReason.call(client: client, data: data)
+    WhoIsOnDutyTodaySlackBotModule::Commands::AnswerDisableHideReason.call(client: client, data: data)
   end
 
   command 'action create' do |client, data, match|

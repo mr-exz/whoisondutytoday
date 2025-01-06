@@ -1,4 +1,11 @@
 # Changelog
+## 0.19.4
+### Bugfixes
+- Fixing hide reason feature
+- Code cleanup
+- Fixing answer at non-working hours and working hours
+- Fixing problems actions with nil values
+
 ## 0.19.3
 ### Bugfixes
 - Deleted not used code

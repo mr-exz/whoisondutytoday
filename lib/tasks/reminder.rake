@@ -6,8 +6,7 @@ namespace :reminder do
     channels.each do |channel|
       begin
         duty = Duty.where(channel_id: channel.slack_channel_id).where(enabled: true).take!
-        time = DateTime.now
-        reason = WhoIsOnDutyTodaySlackBotModule::Commands::Other.answer(time, duty)
+        reason = WhoIsOnDutyTodaySlackBotModule::Commands::Other.determine_reason(duty)
         unless reason.nil?
           p "Reason to skip reminder:#{reason}"
           next

@@ -1,14 +1,14 @@
 require_relative '../../bot/commands/main'
 namespace :reminder do
   task remind: :environment do
-    channels = Channel.where("json_extract(settings, '$.reminder_enabled') = ?", true)
+    channels = Channel.where("JSON_EXTRACT(settings, '$.reminder_enabled') = 'true'")
 
     channels.each do |channel|
       begin
         duty = Duty.where(channel_id: channel.slack_channel_id).where(enabled: true).take!
         reason = WhoIsOnDutyTodaySlackBotModule::Commands::Other.determine_reason(duty)
-        unless reason.nil?
-          p "Reason to skip reminder:#{reason}"
+        unless reason.nil? || reason[:type] == 'working_hours'
+          p "Reason to skip reminder:#{reason[:type]}"
           next
         end
       rescue => e

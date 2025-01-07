@@ -1,4 +1,8 @@
 # Changelog
+## 0.19.6
+### Bugfixes
+- Fixed reminder feature
+
 ## 0.19.5
 ### Bugfixes
 - Fixed hider reason disable feature

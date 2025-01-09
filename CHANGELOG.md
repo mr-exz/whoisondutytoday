@@ -1,4 +1,9 @@
 # Changelog
+## 0.19.7
+### Bugfixes
+- Fixed saving messaged for reminder
+- Fixed duty create
+
 ## 0.19.6
 ### Bugfixes
 - Fixed reminder feature

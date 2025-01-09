@@ -29,7 +29,7 @@ module WhoIsOnDutyTodaySlackBotModule
         message_processor.collectUserInfoBySlackUserId(user_name)
         user = User.where(slack_user_id: user_name).first
 
-        duty = Duty.find_or_initialize_by(user_id: data.user, channel_id: data.channel)
+        duty = Duty.find_or_initialize_by(user_id: user.slack_user_id, channel_id: data.channel)
         duty.duty_from = ActiveSupport::TimeZone.new(user.tz).local_to_utc(match['expression'][/from (\d+:\d+) /, 1].to_time)
         duty.duty_to = ActiveSupport::TimeZone.new(user.tz).local_to_utc(match['expression'][/.* to (\d+:\d+)$/, 1].to_time)
         duty.enabled = true

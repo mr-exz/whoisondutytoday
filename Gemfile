@@ -21,7 +21,7 @@ gem 'slack-ruby-bot', '~> 0.16.1'
 gem 'stringio', '~> 3.1.1'
 gem 'whenever'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0.8'
+gem 'rails', '~> 7.2.0'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '< 2.0.0'
 # Use Puma as the app server

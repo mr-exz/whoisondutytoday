@@ -17,7 +17,7 @@ module WhoIsOnDutyTodaySlackBotModule
 
           # store messages where reminder needed
           if channel.reminder_enabled == true
-            if (data.respond_to?(:thread_ts) == false) && (data.user != duty.user.slack_user_id)
+            if !data.key?('thread_ts') && (data['user'] != duty.user.slack_user_id)
               message_processor.save_message_for_reminder(data: data)
             end
             if (data.user == duty.user.slack_user_id) && (data.respond_to?(:thread_ts) == true)
@@ -38,7 +38,7 @@ module WhoIsOnDutyTodaySlackBotModule
           end
 
           # check if message written in channel
-          if data.respond_to?(:thread_ts) == false
+          if !data.key?('thread_ts')
             message_processor.collectUserInfo(data: data)
             handle_message(client, channel, data, reason)
           else

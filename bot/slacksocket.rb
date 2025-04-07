@@ -43,6 +43,7 @@ module SlackSocket
       @allow_bot_messages.nil? ? SlackRubyBot::Config.allow_bot_messages? : !!@allow_bot_messages
     end
 
+    # bot/slacksocket.rb
     def connect
       http = NiceHttp.new('https://slack.com')
       request = {
@@ -59,20 +60,35 @@ module SlackSocket
       websocket_url = result.url
       endpoint = Async::HTTP::Endpoint.parse(websocket_url, protocols: Async::WebSocket::Client)
 
-      Async do
-        begin
-          Async::WebSocket::Client.connect(endpoint) do |connection|
-            @connection = connection
-            puts 'Connected to Slack WebSocket'
-            while (message = connection.read)
-              handle_message(message, connection)
+      retry_count = 0
+      max_retries = 5
+
+      begin
+        Async do
+          begin
+            Async::WebSocket::Client.connect(endpoint) do |connection|
+              @connection = connection
+              puts 'Connected to Slack WebSocket'
+              while (message = connection.read)
+                handle_message(message, connection)
+              end
             end
+          rescue EOFError => e
+            puts "EOFError: #{e.message}"
+            retry_count += 1
+            if retry_count <= max_retries
+              puts "Reconnecting... (Attempt #{retry_count} of #{max_retries})"
+              sleep(2 ** retry_count) # Exponential backoff
+              retry
+            else
+              puts "Max retries reached. Could not reconnect."
+            end
+          rescue StandardError => e
+            puts "An error occurred: #{e.message}"
           end
-        rescue EOFError => e
-          puts "EOFError: #{e.message}"
-        rescue StandardError => e
-          puts "An error occurred: #{e.message}"
         end
+      rescue StandardError => e
+        puts "Failed to start Async block: #{e.message}"
       end
     end
 

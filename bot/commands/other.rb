@@ -20,7 +20,7 @@ module WhoIsOnDutyTodaySlackBotModule
             if !data.key?('thread_ts') && (data['user'] != duty.user.slack_user_id)
               message_processor.save_message_for_reminder(data: data)
             end
-            if (data.user == duty.user.slack_user_id) && (data.respond_to?(:thread_ts) == true)
+            if (data.user == duty.user.slack_user_id) && data.key?('thread_ts')
               message_processor.disable_message_from_remind(data: data)
             end
           end

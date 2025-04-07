@@ -22,8 +22,8 @@ namespace :reminder do
       Slack.configure do |config|
         config.token = ENV['SLACK_API_TOKEN']
       end
-
-      client = Slack::Web::Client.new
+      @bot_token = ENV['SLACK_BOT_TOKEN'] # Ensure this is set with your Bot User OAuth Token
+      client = Slack::Web::Client.new(token: @bot_token)
       permalinks = []
       messages.each do |message|
         options = {}

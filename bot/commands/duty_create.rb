@@ -16,7 +16,8 @@ module WhoIsOnDutyTodaySlackBotModule
 
       def self.call(client:, data:, match:)
         message_processor = MessageProcessor.new
-        slack_web_client = Slack::Web::Client.new
+        @bot_token = ENV['SLACK_BOT_TOKEN'] # Ensure this is set with your Bot User OAuth Token
+        slack_web_client = Slack::Web::Client.new(token: @bot_token)
         channel_info = slack_web_client.conversations_info(channel: data.channel)
 
         channel = Channel.find_or_initialize_by(slack_channel_id: data.channel)

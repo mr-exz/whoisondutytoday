@@ -5,8 +5,8 @@ module WhoIsOnDutyTodaySlackBotModule
         log_event("Incoming data: #{data}")
         message_processor = MessageProcessor.new
 
-        # skip processing events and data without client_msg_id
-        return if (data.respond_to?(:client_msg_id) == false) && (data.respond_to?(:files) == false)
+        # Skip processing events and data without client_msg_id or if type is not message
+        return unless data.key?('client_msg_id') && data['type'] == 'message'
 
         begin
           channel = Channel.where(slack_channel_id: data.channel).first

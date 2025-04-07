@@ -18,7 +18,8 @@ COPY Gemfile.lock /myapp/Gemfile.lock
 RUN bundle install
 
 COPY . /myapp
-RUN bundle exec whenever --update-crontab
+RUN bundle exec whenever --update-crontab \
+    && sed -i '/if Gem::Version.new(Async::WebSocket::VERSION) >= Gem::Version.new('\''0.9.0'\'')/,/end/d' /usr/local/bundle/gems/slack-ruby-client-2.4.0/lib/slack/real_time/concurrency/async.rb
 
 EXPOSE 3000
 

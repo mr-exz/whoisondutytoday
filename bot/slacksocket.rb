@@ -43,7 +43,6 @@ module SlackSocket
       @allow_bot_messages.nil? ? SlackRubyBot::Config.allow_bot_messages? : !!@allow_bot_messages
     end
 
-    # bot/slacksocket.rb
     def connect
       http = NiceHttp.new('https://slack.com')
       request = {
@@ -60,38 +59,57 @@ module SlackSocket
       websocket_url = result.url
       endpoint = Async::HTTP::Endpoint.parse(websocket_url, protocols: Async::WebSocket::Client)
 
-      retry_count = 0
-      max_retries = 5
-
-      begin
-        Async do
-          begin
+      loop do
+        begin
+          Async do
             Async::WebSocket::Client.connect(endpoint) do |connection|
               @connection = connection
-              puts 'Connected to Slack WebSocket'
+              set_presence_online
+              set_presence_online_via_websocket(connection)
+
+              # Start a ping/pong mechanism
+              Async do
+                loop do
+                  connection.write(JSON.dump(type: 'ping'))
+                  sleep(10) # Send a ping every 10 seconds
+                end
+              end
+
               while (message = connection.read)
                 handle_message(message, connection)
               end
             end
-          rescue EOFError => e
-            puts "EOFError: #{e.message}"
-            retry_count += 1
-            if retry_count <= max_retries
-              puts "Reconnecting... (Attempt #{retry_count} of #{max_retries})"
-              sleep(2 ** retry_count) # Exponential backoff
-              retry
-            else
-              puts "Max retries reached. Could not reconnect."
-            end
-          rescue StandardError => e
-            puts "An error occurred: #{e.message}"
           end
+        rescue EOFError => e
+          puts "EOFError: #{e.message}. Reconnecting..."
+          sleep(5) # Delay before reconnecting
+        rescue StandardError => e
+          puts "An error occurred: #{e.message}. Reconnecting..."
+          sleep(5) # Delay before reconnecting
+        ensure
+          @connection&.close
         end
-      rescue StandardError => e
-        puts "Failed to start Async block: #{e.message}"
       end
     end
 
+    def set_presence_online
+      response = @web_client.users_setPresence(presence: 'auto')
+      if response['ok']
+        puts 'Bot presence set to online.'
+      else
+        puts "Failed to set presence: #{response['error']}"
+      end
+    end
+
+    def set_presence_online_via_websocket(connection)
+      presence_update = {
+        type: 'presence_change',
+        presence: 'active',
+        user: @self.id
+      }
+      connection.write(JSON.dump(presence_update))
+      puts "Sent presence update via WebSocket: #{presence_update}"
+    end
     def web_client
       @web_client
     end

@@ -81,8 +81,8 @@ module SlackSocket
             end
           end
         rescue EOFError => e
-          puts "EOFError: #{e.message}. Reconnecting..."
-          sleep(5) # Delay before reconnecting
+          puts "EOFError: #{e.message}. Terminating Rails service..."
+          Process.exit(1) # Exit the process with a non-zero status to indicate an error
         rescue StandardError => e
           puts "An error occurred: #{e.message}. Reconnecting..."
           sleep(5) # Delay before reconnecting
@@ -162,7 +162,7 @@ module SlackSocket
       elsif data['envelope_id']
         # Acknowledge the message
         connection.write(JSON.dump(envelope_id: data['envelope_id']))
-        puts "Acknowledged message with envelope_id: #{data['envelope_id']}"
+        #puts "Acknowledged message with envelope_id: #{data['envelope_id']}"
 
         # Process the event
         event = data['payload']['event']
@@ -171,8 +171,6 @@ module SlackSocket
         if client_msg_id && !@processed_messages.include?(client_msg_id)
           @processed_messages.add(client_msg_id)
           WhoIsOnDutyTodaySlackBot.process_event(self, data) if event
-        else
-          puts "Duplicate message ignored: #{client_msg_id}"
         end
       end
     rescue JSON::ParserError => e

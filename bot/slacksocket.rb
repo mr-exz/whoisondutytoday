@@ -44,24 +44,24 @@ module SlackSocket
     end
 
     def connect
-      http = NiceHttp.new('https://slack.com')
-      request = {
-        headers: {
-          Authorization: "Bearer #{@socket_token}",
-        },
-        path: '/api/apps.connections.open',
-      }
-      connection_info = http.post(request)
-      http.close
-      result = connection_info.data.json
-      raise(AdquisitionError) unless result.ok
-
-      websocket_url = result.url
-      endpoint = Async::HTTP::Endpoint.parse(websocket_url, protocols: Async::WebSocket::Client)
-
       loop do
         begin
           Async do
+            http = NiceHttp.new('https://slack.com')
+            request = {
+              headers: {
+                Authorization: "Bearer #{@socket_token}",
+              },
+              path: '/api/apps.connections.open',
+            }
+            connection_info = http.post(request)
+            http.close
+            result = connection_info.data.json
+            raise(AdquisitionError) unless result.ok
+
+            websocket_url = result.url
+            endpoint = Async::HTTP::Endpoint.parse(websocket_url, protocols: Async::WebSocket::Client)
+
             Async::WebSocket::Client.connect(endpoint) do |connection|
               @connection = connection
               set_presence_online
@@ -81,8 +81,8 @@ module SlackSocket
             end
           end
         rescue EOFError => e
-          puts "EOFError: #{e.message}. Terminating Rails service..."
-          Process.exit(1) # Exit the process with a non-zero status to indicate an error
+          puts "EOFError: #{e.message}. Reconnecting..."
+          sleep(5) # Delay before reconnecting
         rescue StandardError => e
           puts "An error occurred: #{e.message}. Reconnecting..."
           sleep(5) # Delay before reconnecting

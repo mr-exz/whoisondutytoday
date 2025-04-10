@@ -76,12 +76,22 @@ module SlackSocket
               end
 
               while (message = connection.read)
-                handle_message(message, connection)
+                begin
+                  #raise EOFError, "Emulated EOFError for testing purposes" if JSON.parse(message).to_s.include?("EOFtest")
+                  handle_message(message, connection)
+                rescue EOFError => e
+                  puts "EOFError: #{e.message}. Reconnecting..."
+                  Thread.current.kill
+                  break # Exit the loop to trigger reconnection logic
+                rescue StandardError => e
+                  puts "An error occurred: #{e.message}. Continuing..."
+                end
               end
             end
           end
         rescue EOFError => e
           puts "EOFError: #{e.message}. Reconnecting..."
+          Thread.current.kill # Terminate the current thread
           sleep(5) # Delay before reconnecting
         rescue StandardError => e
           puts "An error occurred: #{e.message}. Reconnecting..."

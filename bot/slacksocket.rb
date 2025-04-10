@@ -44,60 +44,36 @@ module SlackSocket
     end
 
     def connect
-      loop do
+      http = NiceHttp.new('https://slack.com')
+      request = {
+        headers: {
+          Authorization: "Bearer #{@socket_token}",
+        },
+        path: '/api/apps.connections.open',
+      }
+      connection_info = http.post(request)
+      http.close
+      result = connection_info.data.json
+      raise(AdquisitionError) unless result.ok
+
+      websocket_url = result.url
+      endpoint = Async::HTTP::Endpoint.parse(websocket_url, protocols: Async::WebSocket::Client)
+
+      Async do
         begin
-          Async do
-            http = NiceHttp.new('https://slack.com')
-            request = {
-              headers: {
-                Authorization: "Bearer #{@socket_token}",
-              },
-              path: '/api/apps.connections.open',
-            }
-            connection_info = http.post(request)
-            http.close
-            result = connection_info.data.json
-            raise(AdquisitionError) unless result.ok
-
-            websocket_url = result.url
-            endpoint = Async::HTTP::Endpoint.parse(websocket_url, protocols: Async::WebSocket::Client)
-
-            Async::WebSocket::Client.connect(endpoint) do |connection|
-              @connection = connection
-              set_presence_online
-              set_presence_online_via_websocket(connection)
-
-              # Start a ping/pong mechanism
-              Async do
-                loop do
-                  connection.write(JSON.dump(type: 'ping'))
-                  sleep(10) # Send a ping every 10 seconds
-                end
-              end
-
-              while (message = connection.read)
-                begin
-                  #raise EOFError, "Emulated EOFError for testing purposes" if JSON.parse(message).to_s.include?("EOFtest")
-                  handle_message(message, connection)
-                rescue EOFError => e
-                  puts "EOFError: #{e.message}. Reconnecting..."
-                  Thread.current.kill
-                  break # Exit the loop to trigger reconnection logic
-                rescue StandardError => e
-                  puts "An error occurred: #{e.message}. Continuing..."
-                end
-              end
+          Async::WebSocket::Client.connect(endpoint) do |connection|
+            @connection = connection
+            set_presence_online
+            set_presence_online_via_websocket(connection)
+            while (message = connection.read)
+              handle_message(message, connection)
             end
           end
         rescue EOFError => e
           puts "EOFError: #{e.message}. Reconnecting..."
-          Thread.current.kill # Terminate the current thread
-          sleep(5) # Delay before reconnecting
+          Thread.current.kill
         rescue StandardError => e
           puts "An error occurred: #{e.message}. Reconnecting..."
-          sleep(5) # Delay before reconnecting
-        ensure
-          @connection&.close
         end
       end
     end

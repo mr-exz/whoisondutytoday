@@ -105,7 +105,7 @@ module SlackSocket
 
     def names
       [
-        '<@U08LT6D4BE1>',
+        "<@#{@self.id}>",
       ].compact.flatten
     end
     def name?(name)

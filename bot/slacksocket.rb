@@ -22,8 +22,11 @@ module SlackSocket
       @socket_token = ENV['SLACK_SOCKETS_TOKEN']
       @bot_token = ENV['SLACK_BOT_TOKEN'] # Ensure this is set with your Bot User OAuth Token
       @web_client = WebClient.new(token: @bot_token)
+      response = @web_client.auth_test
+      raise "Error fetching bot info: #{response['error']}" unless response['ok']
+
       @processed_messages = Set.new
-      @self = User.new('cibot', 'U08LT6D4BE1')
+      @self = User.new(response['user'], response['user_id'])
     end
 
     class User

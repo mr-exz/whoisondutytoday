@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class AnswerSetCustomText
       DESCRIPTION = 'Will configure default answer in channel. type:non_working_time/working_time'.freeze
-      EXAMPLE = '`answer set custom text type:<time type> text:<custom text>` example: `cibot answer set custom text type:non_working_time text:This is the custom text for non working hours.`'.freeze
+      EXAMPLE = '`answer set custom text type:<time type> text:<custom text>` example: `bot answer set custom text type:non_working_time text:This is the custom text for non working hours.`'.freeze
       def self.call(client:, data:, match:)
         expression = match['expression']
 

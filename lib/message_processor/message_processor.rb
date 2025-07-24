@@ -1,8 +1,7 @@
 # lib/message_processor.rb
 class MessageProcessor
   def initialize
-    @bot_token = ENV['SLACK_BOT_TOKEN'] # Ensure this is set with your Bot User OAuth Token
-    @slack_web_client = Slack::Web::Client.new(token: @bot_token)
+    @slack_web_client = Slack::Web::Client.new
   end
 
   def collectUserInfo(data:)

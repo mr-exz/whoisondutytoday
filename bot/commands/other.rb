@@ -5,8 +5,8 @@ module WhoIsOnDutyTodaySlackBotModule
         log_event("Incoming data: #{data}")
         message_processor = MessageProcessor.new
 
-        # Skip processing events and data without client_msg_id or if type is not message
-        return unless data.key?('client_msg_id') && data['type'] == 'message'
+        # skip processing events and data without client_msg_id
+        return if (data.respond_to?(:client_msg_id) == false) && (data.respond_to?(:files) == false)
 
         begin
           channel = Channel.where(slack_channel_id: data.channel).first
@@ -17,10 +17,10 @@ module WhoIsOnDutyTodaySlackBotModule
 
           # store messages where reminder needed
           if channel.reminder_enabled == true
-            if !data.key?('thread_ts') && (data['user'] != duty.user.slack_user_id)
+            if (data.respond_to?(:thread_ts) == false) && (data.user != duty.user.slack_user_id)
               message_processor.save_message_for_reminder(data: data)
             end
-            if (data.user == duty.user.slack_user_id) && data.key?('thread_ts')
+            if (data.user == duty.user.slack_user_id) && (data.respond_to?(:thread_ts) == true)
               message_processor.disable_message_from_remind(data: data)
             end
           end
@@ -38,7 +38,7 @@ module WhoIsOnDutyTodaySlackBotModule
           end
 
           # check if message written in channel
-          if !data.key?('thread_ts')
+          if data.respond_to?(:thread_ts) == false
             message_processor.collectUserInfo(data: data)
             handle_message(client, channel, data, reason)
           else

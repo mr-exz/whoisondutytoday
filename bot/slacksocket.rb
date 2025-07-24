@@ -9,7 +9,6 @@ require 'set'
 
 module SlackSocket
   class Client < Slack::RealTime::Client
-    attr_accessor :self
     AdquisitionError = Class.new(StandardError)
     ConnectionError = Class.new(StandardError)
     AcknowledgeError = Class.new(StandardError)
@@ -23,17 +22,7 @@ module SlackSocket
       @bot_token = ENV['SLACK_BOT_TOKEN'] # Ensure this is set with your Bot User OAuth Token
       @web_client = WebClient.new(token: @bot_token)
       @processed_messages = Set.new
-      @self = User.new('cibot', 'U08LT6D4BE1')
-    end
-
-    class User
-      attr_accessor :name, :id
-
-      def initialize(name, id)
-        @name = name
-        @id = id
-      end
-    end
+    end  
 
     def allow_message_loops?
       @allow_message_loops.nil? ? SlackRubyBot::Config.allow_message_loops? : !!@allow_message_loops
@@ -60,42 +49,16 @@ module SlackSocket
       endpoint = Async::HTTP::Endpoint.parse(websocket_url, protocols: Async::WebSocket::Client)
 
       Async do
-        begin
-          Async::WebSocket::Client.connect(endpoint) do |connection|
-            @connection = connection
-            set_presence_online
-            set_presence_online_via_websocket(connection)
-            while (message = connection.read)
-              handle_message(message, connection)
-            end
+        Async::WebSocket::Client.connect(endpoint) do |connection|
+          @connection = connection
+          puts 'Connected to Slack WebSocket'
+          while (message = connection.read)
+            handle_message(message, connection)
           end
-        rescue EOFError => e
-          puts "EOFError: #{e.message}. Reconnecting..."
-          Thread.current.kill
-        rescue StandardError => e
-          puts "An error occurred: #{e.message}. Reconnecting..."
         end
       end
     end
 
-    def set_presence_online
-      response = @web_client.users_setPresence(presence: 'auto')
-      if response['ok']
-        puts 'Bot presence set to online.'
-      else
-        puts "Failed to set presence: #{response['error']}"
-      end
-    end
-
-    def set_presence_online_via_websocket(connection)
-      presence_update = {
-        type: 'presence_change',
-        presence: 'active',
-        user: @self.id
-      }
-      connection.write(JSON.dump(presence_update))
-      puts "Sent presence update via WebSocket: #{presence_update}"
-    end
     def web_client
       @web_client
     end
@@ -148,7 +111,7 @@ module SlackSocket
       elsif data['envelope_id']
         # Acknowledge the message
         connection.write(JSON.dump(envelope_id: data['envelope_id']))
-        #puts "Acknowledged message with envelope_id: #{data['envelope_id']}"
+        puts "Acknowledged message with envelope_id: #{data['envelope_id']}"
 
         # Process the event
         event = data['payload']['event']
@@ -157,6 +120,8 @@ module SlackSocket
         if client_msg_id && !@processed_messages.include?(client_msg_id)
           @processed_messages.add(client_msg_id)
           WhoIsOnDutyTodaySlackBot.process_event(self, data) if event
+        else
+          puts "Duplicate message ignored: #{client_msg_id}"
         end
       end
     rescue JSON::ParserError => e

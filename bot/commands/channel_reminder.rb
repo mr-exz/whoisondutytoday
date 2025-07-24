@@ -1,5 +1,3 @@
-require 'slack-ruby-bot'
-
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ChannelReminder < SlackRubyBot::Commands::Base

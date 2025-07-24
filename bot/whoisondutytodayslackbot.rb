@@ -2,6 +2,7 @@ require 'date'
 require 'json'
 
 # Commands
+require_relative 'slacksocket'
 require_relative 'commands/main'
 
 # Libraries
@@ -126,6 +127,47 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
 
   scan(/(.*)/) do |client, data, match|
     WhoIsOnDutyTodaySlackBotModule::Commands::Other.call(client: client, data: data, match: match)
+  end
+
+  def self.client
+    @client ||= SlackSocket::Client.new
+  end
+
+  def self.run
+    client.connect
+  end
+
+  def self.command_classes
+    SlackRubyBot::Commands::Base.command_classes
+  end
+
+  def self.built_in_command_classes
+    command_classes.select do |k|
+      k.name&.starts_with?('SlackRubyBot::Commands::') && k != SlackRubyBot::Commands::Unknown
+    end
+  end
+
+  def self.prepare!(data)
+    data.text = data.text.strip if data.text
+  end
+  def self.child_command_classes
+    command_classes.reject do |k|
+      k.name&.starts_with?('SlackRubyBot::Commands::')
+    end
+  end
+
+  def self.process_event(client, data)
+    return if !client.allow_message_loops? && client.message_to_self?(data)
+    return if !client.allow_bot_messages? && client.bot_message?(data)
+    #p data
+    prepare!(data)
+    child_command_classes.each do |command_class|
+      command_class.invoke(client, convert_event_to_simple_format(data))
+    end
+  end
+
+  def self.convert_event_to_simple_format(event)
+    event['payload']['event']
   end
 end
 

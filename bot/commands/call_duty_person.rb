@@ -6,7 +6,9 @@ module WhoIsOnDutyTodaySlackBotModule
       EXAMPLE = '`call duty person`'.freeze
       def self.call(client:, data:)
         duty = Duty.where(channel_id: data.channel).where(enabled: true).take!
-        slack_web_client = Slack::Web::Client.new
+        @bot_token = ENV['SLACK_BOT_TOKEN'] # Ensure this is set with your Bot User OAuth Token
+        slack_web_client = Slack::Web::Client.new(token: @bot_token)
+
         client_info = slack_web_client.users_info(user: data.user)
         options = {}
         options[:message_ts] = data.thread_ts || data.ts

@@ -1,4 +1,5 @@
 # Changelog
+
 ## 0.20.0
 ### Improvements
 - Migration to Slack Socket mode

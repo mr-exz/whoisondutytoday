@@ -20,9 +20,8 @@ RUN bundle install
 COPY . /myapp
 RUN bundle exec whenever --update-crontab
 
-RUN sed -i "s/if Gem::Version.new(Async::WebSocket::VERSION) >= Gem::Version.new('0.9.0')/if Gem::Version.new(Async::WebSocket::VERSION) >= Gem::Version.new('0.30.0')/" \
-    /usr/local/bundle/gems/slack-ruby-client-2.4.0/lib/slack/real_time/concurrency/async.rb
-
+RUN head -n -6 /usr/local/bundle/gems/slack-ruby-client-2.4.0/lib/slack/real_time/concurrency/async.rb > temp_file  \
+    && mv temp_file /usr/local/bundle/gems/slack-ruby-client-2.4.0/lib/slack/real_time/concurrency/async.rb
 EXPOSE 3000
 
 CMD ["./bin/start"]

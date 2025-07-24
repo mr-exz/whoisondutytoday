@@ -1,4 +1,8 @@
 # Changelog
+## 0.20.3
+### Bugfixes
+- Fixing hack to remove limit for async-websocket 0.8.0
+
 ## 0.20.2
 ### Bugfixes
 - Added hack to remove limit for async-websocket 0.8.0

@@ -38,7 +38,8 @@ class NotifyOpsgenie
   end
 
   def GetOnCall(schedule_name:)
-    uri = URI.parse("#{@opsgenie_url}/v2/schedules/#{schedule_name}/on-calls?scheduleIdentifierType=name&flat=true")
+    encoded_schedule_name = URI.encode_www_form_component(schedule_name)
+    uri = URI.parse("#{@opsgenie_url}/v2/schedules/#{encoded_schedule_name}/on-calls?scheduleIdentifierType=name&flat=true")
     request = Net::HTTP::Get.new(uri)
     request["Authorization"] = "GenieKey %s" % (ENV["OPSGENIE_API_TOKEN"])
 

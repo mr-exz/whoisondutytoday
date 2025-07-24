@@ -77,7 +77,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_15_201550) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "reply_counter"
-    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x00007f61c2258200>"
+    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x0000555cae7831a0>"
     t.boolean "remind_needed"
     t.string "channel_id"
   end

@@ -1,4 +1,8 @@
 # Changelog
+## 0.20.0
+### Improvements
+- Migration to Slack Socket mode
+
 ## 0.19.7
 ### Bugfixes
 - Fixed saving messaged for reminder

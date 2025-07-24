@@ -1,4 +1,7 @@
 # Changelog
+## 0.20.1`
+### Bugfixes
+- Rollback async-websocket 0.8.0
 
 ## 0.20.0
 ### Improvements

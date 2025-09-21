@@ -96,7 +96,7 @@ GEM
       protocol-websocket (~> 0.17)
     autoprefixer-rails (10.4.19.0)
       execjs (~> 2)
-    base64 (0.2.0)
+    base64 (0.3.0)
     bigdecimal (3.1.8)
     bindex (0.8.1)
     bootsnap (1.18.4)
@@ -185,7 +185,7 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    logger (1.6.3)
+    logger (1.7.0)
     loofah (2.23.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -289,7 +289,7 @@ GEM
     rb-inotify (0.11.1)
       ffi (~> 1.0)
     regexp_parser (2.9.3)
-    rexml (3.4.0)
+    rexml (3.4.4)
     rubocop (1.69.2)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
@@ -306,7 +306,7 @@ GEM
       rubocop (>= 1.48.1, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
     ruby-progressbar (1.13.0)
-    rubyzip (2.3.2)
+    rubyzip (3.1.0)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -317,11 +317,11 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    selenium-webdriver (4.27.0)
+    selenium-webdriver (4.35.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
-      rubyzip (>= 1.2.2, < 3.0)
+      rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
     slack-ruby-bot (0.16.1)
       activesupport
@@ -435,7 +435,7 @@ DEPENDENCIES
   rails (~> 7.0.8)
   rubocop
   sass-rails (~> 6.0, >= 6.0.0)
-  selenium-webdriver
+  selenium-webdriver (>= 4.28.0)
   slack-ruby-bot (~> 0.16.1)
   spring (~> 4.1)
   sqlite3 (< 2.0.0)

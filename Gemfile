@@ -2,10 +2,10 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.3.6'
-gem 'actionpack', '>= 7.0.8'
+gem 'actionpack', '>= 7.1.0'
 gem 'actionview', '>= 7.0.8'
 gem 'activerecord', '>= 7.0.8'
-gem 'activestorage', '>= 7.0.8'
+gem 'activestorage', '>= 7.1.0'
 gem 'activesupport', '>= 7.0.8'
 gem 'async-websocket', '~> 0.30.0'
 gem 'bigdecimal'
@@ -22,7 +22,7 @@ gem 'stringio', '~> 3.1.1'
 gem 'whenever'
 gem 'nice_http'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0.8'
+gem 'rails', '~> 7.1.0'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '< 2.0.0'
 # Use Puma as the app server

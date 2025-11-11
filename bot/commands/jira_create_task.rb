@@ -64,16 +64,26 @@ module WhoIsOnDutyTodaySlackBotModule
             return
           end
 
-          # Get team ID for Slack link
-          team_info = client.web_client.team_info
-          team_id = team_info&.dig('team', 'id')
+          # Build Slack thread link
+          # Format: https://workspace.slack.com/archives/CHANNEL/pTIMESTAMP
+          thread_ts_clean = thread_ts.gsub('.', '')
 
-          # Build description with Slack link
-          thread_link = if team_id
-                          "https://#{team_id}.slack.com/archives/#{channel_id}/p#{thread_ts.gsub('.', '')}"
-                        else
-                          "Slack thread"
-                        end
+          begin
+            team_info = client.web_client.team_info
+            team_id = team_info&.dig('team', 'id')
+            domain = team_info&.dig('team', 'domain')
+
+            if domain
+              thread_link = "https://#{domain}.slack.com/archives/#{channel_id}/p#{thread_ts_clean}"
+            elsif team_id
+              thread_link = "https://#{team_id}.slack.com/archives/#{channel_id}/p#{thread_ts_clean}"
+            else
+              thread_link = "Slack thread"
+            end
+          rescue StandardError => e
+            puts "[ERROR] Failed to get team info: #{e.message}"
+            thread_link = "Slack thread"
+          end
 
           # Create short summary (3-5 words) and full description
           short_summary = extract_short_summary(summary)
@@ -175,10 +185,17 @@ module WhoIsOnDutyTodaySlackBotModule
       end
 
       def self.extract_short_summary(summary)
-        # Extract first 3-5 words from summary for JIRA issue title
-        words = summary.split
-        short = words.take(5).join(' ')
-        short[0..254]  # JIRA summary max 255 chars
+        # Make a human-readable short summary, ideally first sentence or reasonable length
+        # JIRA summary max 255 chars
+        short = summary.split("\n").first  # Take first line/paragraph
+        short = short[0..100].strip if short.length > 100  # Limit to 100 chars
+
+        # If it ends with incomplete word, trim to last complete word
+        if short.length == 100 && summary[100] && summary[100] != ' '
+          short = short.gsub(/\s\w*\z/, '')  # Remove incomplete last word
+        end
+
+        short
       end
 
     end

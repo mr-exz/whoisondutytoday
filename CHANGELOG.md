@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.6
+### Improvements
+- Improving release flow on github actions
+
 ## 0.21.5
 ### Improvements
 - Improving release flow on github actions

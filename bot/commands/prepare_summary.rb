@@ -4,7 +4,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class PrepareSummary
       DESCRIPTION = 'Analyze a thread and generate a summary using Claude AI'.freeze
-      EXAMPLE = '@cibot prepare summary (in a thread)'.freeze
+      EXAMPLE = 'prepare summary (in a thread)'.freeze
 
       def self.call(client:, data:, match: nil)
         # This command should only work in threads

@@ -143,31 +143,17 @@ GEM
     drb (2.2.3)
     erubi (1.13.1)
     execjs (2.10.0)
-    faraday (1.10.4)
-      faraday-em_http (~> 1.0)
-      faraday-em_synchrony (~> 1.0)
-      faraday-excon (~> 1.1)
-      faraday-httpclient (~> 1.0)
-      faraday-multipart (~> 1.0)
-      faraday-net_http (~> 1.0)
-      faraday-net_http_persistent (~> 1.0)
-      faraday-patron (~> 1.0)
-      faraday-rack (~> 1.0)
-      faraday-retry (~> 1.0)
-      ruby2_keywords (>= 0.0.4)
-    faraday-em_http (1.0.0)
-    faraday-em_synchrony (1.0.1)
-    faraday-excon (1.1.0)
-    faraday-httpclient (1.0.1)
+    faraday (2.14.0)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
+    faraday-mashify (1.0.0)
+      faraday (~> 2.0)
+      hashie
     faraday-multipart (1.1.1)
       multipart-post (~> 2.0)
-    faraday-net_http (1.0.2)
-    faraday-net_http_persistent (1.2.0)
-    faraday-patron (1.0.0)
-    faraday-rack (1.0.0)
-    faraday-retry (1.0.3)
-    faraday_middleware (1.2.1)
-      faraday (~> 1.0)
+    faraday-net_http (3.4.2)
+      net-http (~> 0.5)
     ffi (1.17.2-aarch64-linux-gnu)
     ffi (1.17.2-aarch64-linux-musl)
     ffi (1.17.2-arm-linux-gnu)
@@ -225,6 +211,8 @@ GEM
     msgpack (1.8.0)
     multipart-post (2.4.1)
     mutex_m (0.3.0)
+    net-http (0.7.0)
+      uri
     net-imap (0.5.12)
       date
       net-protocol
@@ -337,7 +325,6 @@ GEM
       rubocop (>= 1.75.0, < 2.0)
       rubocop-ast (>= 1.38.0, < 2.0)
     ruby-progressbar (1.13.0)
-    ruby2_keywords (0.0.5)
     rubyzip (3.2.2)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
@@ -360,12 +347,12 @@ GEM
       activesupport
       hashie
       slack-ruby-client (>= 0.14.0)
-    slack-ruby-client (0.17.0)
-      faraday (>= 1.0)
-      faraday_middleware
+    slack-ruby-client (2.4.0)
+      faraday (>= 2.0)
+      faraday-mashify
+      faraday-multipart
       gli
       hashie
-      websocket-driver
     spring (4.4.0)
     sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
@@ -409,6 +396,7 @@ GEM
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.1.0)
+    uri (1.1.1)
     web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -467,7 +455,7 @@ DEPENDENCIES
   sass-rails (~> 6.0, >= 6.0.0)
   selenium-webdriver
   slack-ruby-bot (~> 0.16.1)
-  slack-ruby-client (~> 0.16)
+  slack-ruby-client (= 2.4.0)
   spring (~> 4.1)
   sqlite3 (< 2.0.0)
   standard

@@ -68,6 +68,9 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
+    anthropic (0.1.0)
+      faraday (>= 1)
+      faraday-multipart (>= 1)
     archive-zip (0.12.0)
       io-like (~> 0.3.0)
     ast (2.4.2)
@@ -414,6 +417,7 @@ DEPENDENCIES
   activerecord (>= 7.0.8)
   activestorage (>= 7.0.8)
   activesupport (>= 7.0.8)
+  anthropic (~> 0.1.0)
   async-websocket (~> 0.30.0)
   bigdecimal
   bootsnap (>= 1.1.0)

@@ -1,4 +1,10 @@
 # Changelog
+
+## 0.21.0
+### Improvements
+- Claude integration added
+- Slack Socket mode optimisations
+
 ## 0.20.3
 ### Bugfixes
 - Fixing hack to remove limit for async-websocket 0.8.0

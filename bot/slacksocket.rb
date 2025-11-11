@@ -25,7 +25,12 @@ module SlackSocket
       response = @web_client.auth_test
       raise "Error fetching bot info: #{response['error']}" unless response['ok']
 
-      @processed_messages = Set.new
+      # Store messages with timestamp to prevent memory leak
+      @processed_messages = {}  # Changed from Set to Hash to store timestamps
+      @message_ttl_seconds = 3600  # Keep messages for 1 hour
+      @reconnect_attempts = 0
+      @max_reconnect_attempts = 10
+      @reconnect_delay = 2  # Start with 2 seconds
       @self = User.new(response['user'], response['user_id'])
     end
 
@@ -47,36 +52,42 @@ module SlackSocket
     end
 
     def connect
-      http = NiceHttp.new('https://slack.com')
-      request = {
-        headers: {
-          Authorization: "Bearer #{@socket_token}",
-        },
-        path: '/api/apps.connections.open',
-      }
-      connection_info = http.post(request)
-      http.close
-      result = connection_info.data.json
-      raise(AdquisitionError) unless result.ok
-
-      websocket_url = result.url
-      endpoint = Async::HTTP::Endpoint.parse(websocket_url, protocols: Async::WebSocket::Client)
-
       Async do
-        begin
-          Async::WebSocket::Client.connect(endpoint) do |connection|
-            @connection = connection
-            set_presence_online
-            set_presence_online_via_websocket(connection)
-            while (message = connection.read)
-              handle_message(message, connection)
+        loop do
+          begin
+            @reconnect_attempts = 0  # Reset on successful connection
+            @reconnect_delay = 2
+
+            http = NiceHttp.new('https://slack.com')
+            request = {
+              headers: {
+                Authorization: "Bearer #{@socket_token}",
+              },
+              path: '/api/apps.connections.open',
+            }
+            connection_info = http.post(request)
+            http.close
+            result = connection_info.data.json
+            raise(AdquisitionError, "Connection failed: #{result.error}") unless result.ok
+
+            websocket_url = result.url
+            endpoint = Async::HTTP::Endpoint.parse(websocket_url, protocols: Async::WebSocket::Client)
+
+            Async::WebSocket::Client.connect(endpoint) do |connection|
+              @connection = connection
+              set_presence_online
+              set_presence_online_via_websocket(connection)
+              while (message = connection.read)
+                handle_message(message, connection)
+              end
             end
+          rescue EOFError => e
+            puts "EOFError: #{e.message}. Attempting to reconnect..."
+            handle_reconnection
+          rescue StandardError => e
+            puts "An error occurred: #{e.class} - #{e.message}. Attempting to reconnect..."
+            handle_reconnection
           end
-        rescue EOFError => e
-          puts "EOFError: #{e.message}. Reconnecting..."
-          Thread.current.kill
-        rescue StandardError => e
-          puts "An error occurred: #{e.message}. Reconnecting..."
         end
       end
     end
@@ -99,6 +110,7 @@ module SlackSocket
       connection.write(JSON.dump(presence_update))
       puts "Sent presence update via WebSocket: #{presence_update}"
     end
+
     def web_client
       @web_client
     end
@@ -108,6 +120,7 @@ module SlackSocket
         "<@#{@self.id}>",
       ].compact.flatten
     end
+
     def name?(name)
       name && names.include?(name)
     end
@@ -140,36 +153,57 @@ module SlackSocket
       data.subtype == 'bot_message'
     end
 
-    private
-
     def handle_message(message, connection)
       data = JSON.parse(message)
-      #puts "Received message: #{data}"
 
       if data['type'] == 'hello'
         puts 'Connection established.'
       elsif data['envelope_id']
-        # Acknowledge the message
+        # Acknowledge the message immediately to prevent re-delivery
         connection.write(JSON.dump(envelope_id: data['envelope_id']))
-        #puts "Acknowledged message with envelope_id: #{data['envelope_id']}"
+
+        # Clean up old messages periodically (every 100 messages)
+        cleanup_old_messages if @processed_messages.size % 100 == 0
 
         # Process the event
         event = data['payload']['event']
         client_msg_id = event['client_msg_id']
 
-        if client_msg_id && !@processed_messages.include?(client_msg_id)
-          @processed_messages.add(client_msg_id)
+        if client_msg_id && !@processed_messages.key?(client_msg_id)
+          @processed_messages[client_msg_id] = Time.now.to_i
           WhoIsOnDutyTodaySlackBot.process_event(self, data) if event
         end
       end
     rescue JSON::ParserError => e
       puts "Failed to parse message: #{e.message}"
     rescue StandardError => e
-      puts "An error occurred: #{e.message}"
+      puts "An error occurred in handle_message: #{e.message}"
+    end
+
+    private
+
+    def handle_reconnection
+      if @reconnect_attempts >= @max_reconnect_attempts
+        puts "Max reconnection attempts (#{@max_reconnect_attempts}) reached. Giving up."
+        raise ConnectionError, "Failed to reconnect after #{@max_reconnect_attempts} attempts"
+      end
+
+      @reconnect_attempts += 1
+      puts "Reconnection attempt #{@reconnect_attempts}/#{@max_reconnect_attempts}. Waiting #{@reconnect_delay} seconds..."
+      sleep @reconnect_delay
+
+      # Exponential backoff: double the delay, max 60 seconds
+      @reconnect_delay = [@reconnect_delay * 2, 60].min
+    end
+
+    def cleanup_old_messages
+      current_time = Time.now.to_i
+      @processed_messages.reject! do |msg_id, timestamp|
+        current_time - timestamp > @message_ttl_seconds
+      end
     end
 
     class WebClient < Slack::Web::Client
-
     end
   end
 end

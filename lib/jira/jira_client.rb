@@ -12,8 +12,15 @@ module JiraModule
     end
 
     def create_task(project_key:, summary:, description:, priority: 'Low')
-      # Create task via API v3
-      uri = URI("#{@base_url}/rest/api/3/issues")
+      create_task_v2(project_key, summary, description, priority)
+    rescue StandardError => e
+      puts "[JIRA Client Error] #{e.class} - #{e.message}"
+      puts e.backtrace.join("\n")
+      nil
+    end
+
+    def create_task_v2(project_key, summary, description, priority)
+      uri = URI("#{@base_url}/rest/api/2/issue")
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = uri.scheme == 'https'
 
@@ -25,21 +32,7 @@ module JiraModule
         fields: {
           project: { key: project_key },
           summary: summary,
-          description: {
-            version: 3,
-            type: 'doc',
-            content: [
-              {
-                type: 'paragraph',
-                content: [
-                  {
-                    type: 'text',
-                    text: description
-                  }
-                ]
-              }
-            ]
-          },
+          description: description,
           issuetype: { name: 'Task' },
           components: [{ name: 'na' }]
         }
@@ -51,13 +44,9 @@ module JiraModule
       if response.is_a?(Net::HTTPCreated)
         JSON.parse(response.body)
       else
-        puts "[JIRA Error] #{response.code}: #{response.body[0..300]}"
+        puts "[JIRA v2 Error] #{response.code}: #{response.body[0..200]}"
         nil
       end
-    rescue StandardError => e
-      puts "[JIRA Client Error] #{e.class} - #{e.message}"
-      puts e.backtrace.join("\n")
-      nil
     end
 
     def get_issue(issue_key)

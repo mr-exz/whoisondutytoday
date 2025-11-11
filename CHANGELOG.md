@@ -1,3 +1,5 @@
+# Changelog
+
 ## 0.22.0
 ### Improvements
 - Added feature create Jira ticket from Slack thread

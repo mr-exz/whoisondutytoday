@@ -120,20 +120,22 @@ jobs:
           NEXT_PATCH=$((PATCH + 1))
           NEXT_VERSION="$MAJOR.$MINOR.$NEXT_PATCH"
 
-          # Update CHANGELOG for next version
-          echo "## $NEXT_VERSION" > CHANGELOG.md.tmp
-          echo "" >> CHANGELOG.md.tmp
-          echo "### Improvements" >> CHANGELOG.md.tmp
-          echo "" >> CHANGELOG.md.tmp
-          echo "### Bugfixes" >> CHANGELOG.md.tmp
-          echo "" >> CHANGELOG.md.tmp
-          cat CHANGELOG.md >> CHANGELOG.md.tmp
+          # Update CHANGELOG for next version - append at top after title
+          {
+            head -n 1 CHANGELOG.md  # Keep the title (# Changelog)
+            echo ""
+            echo "## $NEXT_VERSION"
+            echo ""
+            echo "<!-- Prepare for next release: remove this line and write your release notes -->"
+            echo ""
+            tail -n +2 CHANGELOG.md  # Keep everything after the title
+          } > CHANGELOG.md.tmp
           mv CHANGELOG.md.tmp CHANGELOG.md
 
           # Commit technical changes (will not trigger new build)
           git add CHANGELOG.md
           git commit -m "chore: prepare for version $NEXT_VERSION [skip ci]" || true
-          git push origin master
+          git push origin master || echo "⚠️  Could not push technical commit (branch protection). Please review changes manually."
           echo "✅ Technical commit created for version $NEXT_VERSION"
 
       - name: Create GitHub Release

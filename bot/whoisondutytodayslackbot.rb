@@ -125,6 +125,10 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::PrepareSummary.call(client: client, data: data)
   end
 
+  command 'create jira task' do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::JiraCreateTask.call(client: client, data: data, match: match)
+  end
+
   command(/.*/) do |client, data|
     WhoIsOnDutyTodaySlackBotModule::Commands::Unknown.call(client: client, data: data)
   end

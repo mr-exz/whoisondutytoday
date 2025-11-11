@@ -27,6 +27,7 @@ require_relative 'channel_auto_answer'
 require_relative 'thread_labels_clean'
 require_relative 'thread_labels'
 require_relative 'git_commits'
+require_relative 'prepare_summary'
 
 module WhoIsOnDutyTodaySlackBotModule
   module Commands

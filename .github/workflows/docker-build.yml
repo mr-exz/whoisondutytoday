@@ -1,18 +1,33 @@
-name: Docker Image CI
-on: [push]
+name: Docker Build CI
+
+on:
+  push:
+    branches:
+      - '**'
+    paths-ignore:
+      - 'CHANGELOG.md'
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    # Skip build on technical commits (those with [skip ci])
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build and push docker image
-        run: make all
+        run: |
+            echo "Building and pushing for master branch"
+            make all

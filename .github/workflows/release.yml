@@ -1,0 +1,155 @@
+name: Release & Build
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'CHANGELOG.md'
+  workflow_dispatch:
+    inputs:
+      force_release:
+        description: 'Force release even if tag exists'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract-version.outputs.version }}
+      tag: ${{ steps.extract-version.outputs.tag }}
+      should_build: ${{ steps.check-tag.outputs.should_build }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version from CHANGELOG
+        id: extract-version
+        run: |
+          VERSION=$(head -n 1 CHANGELOG.md | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "")
+          if [ -z "$VERSION" ]; then
+            echo "❌ Could not extract version from CHANGELOG.md"
+            exit 1
+          fi
+          TAG="release-${VERSION}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "✅ Extracted version: $VERSION"
+          echo "✅ Git tag: $TAG"
+
+      - name: Check if tag already exists
+        id: check-tag
+        run: |
+          TAG="${{ steps.extract-version.outputs.tag }}"
+          FORCE="${{ github.event.inputs.force_release }}"
+
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            if [ "$FORCE" != "true" ]; then
+              echo "⚠️ Tag $TAG already exists. Use workflow_dispatch with force_release=true to override."
+              echo "should_build=false" >> $GITHUB_OUTPUT
+              exit 0
+            else
+              echo "🔄 Force mode: Deleting existing tag $TAG"
+              git tag -d "$TAG"
+              git push origin --delete "$TAG" || true
+              echo "should_build=true" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "✅ Tag $TAG is new"
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create and push git tag
+        if: steps.check-tag.outputs.should_build == 'true'
+        run: |
+          TAG="${{ steps.extract-version.outputs.tag }}"
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git tag -a "$TAG" -m "Release $TAG"
+          git push origin "$TAG"
+          echo "✅ Tag $TAG created and pushed"
+
+  build:
+    needs: release
+    runs-on: ubuntu-latest
+    if: needs.release.outputs.should_build == 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build and push Docker image
+        run: |
+          VERSION="${{ needs.release.outputs.version }}"
+          make build TAG=$VERSION
+          make tag-latest
+          make push
+
+      - name: Prepare for next version
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+          # Extract current version
+          VERSION="${{ needs.release.outputs.version }}"
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          MINOR=$(echo $VERSION | cut -d. -f2)
+          PATCH=$(echo $VERSION | cut -d. -f3)
+
+          # Increment patch version for next development version
+          NEXT_PATCH=$((PATCH + 1))
+          NEXT_VERSION="$MAJOR.$MINOR.$NEXT_PATCH"
+
+          # Update CHANGELOG for next version
+          echo "## $NEXT_VERSION" > CHANGELOG.md.tmp
+          echo "" >> CHANGELOG.md.tmp
+          echo "### Improvements" >> CHANGELOG.md.tmp
+          echo "" >> CHANGELOG.md.tmp
+          echo "### Bugfixes" >> CHANGELOG.md.tmp
+          echo "" >> CHANGELOG.md.tmp
+          cat CHANGELOG.md >> CHANGELOG.md.tmp
+          mv CHANGELOG.md.tmp CHANGELOG.md
+
+          # Commit technical changes (will not trigger new build)
+          git add CHANGELOG.md
+          git commit -m "chore: prepare for version $NEXT_VERSION [skip ci]" || true
+          git push origin master
+          echo "✅ Technical commit created for version $NEXT_VERSION"
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.release.outputs.tag }}
+          release_name: Release ${{ needs.release.outputs.version }}
+          body: |
+            ## Release ${{ needs.release.outputs.version }}
+
+            See [CHANGELOG.md](./CHANGELOG.md) for details.
+          draft: false
+          prerelease: false
+
+      - name: Notify Slack (optional)
+        run: |
+          echo "✅ Release ${{ needs.release.outputs.version }} published"
+          echo "🐳 Docker image: mrexz/whoisondutytoday:${{ needs.release.outputs.version }}"
+          echo "🐳 Docker image: mrexz/whoisondutytoday:latest"

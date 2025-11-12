@@ -64,6 +64,18 @@ module WhoIsOnDutyTodaySlackBotModule
             return
           end
 
+          # Analyze summary with Claude to get structured JIRA fields
+          jira_fields = analyze_for_jira(summarizer, summary)
+
+          if jira_fields.nil?
+            client.say(
+              text: ':x: Failed to analyze thread for JIRA fields. Please try again.',
+              channel: channel_id,
+              thread_ts: thread_ts
+            )
+            return
+          end
+
           # Build Slack thread link
           # Format: https://workspace.slack.com/archives/CHANNEL/pTIMESTAMP
           thread_ts_clean = thread_ts.gsub('.', '')
@@ -85,17 +97,16 @@ module WhoIsOnDutyTodaySlackBotModule
             thread_link = "Slack thread"
           end
 
-          # Create short summary (3-5 words) and full description
-          short_summary = extract_short_summary(summary)
-          full_description = "#{summary}\n\n---\n\n*Source:* #{thread_link}"
+          # Add Slack thread link to description
+          full_description = "#{jira_fields['description']}\n\n---\n\n*Source:* #{thread_link}"
 
-          # Create JIRA issue
+          # Create JIRA issue with Claude-analyzed fields
           jira_client = JiraModule::JiraClient.new
           issue_response = jira_client.create_task(
             project_key: project_key,
-            summary: short_summary,
+            summary: jira_fields['summary'],
             description: full_description,
-            priority: 'Low'
+            priority: jira_fields['priority']
           )
 
           unless issue_response
@@ -184,18 +195,35 @@ module WhoIsOnDutyTodaySlackBotModule
         nil
       end
 
-      def self.extract_short_summary(summary)
-        # Make a human-readable short summary, ideally first sentence or reasonable length
-        # JIRA summary max 255 chars
-        short = summary.split("\n").first  # Take first line/paragraph
-        short = short[0..100].strip if short.length > 100  # Limit to 100 chars
+      def self.analyze_for_jira(summarizer, summary)
+        # Use Claude to analyze the summary and extract JIRA fields
+        prompt = <<~PROMPT
+          Analyze this thread summary and extract JIRA task fields.
+          Return ONLY valid JSON, no markdown, no extra text.
 
-        # If it ends with incomplete word, trim to last complete word
-        if short.length == 100 && summary[100] && summary[100] != ' '
-          short = short.gsub(/\s\w*\z/, '')  # Remove incomplete last word
+          Summary:
+          #{summary}
+
+          Return JSON with these exact fields:
+          {
+            "summary": "concise title (max 100 chars, human-readable)",
+            "description": "detailed description of the issue",
+            "priority": "High, Medium, or Low"
+          }
+        PROMPT
+
+        response = summarizer.analyze_with_claude(prompt)
+        return nil unless response
+
+        begin
+          # Remove markdown code blocks if present
+          json_str = response.gsub(/^```json\s*/, '').gsub(/\s*```$/, '')
+          JSON.parse(json_str)
+        rescue JSON::ParserError => e
+          puts "[ERROR] Failed to parse Claude response as JSON: #{e.message}"
+          puts "[DEBUG] Response was: #{response[0..200]}"
+          nil
         end
-
-        short
       end
 
     end

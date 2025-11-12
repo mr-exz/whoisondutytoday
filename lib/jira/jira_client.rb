@@ -39,6 +39,7 @@ module JiraModule
       }
 
       request.body = JSON.generate(payload)
+
       response = http.request(request)
 
       if response.is_a?(Net::HTTPCreated)

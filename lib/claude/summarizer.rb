@@ -31,6 +31,15 @@ module ClaudeModule
       nil
     end
 
+    def analyze_with_claude(prompt)
+      # Generic method to send any prompt to Claude and get response
+      response = call_claude_api(prompt)
+      response&.dig('content', 0, 'text')
+    rescue StandardError => e
+      puts "Error in analyze_with_claude: #{e.message}"
+      nil
+    end
+
     private
 
     def call_claude_api(prompt)

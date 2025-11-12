@@ -64,28 +64,49 @@ module WhoIsOnDutyTodaySlackBotModule
             return
           end
 
-          # Get team ID for Slack link
-          team_info = client.web_client.team_info
-          team_id = team_info&.dig('team', 'id')
+          # Analyze summary with Claude to get structured JIRA fields
+          jira_fields = analyze_for_jira(summarizer, summary)
 
-          # Build description with Slack link
-          thread_link = if team_id
-                          "https://#{team_id}.slack.com/archives/#{channel_id}/p#{thread_ts.gsub('.', '')}"
-                        else
-                          "Slack thread"
-                        end
+          if jira_fields.nil?
+            client.say(
+              text: ':x: Failed to analyze thread for JIRA fields. Please try again.',
+              channel: channel_id,
+              thread_ts: thread_ts
+            )
+            return
+          end
 
-          # Create short summary (3-5 words) and full description
-          short_summary = extract_short_summary(summary)
-          full_description = "#{summary}\n\n---\n\n*Source:* #{thread_link}"
+          # Build Slack thread link
+          # Format: https://workspace.slack.com/archives/CHANNEL/pTIMESTAMP
+          thread_ts_clean = thread_ts.gsub('.', '')
 
-          # Create JIRA issue
+          begin
+            team_info = client.web_client.team_info
+            team_id = team_info&.dig('team', 'id')
+            domain = team_info&.dig('team', 'domain')
+
+            if domain
+              thread_link = "https://#{domain}.slack.com/archives/#{channel_id}/p#{thread_ts_clean}"
+            elsif team_id
+              thread_link = "https://#{team_id}.slack.com/archives/#{channel_id}/p#{thread_ts_clean}"
+            else
+              thread_link = "Slack thread"
+            end
+          rescue StandardError => e
+            puts "[ERROR] Failed to get team info: #{e.message}"
+            thread_link = "Slack thread"
+          end
+
+          # Add Slack thread link to description
+          full_description = "#{jira_fields['description']}\n\n---\n\n*Source:* #{thread_link}"
+
+          # Create JIRA issue with Claude-analyzed fields
           jira_client = JiraModule::JiraClient.new
           issue_response = jira_client.create_task(
             project_key: project_key,
-            summary: short_summary,
+            summary: jira_fields['summary'],
             description: full_description,
-            priority: 'Low'
+            priority: jira_fields['priority']
           )
 
           unless issue_response
@@ -174,11 +195,35 @@ module WhoIsOnDutyTodaySlackBotModule
         nil
       end
 
-      def self.extract_short_summary(summary)
-        # Extract first 3-5 words from summary for JIRA issue title
-        words = summary.split
-        short = words.take(5).join(' ')
-        short[0..254]  # JIRA summary max 255 chars
+      def self.analyze_for_jira(summarizer, summary)
+        # Use Claude to analyze the summary and extract JIRA fields
+        prompt = <<~PROMPT
+          Analyze this thread summary and extract JIRA task fields.
+          Return ONLY valid JSON, no markdown, no extra text.
+
+          Summary:
+          #{summary}
+
+          Return JSON with these exact fields:
+          {
+            "summary": "concise title (max 100 chars, human-readable)",
+            "description": "detailed description of the issue",
+            "priority": "High, Medium, or Low"
+          }
+        PROMPT
+
+        response = summarizer.analyze_with_claude(prompt)
+        return nil unless response
+
+        begin
+          # Remove markdown code blocks if present
+          json_str = response.gsub(/^```json\s*/, '').gsub(/\s*```$/, '')
+          JSON.parse(json_str)
+        rescue JSON::ParserError => e
+          puts "[ERROR] Failed to parse Claude response as JSON: #{e.message}"
+          puts "[DEBUG] Response was: #{response[0..200]}"
+          nil
+        end
       end
 
     end

@@ -63,6 +63,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_15_201550) do
     t.string "opsgenie_escalation_name"
   end
 
+  create_table "jira_issue_defaults", force: :cascade do |t|
+    t.string "project_key", null: false
+    t.json "default_fields", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_key"], name: "index_jira_issue_defaults_on_project_key", unique: true
+  end
+
   create_table "labels", force: :cascade do |t|
     t.string "label", null: false
     t.datetime "created_at", null: false
@@ -77,7 +85,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_15_201550) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "reply_counter"
-    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x0000555cae7831a0>"
+    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x00000001247100a0>"
     t.boolean "remind_needed"
     t.string "channel_id"
   end

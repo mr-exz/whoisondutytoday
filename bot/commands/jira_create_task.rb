@@ -97,21 +97,38 @@ module WhoIsOnDutyTodaySlackBotModule
             thread_link = "Slack thread"
           end
 
-          # Add Slack thread link to description
-          full_description = "#{jira_fields['description']}\n\n---\n\n*Source:* #{thread_link}"
+          # Get thread starter (reporter) info
+          reporter_name = get_thread_reporter_name(client, data)
 
-          # Create JIRA issue with Claude-analyzed fields
+          # Add Slack thread link and reporter to description
+          full_description = "#{jira_fields['description']}\n\n---\n\n*Reported by:* #{reporter_name}\n*Source:* #{thread_link}"
+
+          # Create JIRA issue
           jira_client = JiraModule::JiraClient.new
+
+          # Load project-specific template (all fields except summary/description come from template)
+          template_fields = JiraIssueDefault.get_defaults(project_key)
+          custom_fields = template_fields.is_a?(Hash) ? template_fields : {}
+
           issue_response = jira_client.create_task(
             project_key: project_key,
             summary: jira_fields['summary'],
             description: full_description,
-            priority: jira_fields['priority']
+            custom_fields: custom_fields
           )
+
+          if issue_response.is_a?(Hash) && issue_response[:error]
+            client.say(
+              text: ":x: Failed to create JIRA task:\n```\n#{issue_response[:body]}\n```",
+              channel: channel_id,
+              thread_ts: thread_ts
+            )
+            return
+          end
 
           unless issue_response
             client.say(
-              text: ':x: Failed to create JIRA task. Please check JIRA configuration.',
+              text: ':x: Failed to create JIRA task.',
               channel: channel_id,
               thread_ts: thread_ts
             )
@@ -224,6 +241,18 @@ module WhoIsOnDutyTodaySlackBotModule
           puts "[DEBUG] Response was: #{response[0..200]}"
           nil
         end
+      end
+
+      def self.get_thread_reporter_name(client, data)
+        # Get the user who started the thread
+        # In a thread response, parent_user_id is the thread starter
+        parent_user_id = data['parent_user_id'] || data['user']
+
+        user_info = fetch_user_info(client, parent_user_id)
+        user_info&.dig('user', 'real_name') || user_info&.dig('user', 'name') || 'Unknown'
+      rescue StandardError => e
+        puts "[ERROR] get_thread_reporter_name: #{e.message}"
+        'Unknown'
       end
 
     end

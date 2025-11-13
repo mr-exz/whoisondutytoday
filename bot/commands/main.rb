@@ -29,6 +29,7 @@ require_relative 'thread_labels'
 require_relative 'git_commits'
 require_relative 'prepare_summary'
 require_relative 'jira_create_task'
+require_relative 'configure_jira_issue_defaults'
 
 module WhoIsOnDutyTodaySlackBotModule
   module Commands

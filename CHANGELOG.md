@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.22.3
+
+<!-- Prepare for next release: remove this line and write your release notes -->
+
+
 ## 0.22.2
 ### Improvements
 - Added new command `configure jira issue defaults` to setup payload for project where to create jira tasks from thread

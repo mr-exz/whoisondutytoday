@@ -129,6 +129,10 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::JiraCreateTask.call(client: client, data: data, match: match)
   end
 
+  command 'configure jira issue defaults' do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ConfigureJiraIssueDefaults.call(client: client, data: data, match: match)
+  end
+
   command(/.*/) do |client, data|
     WhoIsOnDutyTodaySlackBotModule::Commands::Unknown.call(client: client, data: data)
   end

@@ -133,6 +133,10 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::ConfigureJiraIssueDefaults.call(client: client, data: data, match: match)
   end
 
+  command 'take a look' do |client, data|
+    WhoIsOnDutyTodaySlackBotModule::Commands::TakeALook.call(client: client, data: data)
+  end
+
   command(/.*/) do |client, data|
     WhoIsOnDutyTodaySlackBotModule::Commands::Unknown.call(client: client, data: data)
   end

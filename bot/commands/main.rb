@@ -30,6 +30,7 @@ require_relative 'git_commits'
 require_relative 'prepare_summary'
 require_relative 'jira_create_task'
 require_relative 'configure_jira_issue_defaults'
+require_relative 'take_a_look'
 
 module WhoIsOnDutyTodaySlackBotModule
   module Commands

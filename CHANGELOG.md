@@ -1,9 +1,10 @@
 # Changelog
 
-## 0.22.3
-
-<!-- Prepare for next release: remove this line and write your release notes -->
-
+## 0.23.0
+### Improvements
+- Added Claude agent inside with support of
+  - Custom plugins repo
+  - MCPS:Jenkins/Confluence/Jira/Bitbucket/Slack
 
 ## 0.22.2
 ### Improvements

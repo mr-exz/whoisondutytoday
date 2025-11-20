@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.23.1
+
+<!-- Prepare for next release: remove this line and write your release notes -->
+
+
 ## 0.23.0
 ### Improvements
 - Added Claude agent inside with support of

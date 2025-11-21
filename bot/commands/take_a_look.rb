@@ -3,6 +3,9 @@ require 'json'
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class TakeALook
+      DESCRIPTION = 'Analyze a thread and generate troubleshooting insights using Claude AI'.freeze
+      EXAMPLE = '`take a look` (in a thread)'.freeze
+
       def self.call(client:, data:)
         # Only process messages in threads
         return unless data.thread_ts

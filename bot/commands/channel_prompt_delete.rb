@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ChannelPromptDelete
       DESCRIPTION = 'Delete custom prompt for current channel'.freeze
-      EXAMPLE = '`prompt delete`'.freeze
+      EXAMPLE = '`channel prompt delete`'.freeze
 
       def self.call(client:, data:, match: nil)
         begin

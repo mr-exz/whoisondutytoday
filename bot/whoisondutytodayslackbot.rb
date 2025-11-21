@@ -117,15 +117,15 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::ChannelLabelsMerge.call(client: client, data: data, match: match)
   end
 
-  command 'prompt set' do |client, data, match|
+  command 'channel prompt set' do |client, data, match|
     WhoIsOnDutyTodaySlackBotModule::Commands::ChannelPromptSet.call(client: client, data: data, match: match)
   end
 
-  command 'prompt get' do |client, data, match|
+  command 'channel prompt get' do |client, data, match|
     WhoIsOnDutyTodaySlackBotModule::Commands::ChannelPromptGet.call(client: client, data: data, match: match)
   end
 
-  command 'prompt delete' do |client, data, match|
+  command 'channel prompt delete' do |client, data, match|
     WhoIsOnDutyTodaySlackBotModule::Commands::ChannelPromptDelete.call(client: client, data: data, match: match)
   end
 

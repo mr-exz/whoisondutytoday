@@ -2,7 +2,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ChannelPromptGet
       DESCRIPTION = 'View custom prompt for current channel'.freeze
-      EXAMPLE = '`prompt get`'.freeze
+      EXAMPLE = '`channel prompt get`'.freeze
 
       def self.call(client:, data:, match: nil)
         begin

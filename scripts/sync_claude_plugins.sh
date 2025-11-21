@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 PLUGINS_DIR="${PLUGINS_DIR:-/opt/app/plugins}"
 
 # Check if directory exists
@@ -35,6 +33,39 @@ else
   UPDATED="false"
 fi
 
+# Extract plugin names from marketplace.json
+MARKETPLACE_FILE="$PLUGINS_DIR/.claude-plugin/marketplace.json"
+PLUGINS=""
+if [ -f "$MARKETPLACE_FILE" ]; then
+  PLUGINS=$(grep -o '"name": "[^"]*"' "$MARKETPLACE_FILE" | cut -d'"' -f4 | tail -n +2)
+fi
+
+# Install plugins and capture output
+INSTALL_OUTPUT=""
+if [ -n "$PLUGINS" ]; then
+  while IFS= read -r plugin; do
+    if [ -n "$plugin" ]; then
+      OUTPUT=$(claude plugin install "$plugin" 2>&1)
+      INSTALL_OUTPUT="$INSTALL_OUTPUT
+$OUTPUT"
+    fi
+  done <<< "$PLUGINS"
+fi
+
+# Escape JSON strings
+escape_json() {
+  local string="$1"
+  # Escape backslashes, quotes, newlines, carriage returns, tabs
+  string="${string//\\/\\\\}"
+  string="${string//\"/\\\"}"
+  string="${string//$'\n'/\\n}"
+  string="${string//$'\r'/\\r}"
+  string="${string//$'\t'/\\t}"
+  echo "$string"
+}
+
+INSTALL_OUTPUT_ESCAPED=$(escape_json "$INSTALL_OUTPUT")
+
 # Output as JSON for easy parsing
 cat <<EOF
 {
@@ -43,6 +74,7 @@ cat <<EOF
   "hash": "$COMMIT_AFTER",
   "author": "$AUTHOR",
   "date": "$DATE",
-  "message": "$MESSAGE"
+  "message": "$MESSAGE",
+  "install_output": "$INSTALL_OUTPUT_ESCAPED"
 }
 EOF

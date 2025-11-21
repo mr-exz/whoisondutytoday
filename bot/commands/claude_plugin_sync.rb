@@ -25,13 +25,19 @@ module WhoIsOnDutyTodaySlackBotModule
             if result['success']
               status = result['updated'] ? '✅ Updated' : 'ℹ️ Already up to date'
 
+              message = "#{status}\n" \
+                        "Commit: `#{result['hash']}`\n" \
+                        "Author: #{result['author']}\n" \
+                        "Date: #{result['date']}\n" \
+                        "Message: #{result['message']}"
+
+              if result['install_output'] && !result['install_output'].strip.empty?
+                message += "\n\n*Plugin Installation Output:*\n```\n#{result['install_output']}\n```"
+              end
+
               client.web_client.chat_postMessage(
                 channel: data.channel,
-                text: "#{status}\n" \
-                      "Commit: `#{result['hash']}`\n" \
-                      "Author: #{result['author']}\n" \
-                      "Date: #{result['date']}\n" \
-                      "Message: #{result['message']}",
+                text: message,
                 thread_ts: data.thread_ts || data.ts,
                 as_user: true
               )

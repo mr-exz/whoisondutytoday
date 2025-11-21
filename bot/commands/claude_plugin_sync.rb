@@ -14,40 +14,52 @@ module WhoIsOnDutyTodaySlackBotModule
           as_user: true
         )
 
-        # Run sync script
-        output = `bash #{script_path} 2>&1`
+        # Start background thread to avoid blocking
+        Thread.new do
+          begin
+            # Run sync script
+            output = `bash #{script_path} 2>&1`
 
-        begin
-          result = JSON.parse(output)
+            result = JSON.parse(output)
 
-          if result['success']
-            status = result['updated'] ? '✅ Updated' : 'ℹ️ Already up to date'
+            if result['success']
+              status = result['updated'] ? '✅ Updated' : 'ℹ️ Already up to date'
 
+              client.web_client.chat_postMessage(
+                channel: data.channel,
+                text: "#{status}\n" \
+                      "Commit: `#{result['hash']}`\n" \
+                      "Author: #{result['author']}\n" \
+                      "Date: #{result['date']}\n" \
+                      "Message: #{result['message']}",
+                thread_ts: data.thread_ts || data.ts,
+                as_user: true
+              )
+            else
+              client.web_client.chat_postMessage(
+                channel: data.channel,
+                text: "❌ Sync failed: #{result['error']}",
+                thread_ts: data.thread_ts || data.ts,
+                as_user: true
+              )
+            end
+          rescue JSON::ParserError => e
             client.web_client.chat_postMessage(
               channel: data.channel,
-              text: "#{status}\n" \
-                    "Commit: `#{result['hash']}`\n" \
-                    "Author: #{result['author']}\n" \
-                    "Date: #{result['date']}\n" \
-                    "Message: #{result['message']}",
+              text: "❌ Parse error: #{e.message}",
               thread_ts: data.thread_ts || data.ts,
               as_user: true
             )
-          else
+          rescue StandardError => e
+            puts "Error in ClaudePluginSync: #{e.class} - #{e.message}"
+            puts e.backtrace
             client.web_client.chat_postMessage(
               channel: data.channel,
-              text: "❌ Sync failed: #{result['error']}",
+              text: "❌ Error: #{e.message}",
               thread_ts: data.thread_ts || data.ts,
               as_user: true
             )
           end
-        rescue JSON::ParserError
-          client.web_client.chat_postMessage(
-            channel: data.channel,
-            text: "❌ Error: #{output}",
-            thread_ts: data.thread_ts || data.ts,
-            as_user: true
-          )
         end
       end
 

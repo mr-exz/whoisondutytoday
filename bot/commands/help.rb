@@ -35,6 +35,9 @@ module WhoIsOnDutyTodaySlackBotModule
           ChannelLabelsStatistic,
           ChannelLabelsList,
           ChannelLabelsMerge,
+          ChannelPromptSet,
+          ChannelPromptGet,
+          ChannelPromptDelete,
           AnswerSetCustomText,
           AnswerDeleteCustomText,
           AnswerEnableHideReason,
@@ -45,7 +48,12 @@ module WhoIsOnDutyTodaySlackBotModule
           ActionShowAction,
           ThreadLabelsClean,
           ThreadLabels,
-          UserCommits
+          UserCommits,
+          ClaudePluginSync,
+          PrepareSummary,
+          JiraCreateTask,
+          ConfigureJiraIssueDefaults,
+          TakeALook
         ]
 
         commands.map do |command|

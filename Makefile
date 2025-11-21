@@ -1,10 +1,14 @@
 DOCKER_IMAGE_NAME = whoisondutytoday
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+COMMIT_SHA := $(shell git rev-parse --short HEAD)
+VERSION := $(shell cat ./CHANGELOG.md | grep -e '^\#\# .*' | head -n 1 | cut -d' ' -f 2)
 
 ifeq ("$(BRANCH)", "master")
-	DOCKER_IMAGE_TAG = $(shell cat ./CHANGELOG.md | grep -e '^\#\# .*' | head -n 1 | cut -d' ' -f 2)
+	# Master branch: use version only
+	DOCKER_IMAGE_TAG = $(VERSION)
 else
-	DOCKER_IMAGE_TAG = $(shell cat ./CHANGELOG.md | grep -e '^\#\# .*' | head -n 1 | cut -d' ' -f 2)-${BRANCH}
+	# Non-master branches: append branch and commit SHA
+	DOCKER_IMAGE_TAG = $(VERSION)-${BRANCH}-$(COMMIT_SHA)
 endif
 
 DOCKER_REGISTRY_URL = docker.io/mrexz

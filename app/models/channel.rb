@@ -1,5 +1,8 @@
 class Channel < ApplicationRecord
   self.primary_key = 'slack_channel_id'
+
+  has_many :channel_prompts, foreign_key: :channel_id, primary_key: :slack_channel_id, dependent: :destroy
+
   def reminder_enabled
     settings.present? && settings['reminder_enabled'] == 'true'
   end

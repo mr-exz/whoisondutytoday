@@ -117,6 +117,10 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::ChannelLabelsMerge.call(client: client, data: data, match: match)
   end
 
+  command 'channel prompt' do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ChannelPrompt.call(client: client, data: data, match: match)
+  end
+
   command 'git commits' do |client, data, match|
     WhoIsOnDutyTodaySlackBotModule::Commands::UserCommits.call(client: client, data: data, match: match)
   end

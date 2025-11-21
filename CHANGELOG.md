@@ -1,8 +1,10 @@
 # Changelog
 
-## 0.23.1
-
-<!-- Prepare for next release: remove this line and write your release notes -->
+## 0.24.0
+### Improvements
+- Adding commit id in docker image for non master branch builds
+- Added command to sync claude plugins repo and install all
+- Added command to create custom prompt for channel
 
 
 ## 0.23.0

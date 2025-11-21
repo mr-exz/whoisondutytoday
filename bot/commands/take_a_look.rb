@@ -75,21 +75,35 @@ module WhoIsOnDutyTodaySlackBotModule
       def self.call_claude(thread_context)
         require 'tempfile'
 
+        # Get channel-specific prompt or use default
+        channel_prompt = get_channel_prompt(thread_context[:channel])
+
         # Prepare prompt with thread context
-        prompt = <<~PROMPT
-          You are a support troubleshooting assistant. Analyze the following support thread and provide helpful troubleshooting steps and insights.
+        prompt = if channel_prompt
+          <<~PROMPT
+            #{channel_prompt}
 
-          Thread Context:
-          ```
-          #{thread_context[:context]}
-          ```
+            Thread Context:
+            ```
+            #{thread_context[:context]}
+            ```
+          PROMPT
+        else
+          <<~PROMPT
+            You are a support troubleshooting assistant. Analyze the following support thread and provide helpful troubleshooting steps and insights.
 
-          Please provide:
-          1. Summary of the issue
-          2. Potential causes
-          3. Recommended troubleshooting steps
-          4. Any relevant resources or documentation
-        PROMPT
+            Thread Context:
+            ```
+            #{thread_context[:context]}
+            ```
+            Please provide:
+            1. Summary of the issue
+            2. Potential causes
+            3. Recommended troubleshooting steps
+            4. Any relevant resources or documentation or plugins
+            5. Return result in Slack formating and try be short
+          PROMPT
+        end
 
         # Write prompt to temporary file to avoid shell escaping issues
         temp_file = Tempfile.new('claude_prompt_')
@@ -140,6 +154,13 @@ module WhoIsOnDutyTodaySlackBotModule
             puts "Error posting response: #{e.class} - #{e.message}"
           end
         end
+      end
+
+      def self.get_channel_prompt(channel_id)
+        ChannelPrompt.get_prompt(channel_id)
+      rescue => e
+        puts "Error fetching channel prompt: #{e.message}"
+        nil
       end
     end
   end

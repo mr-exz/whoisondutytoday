@@ -129,6 +129,7 @@ module SlackMarkdownHelper
   # Helper method to convert markdown text to Slack format
   def markdown_to_slack(markdown_text)
     doc = Kramdown::Document.new(markdown_text, input: 'GFM')
-    SlackMarkdownConverter.convert(doc.root).first
+    converter = SlackMarkdownConverter.new
+    converter.convert(doc.root)
   end
 end

@@ -91,7 +91,8 @@ module WhoIsOnDutyTodaySlackBotModule
 
       def self.markdown_to_slack(markdown_text)
         doc = Kramdown::Document.new(markdown_text, input: 'GFM')
-        SlackMarkdownHelper::SlackMarkdownConverter.convert(doc.root).first
+        converter = SlackMarkdownHelper::SlackMarkdownConverter.new
+        converter.convert(doc.root)
       rescue => e
         puts "Error converting markdown: #{e.message}"
         markdown_text

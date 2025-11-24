@@ -46,17 +46,18 @@ module WhoIsOnDutyTodaySlackBotModule
       def self.call_claude(system_prompt, thread_context)
         require 'tempfile'
 
-        system_file = Tempfile.new('claude_system_')
-        system_file.write(system_prompt)
-        system_file.close
+        # Use system prompt or default
+        system_prompt ||= "You are a support troubleshooting assistant. Analyze the following support thread and provide helpful troubleshooting steps and insights. Please provide: 1. Summary of the issue, 2. Potential causes, 3. Recommended troubleshooting steps, 4. Any relevant resources or documentation or plugins, 5. Return result in Slack formatting and try be short"
+
+        # Build full prompt with thread context embedded
+        full_prompt = "#{system_prompt}\n\nThread Context:\n```\n#{thread_context}\n```"
 
         prompt_file = Tempfile.new('claude_prompt_')
-        prompt_file.write("for context here is what has been discussed so far:\n\n#{thread_context}")
+        prompt_file.write(full_prompt)
         prompt_file.close
 
         cmd = "claude --dangerously-skip-permissions --allow-dangerously-skip-permissions " \
               "--disallowedTools \"Bash\" " \
-              "--system-prompt \"$(cat #{system_file.path})\" " \
               "-p \"$(cat #{prompt_file.path})\" 2>&1"
 
         output = `#{cmd}` rescue ""
@@ -65,7 +66,6 @@ module WhoIsOnDutyTodaySlackBotModule
         puts "Error calling Claude: #{e.message}"
         ""
       ensure
-        system_file.unlink if system_file
         prompt_file.unlink if prompt_file
       end
 

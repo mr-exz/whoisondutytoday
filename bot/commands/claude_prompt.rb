@@ -1,7 +1,5 @@
 require 'json'
-require 'kramdown'
-require 'kramdown-parser-gfm'
-require_relative '../../app/helpers/slack_markdown_helper'
+require_relative '../../lib/slack_formatter'
 
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
@@ -26,7 +24,7 @@ module WhoIsOnDutyTodaySlackBotModule
             if claude_output.empty?
               message = '⚠️ No response'
             else
-              message = self.markdown_to_slack(claude_output)
+              message = SlackFormatter.markdown_to_slack(claude_output)
             end
             post_response(client, data, message, thread_ts: thread_ts)
           rescue StandardError => e
@@ -87,17 +85,6 @@ module WhoIsOnDutyTodaySlackBotModule
       rescue => e
         puts "Error fetching channel prompt: #{e.message}"
         ""
-      end
-
-      def self.markdown_to_slack(markdown_text)
-        doc = Kramdown::Document.new(markdown_text, input: 'GFM')
-        converter = SlackMarkdownHelper::SlackMarkdownConverter.new
-        result = converter.convert(doc.root)
-        result.strip
-      rescue => e
-        puts "Error converting markdown: #{e.message}"
-        puts e.backtrace.join("\n")
-        markdown_text
       end
 
       def self.post_response(client, data, message, thread_ts: nil)

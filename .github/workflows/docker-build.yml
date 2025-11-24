@@ -64,9 +64,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
-    # Publish on master branch or manual workflow dispatch
-    if: needs.build.outputs.is_master == 'true' || github.event_name == 'workflow_dispatch'
-
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4

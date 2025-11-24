@@ -49,6 +49,7 @@ module WhoIsOnDutyTodaySlackBotModule
           ThreadLabelsClean,
           ThreadLabels,
           UserCommits,
+          ClaudePrompt,
           ClaudePluginSync,
           PrepareSummary,
           JiraCreateTask,

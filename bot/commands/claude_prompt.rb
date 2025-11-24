@@ -58,6 +58,7 @@ module WhoIsOnDutyTodaySlackBotModule
         prompt_file.close
 
         cmd = "claude --dangerously-skip-permissions --allow-dangerously-skip-permissions " \
+              "--disallowedTools \"Bash\" " \
               "--system-prompt \"$(cat #{system_file.path})\" "
 
         if thread_context

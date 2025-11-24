@@ -1,8 +1,10 @@
 require 'json'
+require_relative '../../app/helpers/slack_markdown_helper'
 
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ClaudePrompt
+      include SlackMarkdownHelper
       DESCRIPTION = 'Send a custom prompt to Claude AI'.freeze
       EXAMPLE = '`claude <your prompt here>` example: `claude /answers-troubleshooting:analyze-errors last 3 days`'.freeze
 
@@ -20,7 +22,11 @@ module WhoIsOnDutyTodaySlackBotModule
             thread_context = collect_thread_context(client, data, thread_ts)
             claude_output = call_claude(system_prompt, prompt, thread_context)
 
-            message = claude_output.empty? ? '⚠️ No response' : claude_output
+            if claude_output.empty?
+              message = '⚠️ No response'
+            else
+              message = markdown_to_slack(claude_output)
+            end
             post_response(client, data, message, thread_ts: thread_ts)
           rescue StandardError => e
             puts "Error in ClaudePrompt: #{e.message}"

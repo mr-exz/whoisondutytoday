@@ -1,8 +1,10 @@
 require 'json'
+require_relative '../../app/helpers/slack_markdown_helper'
 
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class TakeALook
+      include SlackMarkdownHelper
       DESCRIPTION = 'Analyze a thread and generate troubleshooting insights using Claude AI'.freeze
       EXAMPLE = '`take a look` (in a thread)'.freeze
 
@@ -17,7 +19,11 @@ module WhoIsOnDutyTodaySlackBotModule
             system_prompt = get_channel_prompt(data.channel)
             claude_output = call_claude(system_prompt, thread_context)
 
-            message = claude_output.empty? ? '⚠️ No analysis available' : claude_output
+            if claude_output.empty?
+              message = '⚠️ No analysis available'
+            else
+              message = markdown_to_slack(claude_output)
+            end
             post_response(client, data, message, thread_ts: data.thread_ts)
           rescue StandardError => e
             puts "Error in TakeALook: #{e.class} - #{e.message}"

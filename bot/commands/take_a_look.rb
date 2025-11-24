@@ -23,7 +23,7 @@ module WhoIsOnDutyTodaySlackBotModule
             if claude_output.empty?
               message = '⚠️ No analysis available'
             else
-              message = markdown_to_slack(claude_output)
+              message = self.markdown_to_slack(claude_output)
             end
             post_response(client, data, message, thread_ts: data.thread_ts)
           rescue StandardError => e

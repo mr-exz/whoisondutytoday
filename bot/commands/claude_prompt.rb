@@ -10,27 +10,29 @@ module WhoIsOnDutyTodaySlackBotModule
         prompt = match['expression'].strip
         return if prompt.empty?
 
-        client.say(channel: data.channel, text: '🤖 Processing...', thread_ts: data.thread_ts)
+        thread_ts = data.thread_ts || data.ts
+
+        client.say(channel: data.channel, text: '🤖 Processing...', thread_ts: thread_ts)
 
         Thread.new do
           begin
             system_prompt = get_channel_prompt(data.channel)
-            thread_context = data.thread_ts ? collect_thread_context(client, data) : nil
+            thread_context = collect_thread_context(client, data, thread_ts)
             claude_output = call_claude(system_prompt, prompt, thread_context)
 
             message = claude_output.empty? ? '⚠️ No response' : claude_output
-            post_response(client, data, message, thread_ts: data.thread_ts)
+            post_response(client, data, message, thread_ts: thread_ts)
           rescue StandardError => e
             puts "Error in ClaudePrompt: #{e.message}"
-            post_response(client, data, "❌ Error: #{e.message}", thread_ts: data.thread_ts)
+            post_response(client, data, "❌ Error: #{e.message}", thread_ts: thread_ts)
           end
         end
       end
 
       private
 
-      def self.collect_thread_context(client, data)
-        thread_messages = client.web_client.conversations_replies(channel: data.channel, ts: data.thread_ts)
+      def self.collect_thread_context(client, data, thread_ts)
+        thread_messages = client.web_client.conversations_replies(channel: data.channel, ts: thread_ts)
         thread_messages['messages'].map do |msg|
           "#{msg['user']}: #{msg['text']}"
         end.join("\n\n")

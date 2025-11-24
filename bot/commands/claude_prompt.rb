@@ -1,10 +1,11 @@
 require 'json'
+require 'kramdown'
+require 'kramdown-parser-gfm'
 require_relative '../../app/helpers/slack_markdown_helper'
 
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ClaudePrompt
-      include SlackMarkdownHelper
       DESCRIPTION = 'Send a custom prompt to Claude AI'.freeze
       EXAMPLE = '`claude <your prompt here>` example: `claude /answers-troubleshooting:analyze-errors last 3 days`'.freeze
 
@@ -86,6 +87,14 @@ module WhoIsOnDutyTodaySlackBotModule
       rescue => e
         puts "Error fetching channel prompt: #{e.message}"
         ""
+      end
+
+      def self.markdown_to_slack(markdown_text)
+        doc = Kramdown::Document.new(markdown_text, input: 'GFM')
+        SlackMarkdownHelper::SlackMarkdownConverter.convert(doc.root).first
+      rescue => e
+        puts "Error converting markdown: #{e.message}"
+        markdown_text
       end
 
       def self.post_response(client, data, message, thread_ts: nil)

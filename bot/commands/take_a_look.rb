@@ -1,10 +1,11 @@
 require 'json'
+require 'kramdown'
+require 'kramdown-parser-gfm'
 require_relative '../../app/helpers/slack_markdown_helper'
 
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class TakeALook
-      include SlackMarkdownHelper
       DESCRIPTION = 'Analyze a thread and generate troubleshooting insights using Claude AI'.freeze
       EXAMPLE = '`take a look` (in a thread)'.freeze
 
@@ -84,6 +85,14 @@ module WhoIsOnDutyTodaySlackBotModule
       rescue => e
         puts "Error fetching channel prompt: #{e.message}"
         ""
+      end
+
+      def self.markdown_to_slack(markdown_text)
+        doc = Kramdown::Document.new(markdown_text, input: 'GFM')
+        SlackMarkdownHelper::SlackMarkdownConverter.convert(doc.root).first
+      rescue => e
+        puts "Error converting markdown: #{e.message}"
+        markdown_text
       end
     end
   end

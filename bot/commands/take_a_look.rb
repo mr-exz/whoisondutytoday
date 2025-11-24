@@ -50,14 +50,13 @@ module WhoIsOnDutyTodaySlackBotModule
         system_file.write(system_prompt)
         system_file.close
 
-        discussion_file = Tempfile.new('claude_discussion_')
-        discussion_file.write("for context here is what has been discussed so far:\n\n#{thread_context}")
-        discussion_file.close
+        prompt_file = Tempfile.new('claude_prompt_')
+        prompt_file.write("for context here is what has been discussed so far:\n\n#{thread_context}")
+        prompt_file.close
 
         cmd = "claude --dangerously-skip-permissions --allow-dangerously-skip-permissions " \
               "--system-prompt \"$(cat #{system_file.path})\" " \
-              "--append-system-prompt \"$(cat #{discussion_file.path})\" " \
-              "-p \"Analyze this thread and provide insights\" 2>&1"
+              "-p \"$(cat #{prompt_file.path})\" 2>&1"
 
         output = `#{cmd}` rescue ""
         output
@@ -66,7 +65,7 @@ module WhoIsOnDutyTodaySlackBotModule
         ""
       ensure
         system_file.unlink if system_file
-        discussion_file.unlink if discussion_file
+        prompt_file.unlink if prompt_file
       end
 
       def self.post_response(client, data, message, thread_ts: nil)

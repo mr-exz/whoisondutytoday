@@ -84,6 +84,27 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
     if: needs.release.outputs.should_build == 'true'
+    outputs:
+      version: ${{ needs.release.outputs.version }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          VERSION="${{ needs.release.outputs.version }}"
+          make build TAG=$VERSION
+          make tag-latest
+          echo "✅ Docker image built successfully: mrexz/whoisondutytoday:$VERSION and latest"
+
+  publish:
+    needs: [release, build]
+    runs-on: ubuntu-latest
+    if: needs.release.outputs.should_build == 'true'
 
     steps:
       - name: Checkout code
@@ -98,12 +119,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image to registry
         run: |
           VERSION="${{ needs.release.outputs.version }}"
           make build TAG=$VERSION
           make tag-latest
           make push
+          echo "✅ Docker image pushed successfully"
 
       - name: Prepare for next version
         run: |
@@ -152,7 +174,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Notify Slack (optional)
+      - name: Notify Release Published
         run: |
           echo "✅ Release ${{ needs.release.outputs.version }} published"
           echo "🐳 Docker image: mrexz/whoisondutytoday:${{ needs.release.outputs.version }}"

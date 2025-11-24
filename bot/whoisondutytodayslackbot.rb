@@ -133,6 +133,10 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::UserCommits.call(client: client, data: data, match: match)
   end
 
+  command 'claude' do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ClaudePrompt.call(client: client, data: data, match: match)
+  end
+
   command 'claude plugin sync' do |client, data|
     WhoIsOnDutyTodaySlackBotModule::Commands::ClaudePluginSync.call(client: client, data: data)
   end

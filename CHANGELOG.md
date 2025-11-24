@@ -1,16 +1,23 @@
 # Changelog
 
+## 0.25.0
+### Improvements
+- Adding command `claude` and support parameters.
+- Fixing claude execution params under `take a look` cmd.
+
 ## 0.24.1
-
-<!-- Prepare for next release: remove this line and write your release notes -->
-
+### Improvements
+- Add CLAUDE.md with project documentation and development commands
+- Add kramdown and kramdown-parser-gfm gems for markdown parsing
+- Create SlackMarkdownHelper with markdown_to_slack method
+- Convert markdown to Slack mrkdwn format (bold, italic, lists, code, links)
+- Add test coverage for basic markdown conversions
 
 ## 0.24.0
 ### Improvements
 - Adding commit id in docker image for non master branch builds
 - Added command to sync claude plugins repo and install all
 - Added command to create custom prompt for channel
-
 
 ## 0.23.0
 ### Improvements

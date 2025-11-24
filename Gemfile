@@ -25,7 +25,7 @@ gem 'nice_http'
 gem 'kramdown', '~> 2.4'
 gem 'kramdown-parser-gfm', '~> 1.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0.8'
+gem 'rails', '~> 8.1.1'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '< 2.0.0'
 # Use Puma as the app server

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.25.2
+
+<!-- Prepare for next release: remove this line and write your release notes -->
+
+
 ## 0.25.1
 ### Bugfixes
 - Prompt is too long

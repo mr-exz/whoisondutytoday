@@ -40,8 +40,14 @@ module WhoIsOnDutyTodaySlackBotModule
 
       def self.collect_thread_context(client, data)
         thread_messages = client.web_client.conversations_replies(channel: data.channel, ts: data.thread_ts)
-        thread_messages['messages'].map do |msg|
-          "#{msg['user']}: #{msg['text']}"
+
+        thread_messages['messages'].filter_map do |msg|
+          next unless msg['text']
+
+          user_id = msg['user'] || msg['bot_id'] || "unknown"
+          message_text = msg['text']
+
+          "channel_id: #{data.channel} user_id: #{user_id} message_text: #{message_text}"
         end.join("\n\n")
       rescue StandardError => e
         puts "Error fetching thread: #{e.message}"

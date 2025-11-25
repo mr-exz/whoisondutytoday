@@ -1,6 +1,9 @@
 # Changelog
 
-## 0.25.2
+## 0.26.0
+### Improvements
+- Isolated folder for threads
+- Support if media in thread
 ### Bugfixes
 - Prompt is too long
 

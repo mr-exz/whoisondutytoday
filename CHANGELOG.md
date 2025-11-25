@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.26.1
+
+<!-- Prepare for next release: remove this line and write your release notes -->
+
+
 ## 0.26.0
 ### Improvements
 - Isolated folder for threads

@@ -21,7 +21,7 @@ module WhoIsOnDutyTodaySlackBotModule
             user_prompt = match && match['expression'] ? match['expression'].strip : ""
             prompt = user_prompt.empty? ? "Following your system instructions, analyze this thread and provide troubleshooting insights." : user_prompt
 
-            claude_output = call_claude(system_prompt, prompt, thread_context)
+            claude_output = call_claude(system_prompt, prompt, thread_context, data.channel, data.thread_ts)
 
             if claude_output.empty?
               message = '⚠️ No analysis available'
@@ -48,20 +48,23 @@ module WhoIsOnDutyTodaySlackBotModule
         ""
       end
 
-      def self.call_claude(system_prompt, prompt, thread_context = nil)
+      def self.call_claude(system_prompt, prompt, thread_context = nil, channel_id = nil, thread_ts = nil)
         require 'fileutils'
 
-        # Create prompts_tmp directory for debugging
-        prompts_dir = './prompts_tmp'
+        # Create prompts_tmp/channel/thread folder structure
+        prompts_dir = if channel_id && thread_ts
+          "./prompts_tmp/#{channel_id}/p#{thread_ts}"
+        else
+          "./prompts_tmp"
+        end
         FileUtils.mkdir_p(prompts_dir)
 
         # Use system prompt or default
         system_prompt ||= "You are a support troubleshooting assistant. Analyze the following support thread and provide helpful troubleshooting steps and insights. Please provide: 1. Summary of the issue, 2. Potential causes, 3. Recommended troubleshooting steps, 4. Any relevant resources or documentation or plugins, 5. Return result in Slack formatting and try be short"
 
-        # Create temp files in prompts_tmp folder
-        timestamp = Time.now.strftime('%Y%m%d_%H%M%S_%N')
-        system_file_path = "#{prompts_dir}/system_#{timestamp}.txt"
-        prompt_file_path = "#{prompts_dir}/prompt_#{timestamp}.txt"
+        # Create temp files with simple names
+        system_file_path = "#{prompts_dir}/system.txt"
+        prompt_file_path = "#{prompts_dir}/prompt.txt"
 
         File.write(system_file_path, system_prompt)
         File.write(prompt_file_path, prompt)
@@ -71,7 +74,7 @@ module WhoIsOnDutyTodaySlackBotModule
               "--system-prompt \"$(cat #{system_file_path})\" "
 
         if thread_context
-          context_file_path = "#{prompts_dir}/context_#{timestamp}.txt"
+          context_file_path = "#{prompts_dir}/context.txt"
           File.write(context_file_path, "for context here is what has been discussed so far:\n\n#{thread_context}")
           cmd += "--append-system-prompt \"$(cat #{context_file_path})\" "
         end

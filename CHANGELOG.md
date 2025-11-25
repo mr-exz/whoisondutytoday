@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.26.2
+
+<!-- Prepare for next release: remove this line and write your release notes -->
+
+
 ## 0.26.1
 ### Bugfixes
 - PDF download fixes

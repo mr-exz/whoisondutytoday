@@ -71,7 +71,19 @@ module WhoIsOnDutyTodaySlackBotModule
 
       def self.download_and_save_file(client, file, prompts_dir)
         filename = file['name']
-        filepath = "#{prompts_dir}/#{filename}"
+        file_id = file['id']
+
+        # Add file ID to prevent naming collisions
+        name_parts = filename.rpartition('.')
+        if name_parts[1].empty?
+          # No extension
+          unique_filename = "#{filename}_#{file_id}"
+        else
+          # Has extension
+          unique_filename = "#{name_parts[0]}_#{file_id}#{name_parts[1]}#{name_parts[2]}"
+        end
+
+        filepath = "#{prompts_dir}/#{unique_filename}"
 
         response = client.web_client.files_info(file: file['id'])
         file_url = response['file']['url_private']

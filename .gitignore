@@ -17,6 +17,7 @@ vagrant/.vagrant
 /log/*
 /tmp/*
 /db/data/*
+/prompts_tmp/*
 !/log/.keep
 !/tmp/.keep
 

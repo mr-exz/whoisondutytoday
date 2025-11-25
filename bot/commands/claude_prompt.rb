@@ -47,38 +47,37 @@ module WhoIsOnDutyTodaySlackBotModule
       end
 
       def self.call_claude(system_prompt, prompt, thread_context = nil)
-        require 'tempfile'
+        require 'fileutils'
 
-        system_file = Tempfile.new('claude_system_')
-        system_file.write(system_prompt)
-        system_file.close
+        # Create prompts_tmp directory for debugging
+        prompts_dir = './prompts_tmp'
+        FileUtils.mkdir_p(prompts_dir)
 
-        prompt_file = Tempfile.new('claude_prompt_')
-        prompt_file.write(prompt)
-        prompt_file.close
+        # Create temp files in prompts_tmp folder
+        timestamp = Time.now.strftime('%Y%m%d_%H%M%S_%N')
+        system_file_path = "#{prompts_dir}/system_#{timestamp}.txt"
+        prompt_file_path = "#{prompts_dir}/prompt_#{timestamp}.txt"
+
+        File.write(system_file_path, system_prompt)
+        File.write(prompt_file_path, prompt)
 
         cmd = "claude --dangerously-skip-permissions --allow-dangerously-skip-permissions " \
               "--disallowedTools \"Bash\" " \
-              "--system-prompt \"$(cat #{system_file.path})\" "
+              "--system-prompt \"$(cat #{system_file_path})\" "
 
         if thread_context
-          discussion_file = Tempfile.new('claude_discussion_')
-          discussion_file.write("for context here is what has been discussed so far:\n\n#{thread_context}")
-          discussion_file.close
-          cmd += "--append-system-prompt \"$(cat #{discussion_file.path})\" "
+          context_file_path = "#{prompts_dir}/context_#{timestamp}.txt"
+          File.write(context_file_path, "for context here is what has been discussed so far:\n\n#{thread_context}")
+          cmd += "--append-system-prompt \"$(cat #{context_file_path})\" "
         end
 
-        cmd += "-p \"$(cat #{prompt_file.path})\" 2>&1"
+        cmd += "-p \"$(cat #{prompt_file_path})\" 2>&1"
 
         output = `#{cmd}` rescue ""
         output
       rescue StandardError => e
         puts "Error calling Claude: #{e.message}"
         ""
-      ensure
-        system_file.unlink if system_file
-        prompt_file.unlink if prompt_file
-        discussion_file.unlink if defined?(discussion_file) && discussion_file
       end
 
       def self.get_channel_prompt(channel_id)

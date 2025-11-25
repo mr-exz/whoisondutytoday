@@ -18,7 +18,13 @@ module WhoIsOnDutyTodaySlackBotModule
         Thread.new do
           begin
             system_prompt = get_channel_prompt(data.channel)
-            thread_context = collect_thread_context(client, data, thread_ts)
+            prompts_dir = if data.channel && thread_ts
+              "./prompts_tmp/#{data.channel}/p#{thread_ts}"
+            else
+              "./prompts_tmp"
+            end
+            FileUtils.mkdir_p(prompts_dir)
+            thread_context = collect_thread_context(client, data, thread_ts, prompts_dir)
             claude_output = call_claude(system_prompt, prompt, thread_context, data.channel, thread_ts)
 
             if claude_output.empty?
@@ -36,7 +42,7 @@ module WhoIsOnDutyTodaySlackBotModule
 
       private
 
-      def self.collect_thread_context(client, data, thread_ts)
+      def self.collect_thread_context(client, data, thread_ts, prompts_dir = nil)
         thread_messages = client.web_client.conversations_replies(channel: data.channel, ts: thread_ts)
 
         thread_messages['messages'].filter_map do |msg|
@@ -44,12 +50,45 @@ module WhoIsOnDutyTodaySlackBotModule
 
           user_id = msg['user'] || msg['bot_id'] || "unknown"
           message_text = msg['text']
+          context_line = "channel_id: #{data.channel} user_id: #{user_id} message_text: #{message_text}"
 
-          "channel_id: #{data.channel} user_id: #{user_id} message_text: #{message_text}"
+          # Download and save files if present
+          if msg['files'] && prompts_dir
+            msg['files'].each do |file|
+              begin
+                download_and_save_file(client, file, prompts_dir)
+                context_line += "\nfile: #{file['name']}"
+              rescue => e
+                puts "Error downloading file #{file['name']}: #{e.message}"
+              end
+            end
+          end
+
+          context_line
         end.join("\n\n")
       rescue StandardError => e
         puts "Error fetching thread: #{e.message}"
         ""
+      end
+
+      def self.download_and_save_file(client, file, prompts_dir)
+        url = file['url_private']
+        filename = file['name']
+        filepath = "#{prompts_dir}/#{filename}"
+
+        response = client.web_client.files_info(file: file['id'])
+        file_url = response['file']['url_private']
+
+        # Download file with Slack authentication
+        require 'net/http'
+        uri = URI(file_url)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        request = Net::HTTP::Get.new(uri.request_uri)
+        request['Authorization'] = "Bearer #{client.web_client.token}"
+
+        response = http.request(request)
+        File.write(filepath, response.body)
       end
 
       def self.call_claude(system_prompt, prompt, thread_context = nil, channel_id = nil, thread_ts = nil)

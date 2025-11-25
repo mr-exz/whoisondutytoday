@@ -29,5 +29,5 @@ jobs:
 
       - name: Build and push docker image
         run: |
-            echo "Building and pushing for master branch"
-            make all
+          echo "Building and pushing for master branch"
+          make all

@@ -133,6 +133,10 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::UserCommits.call(client: client, data: data, match: match)
   end
 
+  command 'claude' do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::ClaudePrompt.call(client: client, data: data, match: match)
+  end
+
   command 'claude plugin sync' do |client, data|
     WhoIsOnDutyTodaySlackBotModule::Commands::ClaudePluginSync.call(client: client, data: data)
   end
@@ -149,8 +153,8 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     WhoIsOnDutyTodaySlackBotModule::Commands::ConfigureJiraIssueDefaults.call(client: client, data: data, match: match)
   end
 
-  command 'take a look' do |client, data|
-    WhoIsOnDutyTodaySlackBotModule::Commands::TakeALook.call(client: client, data: data)
+  command 'take a look' do |client, data, match|
+    WhoIsOnDutyTodaySlackBotModule::Commands::TakeALook.call(client: client, data: data, match: match)
   end
 
   command(/.*/) do |client, data|

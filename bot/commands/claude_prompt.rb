@@ -3,43 +3,41 @@ require_relative '../../lib/slack_formatter'
 
 module WhoIsOnDutyTodaySlackBotModule
   module Commands
-    class TakeALook
-      DESCRIPTION = 'Analyze a thread and generate troubleshooting insights using Claude AI'.freeze
-      EXAMPLE = '`take a look` or `take a look [custom prompt]` (in a thread)'.freeze
+    class ClaudePrompt
+      DESCRIPTION = 'Send a custom prompt to Claude AI'.freeze
+      EXAMPLE = '`claude <your prompt here>` example: `claude /answers-troubleshooting:analyze-errors last 3 days`'.freeze
 
-      def self.call(client:, data:, match: nil)
-        return unless data.thread_ts
+      def self.call(client:, data:, match:)
+        prompt = match['expression'].strip
+        return if prompt.empty?
 
-        client.say(channel: data.channel, text: '🔄 Analyzing thread...', thread_ts: data.thread_ts)
+        thread_ts = data.thread_ts || data.ts
+
+        client.say(channel: data.channel, text: '🤖 Processing...', thread_ts: thread_ts)
 
         Thread.new do
           begin
-            thread_context = collect_thread_context(client, data)
             system_prompt = get_channel_prompt(data.channel)
-
-            # Extract prompt from message or use default
-            user_prompt = match && match['expression'] ? match['expression'].strip : ""
-            prompt = user_prompt.empty? ? "Following your system instructions, analyze this thread and provide troubleshooting insights." : user_prompt
-
+            thread_context = collect_thread_context(client, data, thread_ts)
             claude_output = call_claude(system_prompt, prompt, thread_context)
 
             if claude_output.empty?
-              message = '⚠️ No analysis available'
+              message = '⚠️ No response'
             else
               message = SlackFormatter.markdown_to_slack(claude_output)
             end
-            post_response(client, data, message, thread_ts: data.thread_ts)
+            post_response(client, data, message, thread_ts: thread_ts)
           rescue StandardError => e
-            puts "Error in TakeALook: #{e.class} - #{e.message}"
-            post_response(client, data, "❌ Error: #{e.message}", thread_ts: data.thread_ts)
+            puts "Error in ClaudePrompt: #{e.message}"
+            post_response(client, data, "❌ Error: #{e.message}", thread_ts: thread_ts)
           end
         end
       end
 
       private
 
-      def self.collect_thread_context(client, data)
-        thread_messages = client.web_client.conversations_replies(channel: data.channel, ts: data.thread_ts)
+      def self.collect_thread_context(client, data, thread_ts)
+        thread_messages = client.web_client.conversations_replies(channel: data.channel, ts: thread_ts)
         thread_messages['messages'].map do |msg|
           "#{msg['user']}: #{msg['text']}"
         end.join("\n\n")
@@ -54,9 +52,6 @@ module WhoIsOnDutyTodaySlackBotModule
         # Create prompts_tmp directory for debugging
         prompts_dir = './prompts_tmp'
         FileUtils.mkdir_p(prompts_dir)
-
-        # Use system prompt or default
-        system_prompt ||= "You are a support troubleshooting assistant. Analyze the following support thread and provide helpful troubleshooting steps and insights. Please provide: 1. Summary of the issue, 2. Potential causes, 3. Recommended troubleshooting steps, 4. Any relevant resources or documentation or plugins, 5. Return result in Slack formatting and try be short"
 
         # Create temp files in prompts_tmp folder
         timestamp = Time.now.strftime('%Y%m%d_%H%M%S_%N')
@@ -85,6 +80,13 @@ module WhoIsOnDutyTodaySlackBotModule
         ""
       end
 
+      def self.get_channel_prompt(channel_id)
+        ChannelPrompt.get_prompt(channel_id)
+      rescue => e
+        puts "Error fetching channel prompt: #{e.message}"
+        ""
+      end
+
       def self.post_response(client, data, message, thread_ts: nil)
         message.scan(/.{1,4000}/m).each_with_index do |msg, index|
           client.say(channel: data.channel, text: msg, thread_ts: thread_ts)
@@ -93,14 +95,6 @@ module WhoIsOnDutyTodaySlackBotModule
           puts "Error posting: #{e.message}"
         end
       end
-
-      def self.get_channel_prompt(channel_id)
-        ChannelPrompt.get_prompt(channel_id)
-      rescue => e
-        puts "Error fetching channel prompt: #{e.message}"
-        ""
-      end
-
     end
   end
 end

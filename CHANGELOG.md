@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.25.1
+
+<!-- Prepare for next release: remove this line and write your release notes -->
+
+
 ## 0.25.0
 ### Improvements
 - Adding command `claude` and support parameters.

@@ -72,23 +72,50 @@ module WhoIsOnDutyTodaySlackBotModule
       end
 
       def self.download_and_save_file(client, file, prompts_dir)
-        url = file['url_private']
         filename = file['name']
-        filepath = "#{prompts_dir}/#{filename}"
+        file_id = file['id']
+
+        # Add file ID to prevent naming collisions
+        name_parts = filename.rpartition('.')
+        if name_parts[1].empty?
+          # No extension
+          unique_filename = "#{filename}_#{file_id}"
+        else
+          # Has extension
+          unique_filename = "#{name_parts[0]}_#{file_id}#{name_parts[1]}#{name_parts[2]}"
+        end
+
+        filepath = "#{prompts_dir}/#{unique_filename}"
 
         response = client.web_client.files_info(file: file['id'])
         file_url = response['file']['url_private']
 
-        # Download file with Slack authentication
+        # Download file with Slack authentication and follow redirects
         require 'net/http'
         uri = URI(file_url)
+        body = download_with_redirects(uri, client.web_client.token)
+        File.binwrite(filepath, body)
+      end
+
+      def self.download_with_redirects(uri, token, limit = 5)
+        raise 'Too many redirects' if limit == 0
+
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
         request = Net::HTTP::Get.new(uri.request_uri)
-        request['Authorization'] = "Bearer #{client.web_client.token}"
+        request['Authorization'] = "Bearer #{token}"
 
         response = http.request(request)
-        File.binwrite(filepath, response.body)
+
+        case response
+        when Net::HTTPSuccess
+          response.body
+        when Net::HTTPRedirection
+          new_uri = URI(response['location'])
+          download_with_redirects(new_uri, token, limit - 1)
+        else
+          raise "Failed to download: #{response.code}"
+        end
       end
 
       def self.call_claude(system_prompt, prompt, thread_context = nil, channel_id = nil, thread_ts = nil)

@@ -70,17 +70,17 @@ module WhoIsOnDutyTodaySlackBotModule
         File.write(system_file_path, system_prompt)
         File.write(prompt_file_path, prompt)
 
-        cmd = "claude --dangerously-skip-permissions --allow-dangerously-skip-permissions " \
+        cmd = "cd #{prompts_dir} && claude --dangerously-skip-permissions --allow-dangerously-skip-permissions " \
               "--disallowedTools \"Bash\" " \
-              "--system-prompt \"$(cat #{system_file_path})\" "
+              "--system-prompt \"$(cat system.txt)\" "
 
         if thread_context
           context_file_path = "#{prompts_dir}/context.txt"
           File.write(context_file_path, "for context here is what has been discussed so far:\n\n#{thread_context}")
-          cmd += "--append-system-prompt \"$(cat #{context_file_path})\" "
+          cmd += "--append-system-prompt \"$(cat context.txt)\" "
         end
 
-        cmd += "-p \"$(cat #{prompt_file_path})\" 2>&1"
+        cmd += "-p \"$(cat prompt.txt)\" 2>&1"
 
         output = `#{cmd}` rescue ""
         output

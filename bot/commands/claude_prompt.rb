@@ -73,7 +73,7 @@ module WhoIsOnDutyTodaySlackBotModule
 
       def self.download_and_save_file(client, file, prompts_dir)
         url = file['url_private']
-        filename = file['name']
+        filename = file['name'].gsub("'", '')
         filepath = "#{prompts_dir}/#{filename}"
 
         response = client.web_client.files_info(file: file['id'])
@@ -88,7 +88,7 @@ module WhoIsOnDutyTodaySlackBotModule
         request['Authorization'] = "Bearer #{client.web_client.token}"
 
         response = http.request(request)
-        File.write(filepath, response.body)
+        File.binwrite(filepath, response.body)
       end
 
       def self.call_claude(system_prompt, prompt, thread_context = nil, channel_id = nil, thread_ts = nil)

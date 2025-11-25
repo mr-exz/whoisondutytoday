@@ -14,7 +14,9 @@ module WhoIsOnDutyTodaySlackBotModule
 
         Thread.new do
           begin
-            thread_context = collect_thread_context(client, data)
+            prompts_dir = "./prompts_tmp/#{data.channel}/p#{data.thread_ts}"
+            FileUtils.mkdir_p(prompts_dir)
+            thread_context = collect_thread_context(client, data, prompts_dir)
             system_prompt = get_channel_prompt(data.channel)
 
             # Extract prompt from message or use default
@@ -38,14 +40,53 @@ module WhoIsOnDutyTodaySlackBotModule
 
       private
 
-      def self.collect_thread_context(client, data)
+      def self.collect_thread_context(client, data, prompts_dir = nil)
         thread_messages = client.web_client.conversations_replies(channel: data.channel, ts: data.thread_ts)
-        thread_messages['messages'].map do |msg|
-          "#{msg['user']}: #{msg['text']}"
+
+        thread_messages['messages'].filter_map do |msg|
+          next unless msg['text']
+
+          user_id = msg['user'] || msg['bot_id'] || "unknown"
+          message_text = msg['text']
+          context_line = "channel_id: #{data.channel} user_id: #{user_id} message_text: #{message_text}"
+
+          # Download and save files if present
+          if msg['files'] && prompts_dir
+            msg['files'].each do |file|
+              begin
+                download_and_save_file(client, file, prompts_dir)
+                context_line += "\nfile: #{file['name']}"
+              rescue => e
+                puts "Error downloading file #{file['name']}: #{e.message}"
+              end
+            end
+          end
+
+          context_line
         end.join("\n\n")
       rescue StandardError => e
         puts "Error fetching thread: #{e.message}"
         ""
+      end
+
+      def self.download_and_save_file(client, file, prompts_dir)
+        url = file['url_private']
+        filename = file['name']
+        filepath = "#{prompts_dir}/#{filename}"
+
+        response = client.web_client.files_info(file: file['id'])
+        file_url = response['file']['url_private']
+
+        # Download file with Slack authentication
+        require 'net/http'
+        uri = URI(file_url)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        request = Net::HTTP::Get.new(uri.request_uri)
+        request['Authorization'] = "Bearer #{client.web_client.token}"
+
+        response = http.request(request)
+        File.binwrite(filepath, response.body)
       end
 
       def self.call_claude(system_prompt, prompt, thread_context = nil, channel_id = nil, thread_ts = nil)
@@ -69,17 +110,17 @@ module WhoIsOnDutyTodaySlackBotModule
         File.write(system_file_path, system_prompt)
         File.write(prompt_file_path, prompt)
 
-        cmd = "claude --dangerously-skip-permissions --allow-dangerously-skip-permissions " \
+        cmd = "cd #{prompts_dir} && claude --dangerously-skip-permissions --allow-dangerously-skip-permissions " \
               "--disallowedTools \"Bash\" " \
-              "--system-prompt \"$(cat #{system_file_path})\" "
+              "--system-prompt \"$(cat system.txt)\" "
 
         if thread_context
           context_file_path = "#{prompts_dir}/context.txt"
           File.write(context_file_path, "for context here is what has been discussed so far:\n\n#{thread_context}")
-          cmd += "--append-system-prompt \"$(cat #{context_file_path})\" "
+          cmd += "--append-system-prompt \"$(cat context.txt)\" "
         end
 
-        cmd += "-p \"$(cat #{prompt_file_path})\" 2>&1"
+        cmd += "-p \"$(cat prompt.txt)\" 2>&1"
 
         output = `#{cmd}` rescue ""
         output

@@ -1,9 +1,11 @@
 # Changelog
 
-## 0.25.2
-
-<!-- Prepare for next release: remove this line and write your release notes -->
-
+## 0.26.0
+### Improvements
+- Isolated folder for threads
+- Support if media in thread
+### Bugfixes
+- Prompt is too long
 
 ## 0.25.1
 ### Bugfixes

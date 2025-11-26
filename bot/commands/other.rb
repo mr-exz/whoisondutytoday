@@ -5,6 +5,12 @@ module WhoIsOnDutyTodaySlackBotModule
         log_event("Incoming data: #{data}")
         message_processor = MessageProcessor.new
 
+        # Handle app_mention from bots (automation)
+        if data['type'] == 'app_mention' && data['subtype'] == 'bot_message'
+          react_to_bot_mention(client, data)
+          return
+        end
+
         # Skip processing events and data without client_msg_id or if type is not message
         return unless data.key?('client_msg_id') && data['type'] == 'message'
 
@@ -179,6 +185,16 @@ module WhoIsOnDutyTodaySlackBotModule
         end
 
         send_tagged_message(client, channel, data)
+      end
+
+      def self.react_to_bot_mention(client, data)
+        client.web_client.reactions_add(
+          channel: data.channel,
+          timestamp: data.ts,
+          name: 'robot_face'
+        )
+      rescue StandardError => e
+        puts "Error reacting to bot mention: #{e.message}"
       end
     end
   end

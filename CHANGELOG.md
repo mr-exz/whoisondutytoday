@@ -1,8 +1,13 @@
 # Changelog
 
-## 0.26.3
+## 0.27.0
 
-<!-- Prepare for next release: remove this line and write your release notes -->
+### Improvements
+- Added feature save in knowledge base, and point claude look into it.
+- Bot should react on messages from automation if it tagged directly.
+
+### Bugfixes
+- Fixed `take a look` command to properly work with files
 
 
 ## 0.26.2

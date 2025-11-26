@@ -56,8 +56,8 @@ module WhoIsOnDutyTodaySlackBotModule
           if msg['files'] && prompts_dir
             msg['files'].each do |file|
               begin
-                download_and_save_file(client, file, prompts_dir)
-                context_line += "\nfile: #{file['name']}"
+                saved_filename = download_and_save_file(client, file, prompts_dir)
+                context_line += "\nfile: #{saved_filename}"
               rescue => e
                 puts "Error downloading file #{file['name']}: #{e.message}"
               end
@@ -95,6 +95,7 @@ module WhoIsOnDutyTodaySlackBotModule
         uri = URI(file_url)
         body = download_with_redirects(uri, client.web_client.token)
         File.binwrite(filepath, body)
+        unique_filename
       end
 
       def self.download_with_redirects(uri, token, limit = 5)

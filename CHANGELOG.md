@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.27.2
+
+<!-- Prepare for next release: remove this line and write your release notes -->
+
+
 ## 0.27.1
 ### Bugfixes
 - Tuning of processing not human messages

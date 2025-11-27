@@ -198,12 +198,10 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     event = data['payload']['event']
     event_type = event['type']
 
-    # Convert app_mention to message type so it gets processed as a regular command
-    if event_type == 'app_mention' && event['subtype'] == 'bot_message'
-      event['type'] = 'message'
-      # Set client_msg_id using original event_type for consistency with slacksocket deduplication
-      event['client_msg_id'] = "#{event_type}_#{event['ts']}"
-    end
+    # Skip app_mention events - we only process message types
+    # When a bot mentions us, Slack sends both app_mention and message events
+    # We only want to process the message event
+    return if event_type == 'app_mention'
 
     # Filter regular bot messages
     return if !client.allow_bot_messages? && client.bot_message?(data)

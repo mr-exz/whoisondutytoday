@@ -3,12 +3,11 @@
 ## 0.27.0
 
 ### Improvements
-- Added feature save in knowledge base, and point claude look into it.
+- Added feature save in Confluence knowledge base, and point claude look into it.
 - Bot should react on messages from automation if it tagged directly.
 
 ### Bugfixes
 - Fixed `take a look` command to properly work with files
-
 
 ## 0.26.2
 ### Bugfixes

@@ -6,6 +6,7 @@ require 'json'
 require 'nice_http'
 require 'slack-ruby-client'
 require 'set'
+require 'openssl'
 
 module SlackSocket
   class Client < Slack::RealTime::Client
@@ -71,7 +72,12 @@ module SlackSocket
             raise(AdquisitionError, "Connection failed: #{result.error}") unless result.ok
 
             websocket_url = result.url
-            endpoint = Async::HTTP::Endpoint.parse(websocket_url, protocols: Async::WebSocket::Client)
+
+            # Configure SSL context with verification disabled for dev environment
+            ssl_context = OpenSSL::SSL::SSLContext.new
+            ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+            endpoint = Async::HTTP::Endpoint.parse(websocket_url, protocols: Async::WebSocket::Client, ssl_context: ssl_context)
 
             Async::WebSocket::Client.connect(endpoint) do |connection|
               @connection = connection

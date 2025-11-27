@@ -202,11 +202,40 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
     return if !client.allow_message_loops? && client.message_to_self?(data)
     return if !client.allow_bot_messages? && client.bot_message?(data)
 
+    # For messages from bots/automation, only process if they mention the bot
+    if is_from_bot?(event)
+      unless message_mentions_bot?(event, client)
+        log_ignored_message(event)
+        return
+      end
+    end
+
     #p data
     prepare!(data)
     child_command_classes.each do |command_class|
       command_class.invoke(client, convert_event_to_simple_format(data))
     end
+  end
+
+  def self.is_from_bot?(event)
+    event.key?('bot_id') || event.key?('app_id')
+  end
+
+  def self.message_mentions_bot?(event, client)
+    text = event['text'] || ''
+    bot_mention = "<@#{client.self.id}>"
+    text.include?(bot_mention)
+  end
+
+  def self.log_ignored_message(event)
+    logger = Logger.new(STDOUT)
+    bot_name = event['bot_profile']&.dig('name') || event['username'] || 'Unknown Bot'
+    logger.info({
+      ignored_message: true,
+      bot_name: bot_name,
+      channel: event['channel'],
+      ts: event['ts']
+    }.to_json)
   end
 
   def self.convert_event_to_simple_format(event)

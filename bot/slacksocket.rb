@@ -169,7 +169,7 @@ module SlackSocket
         event = data['payload']['event']
         client_msg_id = event['client_msg_id']
 
-        # For events without client_msg_id (like app_mention), use event type + ts as unique identifier
+        # For events without client_msg_id (like workflow messages), use event type + ts as identifier
         event_identifier = client_msg_id || "#{event['type']}_#{event['ts']}"
 
         if !@processed_messages.key?(event_identifier)

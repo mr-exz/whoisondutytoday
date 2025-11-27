@@ -180,6 +180,7 @@ module WhoIsOnDutyTodaySlackBotModule
 
         send_tagged_message(client, channel, data)
       end
+
     end
   end
 end

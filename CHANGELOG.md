@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.27.1
+
+<!-- Prepare for next release: remove this line and write your release notes -->
+
+
 ## 0.27.0
 ### Improvements
 - Bot should react on messages from automation if it tagged directly.

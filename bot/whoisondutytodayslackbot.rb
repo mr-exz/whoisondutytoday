@@ -193,8 +193,15 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
   end
 
   def self.process_event(client, data)
+    event = data['payload']['event']
+
+    # Skip app_mention events - we only process message events
+    # Slack sends both app_mention and message for bot mentions, we only need message
+    return if event['type'] == 'app_mention'
+
     return if !client.allow_message_loops? && client.message_to_self?(data)
     return if !client.allow_bot_messages? && client.bot_message?(data)
+
     #p data
     prepare!(data)
     child_command_classes.each do |command_class|

@@ -169,8 +169,11 @@ module SlackSocket
         event = data['payload']['event']
         client_msg_id = event['client_msg_id']
 
-        if client_msg_id && !@processed_messages.key?(client_msg_id)
-          @processed_messages[client_msg_id] = Time.now.to_i
+        # For events without client_msg_id (like workflow messages), use event type + ts as identifier
+        event_identifier = client_msg_id || "#{event['type']}_#{event['ts']}"
+
+        if !@processed_messages.key?(event_identifier)
+          @processed_messages[event_identifier] = Time.now.to_i
           WhoIsOnDutyTodaySlackBot.process_event(self, data) if event
         end
       end

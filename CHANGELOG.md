@@ -1,9 +1,8 @@
 # Changelog
 
-## 0.27.3
-
-<!-- Prepare for next release: remove this line and write your release notes -->
-
+## 0.28.0
+### Improvements
+- Adding internal Slack mcp for support
 
 ## 0.27.2
 ### Bugfixes

@@ -40,6 +40,8 @@ validate_env_vars() {
   check_var "BITBUCKET_USERNAME" "$BITBUCKET_USERNAME"
   check_var "BITBUCKET_PASSWORD" "$BITBUCKET_PASSWORD"
   check_var "BITBUCKET_URL" "$BITBUCKET_URL"
+  check_var "SLACK_MCP_URL" "$SLACK_MCP_URL"
+  check_var "SLACK_MCP_API_KEY" "$SLACK_MCP_API_KEY"
   check_var "SLACK_MCP_XOXP_TOKEN" "$SLACK_MCP_XOXP_TOKEN"
   check_var "PLUGIN_REPO_URL" "$PLUGIN_REPO_URL"
   check_var "PLUGIN_REPO_USERNAME" "$PLUGIN_REPO_USERNAME"
@@ -115,9 +117,15 @@ setup_confluence_mcp() {
 
 # Setup Slack MCP
 setup_slack_mcp() {
-  if [ -n "$SLACK_MCP_XOXP_TOKEN" ]; then
-    if claude mcp add slack --scope user --env "SLACK_MCP_XOXP_TOKEN=${SLACK_MCP_XOXP_TOKEN}" -- npx -y slack-mcp-server@latest --transport stdio > /dev/null 2>&1; then
+  if [ -n "$SLACK_MCP_URL" ] && [ -n "$SLACK_MCP_API_KEY" ]; then
+    if claude mcp add --transport http slack --scope user "${SLACK_MCP_URL}" --header "Authorization: Bearer ${SLACK_MCP_API_KEY}" > /dev/null 2>&1; then
       echo "✓ Slack MCP added"
+    else
+      echo "⚠ Slack MCP setup skipped or failed"
+    fi
+  elif [ -n "$SLACK_MCP_XOXP_TOKEN" ]; then
+    if claude mcp add slack --scope user --env "SLACK_MCP_XOXP_TOKEN=${SLACK_MCP_XOXP_TOKEN}" -- npx -y slack-mcp-server@latest --transport stdio > /dev/null 2>&1; then
+      echo "✓ Slack MCP added (legacy)"
     else
       echo "⚠ Slack MCP setup skipped or failed"
     fi

@@ -4,7 +4,7 @@ module WhoIsOnDutyTodaySlackBotModule
   module Commands
     class ClaudePluginSync
       DESCRIPTION = 'Sync Claude plugin repository and return head commit'.freeze
-      EXAMPLE = '`claude plugin sync`'.freeze
+      EXAMPLE = '`claude-plugins sync`'.freeze
 
       def self.call(client:, data:, match: nil)
         client.web_client.chat_postMessage(

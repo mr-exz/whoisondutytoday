@@ -1,9 +1,8 @@
 # Changelog
 
 ## 0.28.1
-
-<!-- Prepare for next release: remove this line and write your release notes -->
-
+### Bugfixes
+- `claude plugin sync` changed to `claude-plugins sync`
 
 ## 0.28.0
 ### Improvements

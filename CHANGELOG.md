@@ -1,9 +1,8 @@
 # Changelog
 
 ## 0.28.2
-
-<!-- Prepare for next release: remove this line and write your release notes -->
-
+### Bugfixes
+- Fixes of message processing
 
 ## 0.28.1
 ### Bugfixes

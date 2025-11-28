@@ -9,7 +9,6 @@ require_relative 'commands/main'
 require_relative '../lib/opsgenie/notify_opsgenie'
 require_relative '../lib/message_processor/message_processor'
 
-
 class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
   SlackRubyBot::Client.logger.level = Logger::WARN
 
@@ -194,10 +193,6 @@ class WhoIsOnDutyTodaySlackBot < SlackRubyBot::Bot
 
   def self.process_event(client, data)
     event = data['payload']['event']
-
-    # Skip app_mention events - we only process message events
-    # Slack sends both app_mention and message for bot mentions, we only need message
-    return if event['type'] == 'app_mention'
 
     return if !client.allow_message_loops? && client.message_to_self?(data)
     return if !client.allow_bot_messages? && client.bot_message?(data)

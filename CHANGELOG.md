@@ -1,9 +1,8 @@
 # Changelog
 
 ## 0.29.2
-
-<!-- Prepare for next release: remove this line and write your release notes -->
-
+### Bugfixes
+- Adding missed includes
 
 ## 0.29.1
 ### Bugfixes

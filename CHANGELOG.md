@@ -1,9 +1,10 @@
 # Changelog
 
-## 0.28.3
-
-<!-- Prepare for next release: remove this line and write your release notes -->
-
+## 0.29.0
+### Improvements
+- Added new command `claude-plugins setup`
+### Bugfixes
+- Fixes of message processing 2 times
 
 ## 0.28.2
 ### Bugfixes

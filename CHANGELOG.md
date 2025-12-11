@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.29.1
+
+<!-- Prepare for next release: remove this line and write your release notes -->
+
+
 ## 0.29.0
 ### Improvements
 - Added new command `claude-plugins setup`

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.29.3
+
+<!-- Prepare for next release: remove this line and write your release notes -->
+
+
 ## 0.29.2
 ### Bugfixes
 - Adding missed includes

@@ -51,6 +51,7 @@ module WhoIsOnDutyTodaySlackBotModule
           UserCommits,
           ClaudePrompt,
           ClaudePluginSync,
+          ClaudePluginSetup,
           PrepareSummary,
           JiraCreateTask,
           ConfigureJiraIssueDefaults,

@@ -1,9 +1,8 @@
 # Changelog
 
 ## 0.29.1
-
-<!-- Prepare for next release: remove this line and write your release notes -->
-
+### Bugfixes
+- Adding missed help
 
 ## 0.29.0
 ### Improvements

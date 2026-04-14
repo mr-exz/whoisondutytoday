@@ -1,0 +1,45 @@
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Slack Channel ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Reminder Enabled</th>
+      <th scope="col">Tag Reporter Enabled</th>
+      <th scope="col">Auto Answer Enabled</th>
+      <th scope="col">Created At</th>
+      <th scope="col">Last Updated At</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+
+  <% @channels.each do |channel| %>
+    <tr>
+      <td><%= channel.slack_channel_id %></td>
+      <td><%= channel.name %></td>
+      <td>
+        <% if channel.reminder_enabled %>
+          <span class="badge badge-success">Yes</span>
+        <% else %>
+          <span class="badge badge-secondary">No</span>
+        <% end %>
+      </td>
+      <td>
+        <% if channel.tag_reporter_enabled %>
+          <span class="badge badge-success">Yes</span>
+        <% else %>
+          <span class="badge badge-secondary">No</span>
+        <% end %>
+      </td>
+      <td>
+        <% if channel.auto_answer_enabled %>
+          <span class="badge badge-success">Yes</span>
+        <% else %>
+          <span class="badge badge-secondary">No</span>
+        <% end %>
+      </td>
+      <td><%= channel.created_at.strftime("%Y-%m-%d %H:%M") if channel.created_at %></td>
+      <td><%= channel.updated_at.strftime("%Y-%m-%d %H:%M") if channel.updated_at %></td>
+      <td><%= link_to "delete", channel_path(channel.slack_channel_id), method: :delete, data: { confirm: "You sure?" } %></td>
+    </tr>
+  <% end %>
+</table>

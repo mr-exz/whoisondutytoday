@@ -67,7 +67,7 @@ end
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'listen', '~> 3.5'
-  gem 'web-console', '>= 4.2.1'
+  gem 'web-console', '>= 4.3.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring', '~> 4.1'
 end

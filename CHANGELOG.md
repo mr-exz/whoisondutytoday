@@ -1,9 +1,8 @@
 # Changelog
 
 ## 0.29.4
-
-<!-- Prepare for next release: remove this line and write your release notes -->
-
+### Improvements
+- Updated `web-console` 4.2.1 -> 4.3.0
 
 ## 0.29.3
 ### Improvements

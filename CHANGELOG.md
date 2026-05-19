@@ -3,6 +3,9 @@
 ## 0.29.4
 ### Improvements
 - Updated `web-console` 4.2.1 -> 4.3.0
+- Updated `json` >= 2.17.1.2
+- Updated `rubocop` >= 1.81.0
+- Updated `slack-ruby-client` 2.4.0 -> 2.5.0
 
 ## 0.29.3
 ### Improvements

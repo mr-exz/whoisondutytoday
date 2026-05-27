@@ -140,6 +140,7 @@ module WhoIsOnDutyTodaySlackBotModule
 
         cmd = "cd #{prompts_dir} && claude --dangerously-skip-permissions --allow-dangerously-skip-permissions " \
               "--disallowedTools \"Bash\" " \
+              "--disable-slash-commands " \
               "--system-prompt \"$(cat system.txt)\" "
 
         if thread_context

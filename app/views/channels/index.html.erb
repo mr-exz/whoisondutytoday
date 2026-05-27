@@ -1,5 +1,5 @@
 <table class="table">
-  <thead class="thead-dark">
+  <thead class="table-dark">
     <tr>
       <th scope="col">Slack Channel ID</th>
       <th scope="col">Name</th>
@@ -18,23 +18,23 @@
       <td><%= channel.name %></td>
       <td>
         <% if channel.reminder_enabled %>
-          <span class="badge badge-success">Yes</span>
+          <span class="badge badge bg-success">Yes</span>
         <% else %>
-          <span class="badge badge-secondary">No</span>
+          <span class="badge badge bg-secondary">No</span>
         <% end %>
       </td>
       <td>
         <% if channel.tag_reporter_enabled %>
-          <span class="badge badge-success">Yes</span>
+          <span class="badge badge bg-success">Yes</span>
         <% else %>
-          <span class="badge badge-secondary">No</span>
+          <span class="badge badge bg-secondary">No</span>
         <% end %>
       </td>
       <td>
         <% if channel.auto_answer_enabled %>
-          <span class="badge badge-success">Yes</span>
+          <span class="badge badge bg-success">Yes</span>
         <% else %>
-          <span class="badge badge-secondary">No</span>
+          <span class="badge badge bg-secondary">No</span>
         <% end %>
       </td>
       <td><%= channel.created_at.strftime("%Y-%m-%d %H:%M") if channel.created_at %></td>

@@ -16,10 +16,13 @@ vagrant/.vagrant
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
+/spring-*
 /db/data/*
 /prompts_tmp/*
+/claude-tmp/*
 !/log/.keep
 !/tmp/.keep
+*.log
 
 # Ignore uploaded files in development
 /storage/*

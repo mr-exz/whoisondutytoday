@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.30.0
+### Security
+- Disable slash commands, so no user would be able to run them
+### Bugfixes
+- Removed `config.active_record.legacy_connection_handling` which was dropped in Rails 7.2 and caused `db:migrate` to fail
+- Updated `sqlite3` constraint from `< 2.0.0` to `>= 2.1` required by Rails 8.1
+- Fixed `enum` syntax in `Answer` model to use Rails 7.1+ positional argument style
+- Updated `validates_uniqueness_of` to modern `validates` syntax in `Label` model
+- Fixed Bootstrap 5 badge classes in Channels view (`badge-success`/`badge-secondary` → `badge bg-success`/`badge bg-secondary`)
+- Fixed Bootstrap 5 table header classes (`thead-dark` → `table-dark`) across all views
+- Fixed Claude CLI silently failing due to tmpdir being owned by another user — `CLAUDE_CODE_TMPDIR` is now optional via env var, injected into `settings.json` by `init_claude.sh` and `setup_claude_settings.sh`, with directory created at runtime by `init_claude.sh`
+- Regenerated `db/schema.rb` after applying pending migrations (`jira_issue_defaults`, `channel_prompts`)
+- Made all shell scripts in `scripts/` executable and removed redundant `chmod +x` from Dockerfile
+- Removed redundant `mkdir /myapp` from Dockerfile (created implicitly by `WORKDIR`)
+- Added `*.log` and `/spring-*` to `.gitignore`
+- Documented `CLAUDE_CODE_TMPDIR` in `production.env.example`
+
 ## 0.29.4
 ### Improvements
 - Updated `web-console` >= 4.2.1 to >= 4.3.0

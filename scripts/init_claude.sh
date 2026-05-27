@@ -57,14 +57,24 @@ init_claude_config() {
   local config_file="$HOME/.claude/settings.json"
 
   mkdir -p "$HOME/.claude"
+  [ -n "$CLAUDE_CODE_TMPDIR" ] && mkdir -p "$CLAUDE_CODE_TMPDIR"
 
   # Replace placeholders with environment variables
   if [ -f "$template_file" ]; then
-    sed -e "s|{{ANTHROPIC_BASE_URL}}|${ANTHROPIC_BASE_URL:-https://api.anthropic.com}|g" \
-        -e "s|{{ANTHROPIC_AUTH_TOKEN}}|${ANTHROPIC_AUTH_TOKEN}|g" \
-        -e "s|{{ANTHROPIC_DEFAULT_HAIKU_MODEL}}|${ANTHROPIC_DEFAULT_HAIKU_MODEL}|g" \
-        -e "s|{{ANTHROPIC_DEFAULT_SONNET_MODEL}}|${ANTHROPIC_DEFAULT_SONNET_MODEL}|g" \
-        "$template_file" > "$config_file"
+    if [ -n "$CLAUDE_CODE_TMPDIR" ]; then
+      sed -e "s|{{ANTHROPIC_BASE_URL}}|${ANTHROPIC_BASE_URL:-https://api.anthropic.com}|g" \
+          -e "s|{{ANTHROPIC_AUTH_TOKEN}}|${ANTHROPIC_AUTH_TOKEN}|g" \
+          -e "s|{{ANTHROPIC_DEFAULT_HAIKU_MODEL}}|${ANTHROPIC_DEFAULT_HAIKU_MODEL}|g" \
+          -e "s|{{ANTHROPIC_DEFAULT_SONNET_MODEL}}|${ANTHROPIC_DEFAULT_SONNET_MODEL}|g" \
+          -e "s|{{CLAUDE_CODE_TMPDIR}}|${CLAUDE_CODE_TMPDIR}|g" \
+          "$template_file" > "$config_file"
+    else
+      sed -e "s|{{ANTHROPIC_BASE_URL}}|${ANTHROPIC_BASE_URL:-https://api.anthropic.com}|g" \
+          -e "s|{{ANTHROPIC_AUTH_TOKEN}}|${ANTHROPIC_AUTH_TOKEN}|g" \
+          -e "s|{{ANTHROPIC_DEFAULT_HAIKU_MODEL}}|${ANTHROPIC_DEFAULT_HAIKU_MODEL}|g" \
+          -e "s|{{ANTHROPIC_DEFAULT_SONNET_MODEL}}|${ANTHROPIC_DEFAULT_SONNET_MODEL}|g" \
+          "$template_file" | grep -v '"CLAUDE_CODE_TMPDIR"' > "$config_file"
+    fi
     chmod 600 "$config_file"
     echo "✓ Claude settings initialized at $config_file"
   else
